@@ -57,6 +57,18 @@ function calcTaskProgressPerTick(task: Task): number
     return progress;
 }
 
+// MARK: Energy
+
+function modifyEnergy(delta: number)
+{
+    GAMESTATE.current_energy += delta;
+}
+
+function calcEnergyDrainPerTick(task: Task): number
+{
+    return 1;
+}
+
 // MARK: Rendering
 
 function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
@@ -108,6 +120,7 @@ function createSkillDiv(skill: SkillProgress, skills_div: HTMLElement, rendering
 
 class Rendering
 {
+    energy_element: HTMLElement;
     task_elements: Map<TaskDefinition, HTMLElement> = new Map();
     skill_elements: Map<Skill, HTMLElement> = new Map();
 
@@ -145,6 +158,16 @@ class Rendering
     {
         this.createTasks();
         this.createSkills();
+        var energy_div = document.getElementById("energy");
+        if (energy_div)
+        {
+            this.energy_element = energy_div;
+        }
+        else
+        {
+            console.error("The element with ID 'energy' was not found.");
+            this.energy_element = new HTMLElement();
+        }
     }
 }
 
@@ -156,6 +179,9 @@ class Gamestate
     active_task: Task | null = null;
 
     skills: SkillProgress[] = [];
+
+    current_energy = 100;
+    max_energy = 100;
 
     private initializeTasks()
     {
@@ -218,7 +244,7 @@ function updateSkillRendering() {
         var fill = RENDERING.skill_elements.get(skill.skill)?.querySelector<HTMLDivElement>(".progress-fill");
         if (fill)
         {
-             fill.style.width = `${skill.progress * 100 / calcSkillXpNeeded(skill)}%`;
+            fill.style.width = `${skill.progress * 100 / calcSkillXpNeeded(skill)}%`;
         }
         
         var name = RENDERING.skill_elements.get(skill.skill)?.querySelector<HTMLDivElement>(".skill-name");
@@ -234,6 +260,25 @@ function updateSkillRendering() {
     }
 }
 
+function updateEnergyRendering() {
+    var fill = RENDERING.energy_element.querySelector<HTMLDivElement>(".progress-fill");
+    if (fill)
+    {
+        fill.style.width = `${GAMESTATE.current_energy * 100 / GAMESTATE.max_energy}%`;
+    }
+
+    var value = RENDERING.energy_element.querySelector<HTMLDivElement>(".progress-value");
+    if (value)
+    {
+        const new_html = `${GAMESTATE.current_energy}`;
+        // Avoid flickering in the debugger
+        if (new_html != value.innerHTML)
+        {
+            value.textContent = new_html;
+        }
+    }
+}
+
 function updateGamestate() {
     updateActiveTask();
 }
@@ -241,6 +286,7 @@ function updateGamestate() {
 function updateRendering() {
     updateTaskRendering();
     updateSkillRendering();
+    updateEnergyRendering();
 }
 
 function updateActiveTask() {
@@ -254,6 +300,7 @@ function updateActiveTask() {
     {
         const progress = calcTaskProgressPerTick(active_task);
         active_task.progress += progress;
+        modifyEnergy(-calcEnergyDrainPerTick(active_task));
         for (const skill of active_task.definition.skills)
         {
             addSkillXp(skill, calcSkillProgressPerTick(progress));
