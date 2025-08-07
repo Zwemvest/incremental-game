@@ -1,16 +1,23 @@
 
-export class Task {
+export class TaskDefinition {
     name = "";
+    max_progress = 0;
+}
 
-    constructor(name: string)  {
-        this.name = name;
+export class Task {
+    definition: TaskDefinition;
+    progress: number = 0;
+    html_element: HTMLElement | null = null;
+
+    constructor(definition: TaskDefinition)  {
+        this.definition = definition;
     }
 }
 
 export const TASKS = [
-    new Task("Task 1"),
-    new Task("Task 2"),
-    new Task("Task 3"),
-    new Task("Task 4"),
+    {name: "Task 1", max_progress: 100},
+    {name: "Task 2", max_progress: 100},
+    {name: "Task 3", max_progress: 100},
+    {name: "Task 4", max_progress: 100},
 ]
 

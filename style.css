@@ -2,3 +2,20 @@ body {
     background: #333;
     color: #fff;
 }
+
+#game-area {
+  max-width: 900px;
+  margin: 0 auto;
+}
+
+#tasks {
+  max-width: 600px;
+}
+
+.task {
+    width: 100%;
+}
+
+.task button {
+    width: 100%;
+}
