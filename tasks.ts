@@ -7,7 +7,6 @@ export class TaskDefinition {
 export class Task {
     definition: TaskDefinition;
     progress: number = 0;
-    html_element: HTMLElement | null = null;
 
     constructor(definition: TaskDefinition)  {
         this.definition = definition;
@@ -16,8 +15,8 @@ export class Task {
 
 export const TASKS = [
     {name: "Task 1", max_progress: 100},
-    {name: "Task 2", max_progress: 100},
-    {name: "Task 3", max_progress: 100},
+    {name: "Task 2", max_progress: 50},
+    {name: "Task 3", max_progress: 25},
     {name: "Task 4", max_progress: 100},
 ]
 

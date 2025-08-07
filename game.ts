@@ -1,34 +1,29 @@
-import { TaskDefinition, Task } from "./tasks.js";
-import { TASKS } from "./tasks.js";
+import { Task, TaskDefinition, TASKS } from "./tasks.js";
 
-var TASKS_DIV = document.getElementById("tasks");
+enum Skill {
+    Studying,
+    Travel,
 
-class Gamestate
+    Count
+}
+
+let SKILL_NAMES = ["Studying", "Travel"];
+
+class SkillProgress
 {
-    tasks: Task[] = [];
-    active_task: Task | null = null;
+    skill: Skill;
+    level: number = 0;
+    progress: number = 0;
 
-    public initializeTasks()
+    constructor(skill: Skill)
     {
-        for (const task of TASKS) {
-            this.tasks.push(new Task(task));
-        }
+        this.skill = skill;
     }
 }
 
-function clickTask(task: Task)
-{
-    if (gamestate.active_task == task)
-    {
-        gamestate.active_task = null;
-    }
-    else
-    {
-        gamestate.active_task = task;
-    }
-}
+// MARK: Rendering
 
-function createTaskDiv(task: Task, tasks_div: HTMLElement)
+function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
 {
     const task_div = document.createElement("div");
     task_div.className = "task";
@@ -49,26 +44,119 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement)
     task_div.appendChild(progressBar);
 
     tasks_div.appendChild(task_div);
-    task.html_element = task_div;
+    rendering.task_elements.set(task.definition, task_div);
 }
 
-function createTasks()
+function createSkillDiv(skill: SkillProgress, skills_div: HTMLElement, rendering: Rendering)
 {
-    if (!TASKS_DIV)
-    {
-        console.error("The element with ID 'tasks' was not found.");
-        return;
-    }
-    TASKS_DIV.innerHTML = "";
+    const skill_div = document.createElement("div");
+    skill_div.className = "skill";
 
-    for (const task of gamestate.tasks) {
-        createTaskDiv(task, TASKS_DIV);
+    const name = document.createElement("div");
+    name.className = "skill-name";
+    name.textContent = `${SKILL_NAMES[skill.skill]}`;
+
+    const progressFill = document.createElement("div");
+    progressFill.className = "progress-fill";
+    progressFill.style.width = "0%";
+    const progressBar = document.createElement("div");
+    progressBar.className = "progress-bar";
+    progressBar.appendChild(progressFill);
+
+    skill_div.appendChild(name);
+    skill_div.appendChild(progressBar);
+
+    skills_div.appendChild(skill_div);
+    rendering.skill_elements.set(skill.skill, skill_div);
+}
+
+class Rendering
+{
+    task_elements: Map<TaskDefinition, HTMLElement> = new Map();
+    skill_elements: Map<Skill, HTMLElement> = new Map();
+
+    private createTasks()
+    {
+        var tasks_div = document.getElementById("tasks");
+        if (!tasks_div)
+        {
+            console.error("The element with ID 'tasks' was not found.");
+            return;
+        }
+        tasks_div.innerHTML = "";
+
+        for (const task of GAMESTATE.tasks) {
+            createTaskDiv(task, tasks_div, this);
+        }
+    }
+
+    private createSkills()
+    {
+        var skills_div = document.getElementById("skills");
+        if (!skills_div)
+        {
+            console.error("The element with ID 'skills' was not found.");
+            return;
+        }
+        skills_div.innerHTML = "";
+
+        for (const skill of GAMESTATE.skills) {
+            createSkillDiv(skill, skills_div, this);
+        }
+    }
+
+    constructor()
+    {
+        this.createTasks();
+        this.createSkills();
+    }
+}
+
+// MARK: Gamestate
+
+class Gamestate
+{
+    tasks: Task[] = [];
+    active_task: Task | null = null;
+
+    skills: SkillProgress[] = [];
+
+    private initializeTasks()
+    {
+        for (const task of TASKS) {
+            this.tasks.push(new Task(task));
+        }
+    }
+
+    private initializeSkills()
+    {
+        for (let i = 0; i < Skill.Count; i++) {
+            this.skills.push(new SkillProgress(i));
+        }
+    }
+
+    constructor()
+    {
+        this.initializeTasks();
+        this.initializeSkills();
+    }
+}
+
+function clickTask(task: Task)
+{
+    if (GAMESTATE.active_task == task)
+    {
+        GAMESTATE.active_task = null;
+    }
+    else
+    {
+        GAMESTATE.active_task = task;
     }
 }
 
 function updateTaskRendering() {
-    for (const task of gamestate.tasks) {
-        var fill = task.html_element?.querySelector<HTMLDivElement>(".progress-fill");
+    for (const task of GAMESTATE.tasks) {
+        var fill = RENDERING.task_elements.get(task.definition)?.querySelector<HTMLDivElement>(".progress-fill");
         if (!fill)
         {
             continue;
@@ -78,8 +166,29 @@ function updateTaskRendering() {
     }
 }
 
+function updateSkillRendering() {
+    for (const skill of GAMESTATE.skills) {
+        var fill = RENDERING.skill_elements.get(skill.skill)?.querySelector<HTMLDivElement>(".progress-fill");
+        if (!fill)
+        {
+            continue;
+        }
+        
+        fill.style.width = `${skill.progress}%`;
+    }
+}
+
+function updateGamestate() {
+    updateActiveTask();
+}
+
+function updateRendering() {
+    updateTaskRendering();
+    updateSkillRendering();
+}
+
 function updateActiveTask() {
-    var active_task = gamestate.active_task;
+    var active_task = GAMESTATE.active_task;
     if (!active_task)
     {
         return;
@@ -92,15 +201,11 @@ function updateActiveTask() {
 }
 
 function gameLoop() {
-    updateActiveTask();
-
-
-    updateTaskRendering();
+    updateGamestate();
+    updateRendering();
 }
 
-var gamestate = new Gamestate();
-gamestate.initializeTasks();
-createTasks();
-
+var GAMESTATE = new Gamestate();
+var RENDERING = new Rendering();
 
 setInterval(gameLoop, 100);
