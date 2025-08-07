@@ -16,22 +16,45 @@ class SkillProgress
     }
 }
 
+function calcSkillProgressPerTick(progress: number): number
+{
+    return progress;
+}
+
+function calcSkillXpNeeded(skill: SkillProgress): number
+{
+    const exponent_base = 1.02;
+    const mult = 1;
+
+    return Math.pow(exponent_base, skill.level) * mult;
+}
+
 function addSkillXp(skill: Skill, xp: number) {
-    var skill_entry = GAMESTATE.skills[skill];
-    if (!skill_entry)
-    {
-        console.error("Skill not found");
-        return;
-    }
+    var skill_entry = GAMESTATE.getSkill(skill);
 
     skill_entry.progress += xp;
-    const xp_to_level_up = 100;
+    const xp_to_level_up = calcSkillXpNeeded(skill_entry);
 
     if (skill_entry.progress >= xp_to_level_up)
     {
         skill_entry.progress -= xp_to_level_up;
         skill_entry.level += 1;
     }
+}
+
+// MARK: Tasks
+
+function calcTaskProgressPerTick(task: Task): number
+{
+    var progress = 1;
+
+    for (const skill of task.definition.skills)
+    {
+        const exponent = 1.01;
+        progress *= Math.pow(exponent, GAMESTATE.getSkill(skill).level);
+    }
+
+    return progress;
 }
 
 // MARK: Rendering
@@ -153,6 +176,17 @@ class Gamestate
         this.initializeTasks();
         this.initializeSkills();
     }
+
+    public getSkill(skill: Skill): SkillProgress
+    {
+        const ret = this.skills[skill];
+        if (!ret)
+        {
+            console.log("Couldn't find skill");
+            return new SkillProgress(skill);
+        }
+        return ret;
+    }
 }
 
 function clickTask(task: Task)
@@ -184,7 +218,7 @@ function updateSkillRendering() {
         var fill = RENDERING.skill_elements.get(skill.skill)?.querySelector<HTMLDivElement>(".progress-fill");
         if (fill)
         {
-             fill.style.width = `${skill.progress}%`;
+             fill.style.width = `${skill.progress * 100 / calcSkillXpNeeded(skill)}%`;
         }
         
         var name = RENDERING.skill_elements.get(skill.skill)?.querySelector<HTMLDivElement>(".skill-name");
@@ -218,10 +252,11 @@ function updateActiveTask() {
     
     if (active_task.progress < active_task.definition.max_progress)
     {
-        active_task.progress += 1;
+        const progress = calcTaskProgressPerTick(active_task);
+        active_task.progress += progress;
         for (const skill of active_task.definition.skills)
         {
-            addSkillXp(skill, 5);
+            addSkillXp(skill, calcSkillProgressPerTick(progress));
         }
     }
 }
