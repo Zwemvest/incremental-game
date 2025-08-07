@@ -1,28 +1,24 @@
-import { Task, TaskDefinition, TASKS, Skill } from "./tasks.js";
+import { Task, TaskDefinition, ZONES, Skill, TaskType } from "./zones.js";
 
 // MARK: Skills
 
 let SKILL_NAMES = ["Studying", "Travel"];
 
-class SkillProgress
-{
+class SkillProgress {
     skill: Skill;
     level: number = 0;
     progress: number = 0;
 
-    constructor(skill: Skill)
-    {
+    constructor(skill: Skill) {
         this.skill = skill;
     }
 }
 
-function calcSkillProgressPerTick(progress: number): number
-{
+function calcSkillProgressPerTick(progress: number): number {
     return progress;
 }
 
-function calcSkillXpNeeded(skill: SkillProgress): number
-{
+function calcSkillXpNeeded(skill: SkillProgress): number {
     const exponent_base = 1.02;
     const mult = 1;
 
@@ -35,8 +31,7 @@ function addSkillXp(skill: Skill, xp: number) {
     skill_entry.progress += xp;
     const xp_to_level_up = calcSkillXpNeeded(skill_entry);
 
-    if (skill_entry.progress >= xp_to_level_up)
-    {
+    if (skill_entry.progress >= xp_to_level_up) {
         skill_entry.progress -= xp_to_level_up;
         skill_entry.level += 1;
     }
@@ -44,12 +39,10 @@ function addSkillXp(skill: Skill, xp: number) {
 
 // MARK: Tasks
 
-function calcTaskProgressPerTick(task: Task): number
-{
+function calcTaskProgressPerTick(task: Task): number {
     var progress = 1;
 
-    for (const skill of task.definition.skills)
-    {
+    for (const skill of task.definition.skills) {
         const exponent = 1.01;
         progress *= Math.pow(exponent, GAMESTATE.getSkill(skill).level);
     }
@@ -57,22 +50,56 @@ function calcTaskProgressPerTick(task: Task): number
     return progress;
 }
 
+function updateActiveTask() {
+    var active_task = GAMESTATE.active_task;
+    if (!active_task) {
+        return;
+    }
+
+    if (active_task.progress < active_task.definition.max_progress) {
+        const progress = calcTaskProgressPerTick(active_task);
+        active_task.progress += progress;
+        modifyEnergy(-calcEnergyDrainPerTick(active_task));
+        for (const skill of active_task.definition.skills) {
+            addSkillXp(skill, calcSkillProgressPerTick(progress));
+        }
+
+        if (active_task.progress >= active_task.definition.max_progress)
+        {
+            finishTask(active_task);
+        }
+    }
+}
+
+function clickTask(task: Task) {
+    if (GAMESTATE.active_task == task) {
+        GAMESTATE.active_task = null;
+    }
+    else {
+        GAMESTATE.active_task = task;
+    }
+}
+
+function finishTask(task: Task)
+{
+    if (task.definition.type == TaskType.Travel)
+    {
+        advanceZone();
+    }
+}
+
 // MARK: Energy
 
-function modifyEnergy(delta: number)
-{
+function modifyEnergy(delta: number) {
     GAMESTATE.current_energy += delta;
 }
 
-function calcEnergyDrainPerTick(task: Task): number
-{
+function calcEnergyDrainPerTick(task: Task): number {
     return 1;
 }
 
-function checkEnergyReset()
-{
-    if (GAMESTATE.current_energy > 0)
-    {
+function checkEnergyReset() {
+    if (GAMESTATE.current_energy > 0) {
         GAMESTATE.did_energy_reset_this_tick = false;
         return;
     }
@@ -80,8 +107,8 @@ function checkEnergyReset()
     doEnergyReset();
 }
 
-function doEnergyReset()
-{
+function doEnergyReset() {
+    GAMESTATE.current_zone = 0;
     GAMESTATE.initializeTasks();
     GAMESTATE.current_energy = GAMESTATE.max_energy;
     GAMESTATE.did_energy_reset_this_tick = true;
@@ -89,15 +116,14 @@ function doEnergyReset()
 
 // MARK: Rendering
 
-function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
-{
+function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering) {
     const task_div = document.createElement("div");
     task_div.className = "task";
 
     const button = document.createElement("button");
     button.className = "task-button";
     button.textContent = `${task.definition.name}`;
-    button.addEventListener("click", () => {clickTask(task);});
+    button.addEventListener("click", () => { clickTask(task); });
 
     const progressFill = document.createElement("div");
     progressFill.className = "progress-fill";
@@ -113,8 +139,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     rendering.task_elements.set(task.definition, task_div);
 }
 
-function createSkillDiv(skill: SkillProgress, skills_div: HTMLElement, rendering: Rendering)
-{
+function createSkillDiv(skill: SkillProgress, skills_div: HTMLElement, rendering: Rendering) {
     const skill_div = document.createElement("div");
     skill_div.className = "skill";
 
@@ -136,17 +161,16 @@ function createSkillDiv(skill: SkillProgress, skills_div: HTMLElement, rendering
     rendering.skill_elements.set(skill.skill, skill_div);
 }
 
-class Rendering
-{
+class Rendering {
     energy_element: HTMLElement;
     task_elements: Map<TaskDefinition, HTMLElement> = new Map();
     skill_elements: Map<Skill, HTMLElement> = new Map();
 
-    public createTasks()
-    {
+    current_zone: number = 0;
+
+    public createTasks() {
         var tasks_div = document.getElementById("tasks");
-        if (!tasks_div)
-        {
+        if (!tasks_div) {
             console.error("The element with ID 'tasks' was not found.");
             return;
         }
@@ -157,11 +181,9 @@ class Rendering
         }
     }
 
-    private createSkills()
-    {
+    private createSkills() {
         var skills_div = document.getElementById("skills");
-        if (!skills_div)
-        {
+        if (!skills_div) {
             console.error("The element with ID 'skills' was not found.");
             return;
         }
@@ -172,17 +194,14 @@ class Rendering
         }
     }
 
-    constructor()
-    {
+    constructor() {
         this.createTasks();
         this.createSkills();
         var energy_div = document.getElementById("energy");
-        if (energy_div)
-        {
+        if (energy_div) {
             this.energy_element = energy_div;
         }
-        else
-        {
+        else {
             console.error("The element with ID 'energy' was not found.");
             this.energy_element = new HTMLElement();
         }
@@ -190,18 +209,23 @@ class Rendering
 }
 
 function updateTaskRendering() {
-    if (GAMESTATE.did_energy_reset_this_tick)
+    if (RENDERING.current_zone != GAMESTATE.current_zone)
     {
+        RENDERING.current_zone = GAMESTATE.current_zone;
+        RENDERING.createTasks();
+    }
+
+    // TODO - Track this with a reset count instead
+    if (GAMESTATE.did_energy_reset_this_tick) {
         RENDERING.createTasks();
     }
 
     for (const task of GAMESTATE.tasks) {
         var fill = RENDERING.task_elements.get(task.definition)?.querySelector<HTMLDivElement>(".progress-fill");
-        if (!fill)
-        {
+        if (!fill) {
             continue;
         }
-        
+
         fill.style.width = `${task.progress * 100 / task.definition.max_progress}%`;
     }
 }
@@ -209,18 +233,15 @@ function updateTaskRendering() {
 function updateSkillRendering() {
     for (const skill of GAMESTATE.skills) {
         var fill = RENDERING.skill_elements.get(skill.skill)?.querySelector<HTMLDivElement>(".progress-fill");
-        if (fill)
-        {
+        if (fill) {
             fill.style.width = `${skill.progress * 100 / calcSkillXpNeeded(skill)}%`;
         }
-        
+
         var name = RENDERING.skill_elements.get(skill.skill)?.querySelector<HTMLDivElement>(".skill-name");
-        if (name)
-        {
+        if (name) {
             const new_html = `${SKILL_NAMES[skill.skill]}<br>(${skill.level})`;
             // Avoid flickering in the debugger
-            if (new_html != name.innerHTML)
-            {
+            if (new_html != name.innerHTML) {
                 name.innerHTML = new_html;
             }
         }
@@ -229,18 +250,15 @@ function updateSkillRendering() {
 
 function updateEnergyRendering() {
     var fill = RENDERING.energy_element.querySelector<HTMLDivElement>(".progress-fill");
-    if (fill)
-    {
+    if (fill) {
         fill.style.width = `${GAMESTATE.current_energy * 100 / GAMESTATE.max_energy}%`;
     }
 
     var value = RENDERING.energy_element.querySelector<HTMLDivElement>(".progress-value");
-    if (value)
-    {
+    if (value) {
         const new_html = `${GAMESTATE.current_energy}`;
         // Avoid flickering in the debugger
-        if (new_html != value.innerHTML)
-        {
+        if (new_html != value.innerHTML) {
             value.textContent = new_html;
         }
     }
@@ -254,10 +272,10 @@ function updateRendering() {
 
 // MARK: Gamestate
 
-class Gamestate
-{
+class Gamestate {
     tasks: Task[] = [];
     active_task: Task | null = null;
+    current_zone: number = 0;
 
     skills: SkillProgress[] = [];
 
@@ -265,34 +283,32 @@ class Gamestate
     max_energy = 100;
     did_energy_reset_this_tick = false;
 
-    public initializeTasks()
-    {
+    public initializeTasks() {
         this.active_task = null;
         this.tasks = [];
 
-        for (const task of TASKS) {
-            this.tasks.push(new Task(task));
+        const zone = ZONES[this.current_zone];
+        if (zone) {
+            for (const task of zone.tasks) {
+                this.tasks.push(new Task(task));
+            }
         }
     }
 
-    private initializeSkills()
-    {
+    private initializeSkills() {
         for (let i = 0; i < Skill.Count; i++) {
             this.skills.push(new SkillProgress(i));
         }
     }
 
-    constructor()
-    {
+    constructor() {
         this.initializeTasks();
         this.initializeSkills();
     }
 
-    public getSkill(skill: Skill): SkillProgress
-    {
+    public getSkill(skill: Skill): SkillProgress {
         const ret = this.skills[skill];
-        if (!ret)
-        {
+        if (!ret) {
             console.log("Couldn't find skill");
             return new SkillProgress(skill);
         }
@@ -300,40 +316,14 @@ class Gamestate
     }
 }
 
-function clickTask(task: Task)
-{
-    if (GAMESTATE.active_task == task)
-    {
-        GAMESTATE.active_task = null;
-    }
-    else
-    {
-        GAMESTATE.active_task = task;
-    }
+function advanceZone() {
+    GAMESTATE.current_zone += 1;
+    GAMESTATE.initializeTasks();
 }
 
 function updateGamestate() {
     updateActiveTask();
     checkEnergyReset();
-}
-
-function updateActiveTask() {
-    var active_task = GAMESTATE.active_task;
-    if (!active_task)
-    {
-        return;
-    }
-    
-    if (active_task.progress < active_task.definition.max_progress)
-    {
-        const progress = calcTaskProgressPerTick(active_task);
-        active_task.progress += progress;
-        modifyEnergy(-calcEnergyDrainPerTick(active_task));
-        for (const skill of active_task.definition.skills)
-        {
-            addSkillXp(skill, calcSkillProgressPerTick(progress));
-        }
-    }
 }
 
 function gameLoop() {
