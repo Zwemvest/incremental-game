@@ -1,11 +1,6 @@
-import { Task, TaskDefinition, TASKS } from "./tasks.js";
+import { Task, TaskDefinition, TASKS, Skill } from "./tasks.js";
 
-enum Skill {
-    Studying,
-    Travel,
-
-    Count
-}
+// MARK: Skills
 
 let SKILL_NAMES = ["Studying", "Travel"];
 
@@ -18,6 +13,24 @@ class SkillProgress
     constructor(skill: Skill)
     {
         this.skill = skill;
+    }
+}
+
+function addSkillXp(skill: Skill, xp: number) {
+    var skill_entry = GAMESTATE.skills[skill];
+    if (!skill_entry)
+    {
+        console.error("Skill not found");
+        return;
+    }
+
+    skill_entry.progress += xp;
+    const xp_to_level_up = 100;
+
+    if (skill_entry.progress >= xp_to_level_up)
+    {
+        skill_entry.progress -= xp_to_level_up;
+        skill_entry.level += 1;
     }
 }
 
@@ -169,12 +182,21 @@ function updateTaskRendering() {
 function updateSkillRendering() {
     for (const skill of GAMESTATE.skills) {
         var fill = RENDERING.skill_elements.get(skill.skill)?.querySelector<HTMLDivElement>(".progress-fill");
-        if (!fill)
+        if (fill)
         {
-            continue;
+             fill.style.width = `${skill.progress}%`;
         }
         
-        fill.style.width = `${skill.progress}%`;
+        var name = RENDERING.skill_elements.get(skill.skill)?.querySelector<HTMLDivElement>(".skill-name");
+        if (name)
+        {
+            const new_html = `${SKILL_NAMES[skill.skill]}<br>(${skill.level})`;
+            // Avoid flickering in the debugger
+            if (new_html != name.innerHTML)
+            {
+                name.innerHTML = new_html;
+            }
+        }
     }
 }
 
@@ -197,6 +219,10 @@ function updateActiveTask() {
     if (active_task.progress < active_task.definition.max_progress)
     {
         active_task.progress += 1;
+        for (const skill of active_task.definition.skills)
+        {
+            addSkillXp(skill, 5);
+        }
     }
 }
 

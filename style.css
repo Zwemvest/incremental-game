@@ -42,4 +42,11 @@ body {
 
 .skill {
     width: 80px;
+    text-align: center;
+}
+
+.skill .progress-bar {
+    width: 80px;
+    text-align: center;
+    margin-top: 5px;
 }
