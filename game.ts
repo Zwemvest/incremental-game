@@ -6,6 +6,7 @@ var TASKS_DIV = document.getElementById("tasks");
 class Gamestate
 {
     tasks: Task[] = [];
+    active_task: Task | null = null;
 
     public initializeTasks()
     {
@@ -17,7 +18,14 @@ class Gamestate
 
 function clickTask(task: Task)
 {
-    task.progress += 1;
+    if (gamestate.active_task == task)
+    {
+        gamestate.active_task = null;
+    }
+    else
+    {
+        gamestate.active_task = task;
+    }
 }
 
 function createTaskDiv(task: Task, tasks_div: HTMLElement)
@@ -27,15 +35,24 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement)
 
     const button = document.createElement("button");
     button.className = "task-button";
+    button.textContent = `${task.definition.name}`;
     button.addEventListener("click", () => {clickTask(task);});
 
+    const progressFill = document.createElement("div");
+    progressFill.className = "progress-fill";
+    progressFill.style.width = "0%";
+    const progressBar = document.createElement("div");
+    progressBar.className = "progress-bar";
+    progressBar.appendChild(progressFill);
+
     task_div.appendChild(button);
+    task_div.appendChild(progressBar);
 
     tasks_div.appendChild(task_div);
     task.html_element = task_div;
 }
 
-function createTasks(gamestate: Gamestate)
+function createTasks()
 {
     if (!TASKS_DIV)
     {
@@ -49,24 +66,41 @@ function createTasks(gamestate: Gamestate)
     }
 }
 
-function updateTaskRendering(gamestate: Gamestate) {
+function updateTaskRendering() {
     for (const task of gamestate.tasks) {
-        var button = task.html_element?.getElementsByClassName("task-button")[0];
-        if (!button)
+        var fill = task.html_element?.querySelector<HTMLDivElement>(".progress-fill");
+        if (!fill)
         {
             continue;
         }
-        button.textContent = `${task.definition.name} - ${task.progress}/${task.definition.max_progress}`;
+        
+        fill.style.width = `${task.progress * 100 / task.definition.max_progress}%`;
     }
 }
 
-function gameLoop(gamestate: Gamestate) {
-    updateTaskRendering(gamestate);
+function updateActiveTask() {
+    var active_task = gamestate.active_task;
+    if (!active_task)
+    {
+        return;
+    }
+    
+    if (active_task.progress < active_task.definition.max_progress)
+    {
+        active_task.progress += 1;
+    }
+}
+
+function gameLoop() {
+    updateActiveTask();
+
+
+    updateTaskRendering();
 }
 
 var gamestate = new Gamestate();
 gamestate.initializeTasks();
-createTasks(gamestate);
+createTasks();
 
 
-setInterval(gameLoop, 100, gamestate);
+setInterval(gameLoop, 100);
