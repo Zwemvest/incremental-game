@@ -69,6 +69,24 @@ function calcEnergyDrainPerTick(task: Task): number
     return 1;
 }
 
+function checkEnergyReset()
+{
+    if (GAMESTATE.current_energy > 0)
+    {
+        GAMESTATE.did_energy_reset_this_tick = false;
+        return;
+    }
+
+    doEnergyReset();
+}
+
+function doEnergyReset()
+{
+    GAMESTATE.initializeTasks();
+    GAMESTATE.current_energy = GAMESTATE.max_energy;
+    GAMESTATE.did_energy_reset_this_tick = true;
+}
+
 // MARK: Rendering
 
 function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
@@ -124,7 +142,7 @@ class Rendering
     task_elements: Map<TaskDefinition, HTMLElement> = new Map();
     skill_elements: Map<Skill, HTMLElement> = new Map();
 
-    private createTasks()
+    public createTasks()
     {
         var tasks_div = document.getElementById("tasks");
         if (!tasks_div)
@@ -171,63 +189,12 @@ class Rendering
     }
 }
 
-// MARK: Gamestate
-
-class Gamestate
-{
-    tasks: Task[] = [];
-    active_task: Task | null = null;
-
-    skills: SkillProgress[] = [];
-
-    current_energy = 100;
-    max_energy = 100;
-
-    private initializeTasks()
-    {
-        for (const task of TASKS) {
-            this.tasks.push(new Task(task));
-        }
-    }
-
-    private initializeSkills()
-    {
-        for (let i = 0; i < Skill.Count; i++) {
-            this.skills.push(new SkillProgress(i));
-        }
-    }
-
-    constructor()
-    {
-        this.initializeTasks();
-        this.initializeSkills();
-    }
-
-    public getSkill(skill: Skill): SkillProgress
-    {
-        const ret = this.skills[skill];
-        if (!ret)
-        {
-            console.log("Couldn't find skill");
-            return new SkillProgress(skill);
-        }
-        return ret;
-    }
-}
-
-function clickTask(task: Task)
-{
-    if (GAMESTATE.active_task == task)
-    {
-        GAMESTATE.active_task = null;
-    }
-    else
-    {
-        GAMESTATE.active_task = task;
-    }
-}
-
 function updateTaskRendering() {
+    if (GAMESTATE.did_energy_reset_this_tick)
+    {
+        RENDERING.createTasks();
+    }
+
     for (const task of GAMESTATE.tasks) {
         var fill = RENDERING.task_elements.get(task.definition)?.querySelector<HTMLDivElement>(".progress-fill");
         if (!fill)
@@ -279,14 +246,75 @@ function updateEnergyRendering() {
     }
 }
 
-function updateGamestate() {
-    updateActiveTask();
-}
-
 function updateRendering() {
     updateTaskRendering();
     updateSkillRendering();
     updateEnergyRendering();
+}
+
+// MARK: Gamestate
+
+class Gamestate
+{
+    tasks: Task[] = [];
+    active_task: Task | null = null;
+
+    skills: SkillProgress[] = [];
+
+    current_energy = 100;
+    max_energy = 100;
+    did_energy_reset_this_tick = false;
+
+    public initializeTasks()
+    {
+        this.active_task = null;
+        this.tasks = [];
+
+        for (const task of TASKS) {
+            this.tasks.push(new Task(task));
+        }
+    }
+
+    private initializeSkills()
+    {
+        for (let i = 0; i < Skill.Count; i++) {
+            this.skills.push(new SkillProgress(i));
+        }
+    }
+
+    constructor()
+    {
+        this.initializeTasks();
+        this.initializeSkills();
+    }
+
+    public getSkill(skill: Skill): SkillProgress
+    {
+        const ret = this.skills[skill];
+        if (!ret)
+        {
+            console.log("Couldn't find skill");
+            return new SkillProgress(skill);
+        }
+        return ret;
+    }
+}
+
+function clickTask(task: Task)
+{
+    if (GAMESTATE.active_task == task)
+    {
+        GAMESTATE.active_task = null;
+    }
+    else
+    {
+        GAMESTATE.active_task = task;
+    }
+}
+
+function updateGamestate() {
+    updateActiveTask();
+    checkEnergyReset();
 }
 
 function updateActiveTask() {
