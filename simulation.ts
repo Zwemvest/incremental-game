@@ -116,6 +116,11 @@ function updateEnabledTasks() {
     }
 }
 
+function resetTasks() {
+    GAMESTATE.initializeTasks();
+    updateEnabledTasks();
+}
+
 // MARK: Energy
 
 function modifyEnergy(delta: number) {
@@ -136,7 +141,7 @@ function checkEnergyReset() {
 
 function doEnergyReset() {
     GAMESTATE.current_zone = 0;
-    GAMESTATE.initializeTasks();
+    resetTasks();
     GAMESTATE.current_energy = GAMESTATE.max_energy;
     GAMESTATE.energy_reset_count += 1;
 }
@@ -189,14 +194,13 @@ export class Gamestate {
     }
 
     public start() {
-        updateEnabledTasks();
+        resetTasks();
     }
 }
 
 function advanceZone() {
     GAMESTATE.current_zone += 1;
-    GAMESTATE.initializeTasks();
-    updateEnabledTasks();
+    resetTasks();
 }
 
 export function updateGamestate() {
