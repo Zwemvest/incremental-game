@@ -38,15 +38,19 @@ function addSkillXp(skill: Skill, xp: number) {
 
 // MARK: Tasks
 
-function calcTaskProgressPerTick(task: Task): number {
-    var progress = 1;
+export function calcTaskProgressMultiplier(task: Task): number {
+    var mult = 1;
 
     for (const skill of task.definition.skills) {
         const exponent = 1.01;
-        progress *= Math.pow(exponent, GAMESTATE.getSkill(skill).level);
+        mult *= Math.pow(exponent, GAMESTATE.getSkill(skill).level);
     }
 
-    return progress;
+    return mult;
+}
+
+function calcTaskProgressPerTick(task: Task): number {
+    return calcTaskProgressMultiplier(task);
 }
 
 function updateActiveTask() {
@@ -115,6 +119,8 @@ function doEnergyReset() {
 // MARK: Gamestate
 
 export class Gamestate {
+    tick_interval_ms = 100;
+
     tasks: Task[] = [];
     active_task: Task | null = null;
     current_zone: number = 0;

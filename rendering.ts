@@ -1,5 +1,5 @@
 import { Task, TaskDefinition, Skill, ZONES } from "./zones.js";
-import { clickTask, SkillProgress, calcSkillXpNeeded } from "./simulation.js";
+import { clickTask, SkillProgress, calcSkillXpNeeded, calcTaskProgressMultiplier } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 
 // MARK: Skills
@@ -84,7 +84,8 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     task_div.appendChild(skillsUsed);
 
     setupTooltip(task_div, function() {
-        return "Test";
+        const estimated_time = estimateTaskTimeInSeconds(task);
+        return `Estimated time: ${estimated_time}s`;
     });
 
     tasks_div.appendChild(task_div);
@@ -105,6 +106,13 @@ function updateTaskRendering() {
 
         fill.style.width = `${task.progress * 100 / task.definition.max_progress}%`;
     }
+}
+
+function estimateTaskTimeInSeconds(task: Task): number {
+    const progress_mult = calcTaskProgressMultiplier(task);
+    const num_ticks = Math.ceil(task.definition.max_progress / progress_mult);
+
+    return num_ticks * GAMESTATE.tick_interval_ms / 1000;
 }
 
 // MARK: Energy
