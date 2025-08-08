@@ -4,7 +4,7 @@ import { GAMESTATE, RENDERING } from "./game.js";
 
 // MARK: Skills
 
-let SKILL_NAMES = ["Studying", "Travel"];
+let SKILL_NAMES = ["Charisma", "Study", "Combat", "Search", "Subterfuge", "Crafting", "Survival", "Travel", "Magic"];
 
 function createSkillDiv(skill: SkillProgress, skills_div: HTMLElement, rendering: Rendering) {
     const skill_div = document.createElement("div");
