@@ -10,3 +10,4 @@ export var GAMESTATE = new Gamestate();
 export var RENDERING = new Rendering();
 
 setInterval(gameLoop, GAMESTATE.tick_interval_ms);
+GAMESTATE.start();

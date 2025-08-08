@@ -94,6 +94,26 @@ function finishTask(task: Task)
     {
         advanceZone();
     }
+
+    updateEnabledTasks();
+}
+
+function updateEnabledTasks() {
+    var has_unfinished_mandatory_task = false;
+
+    for (var task of GAMESTATE.tasks) {
+        const finished = task.progress >= task.definition.max_progress
+        task.enabled = !finished;
+        has_unfinished_mandatory_task = has_unfinished_mandatory_task || (task.definition.type == TaskType.Mandatory && !finished);
+    }
+
+    if (has_unfinished_mandatory_task) {
+        for (var task of GAMESTATE.tasks) {
+            if (task.definition.type == TaskType.Travel) {
+                task.enabled = false;
+            }
+        }
+    }
 }
 
 // MARK: Energy
@@ -167,11 +187,16 @@ export class Gamestate {
         }
         return ret;
     }
+
+    public start() {
+        updateEnabledTasks();
+    }
 }
 
 function advanceZone() {
     GAMESTATE.current_zone += 1;
     GAMESTATE.initializeTasks();
+    updateEnabledTasks();
 }
 
 export function updateGamestate() {

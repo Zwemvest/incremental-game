@@ -30,6 +30,7 @@ export class TaskDefinition {
 export class Task {
     definition: TaskDefinition;
     progress: number = 0;
+    enabled: boolean = true;
 
     constructor(definition: TaskDefinition) {
         this.definition = definition;

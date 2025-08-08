@@ -127,12 +127,17 @@ function updateTaskRendering() {
     }
 
     for (const task of GAMESTATE.tasks) {
-        var fill = RENDERING.task_elements.get(task.definition)?.querySelector<HTMLDivElement>(".progress-fill");
-        if (!fill) {
-            continue;
+        var task_element = RENDERING.task_elements.get(task.definition);
+        var fill = task_element?.querySelector<HTMLDivElement>(".progress-fill");
+        if (fill) {
+            fill.style.width = `${task.progress * 100 / task.definition.max_progress}%`;
         }
-
-        fill.style.width = `${task.progress * 100 / task.definition.max_progress}%`;
+        
+        var button = task_element?.querySelector<HTMLInputElement>(".task-button");
+        if (button)
+        {
+            button.disabled = !task.enabled;
+        }
     }
 }
 
