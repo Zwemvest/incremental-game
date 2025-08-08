@@ -1,5 +1,5 @@
 import { Task, TaskDefinition, Skill, ZONES } from "./zones.js";
-import { clickTask, SkillProgress, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillProgress } from "./simulation.js";
+import { clickTask, SkillProgress, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillProgress, calcEnergyDrainPerTick } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 
 // MARK: Skills
@@ -68,11 +68,9 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     skillsUsed.className = "skills-used-text";
     var skillText = "Skills used: ";
     var skillStrings: string[] = [];
-    for (const skill of task.definition.skills)
-    {
+    for (const skill of task.definition.skills) {
         const name = SKILL_NAMES[skill];
-        if (name)
-        {
+        if (name) {
             skillStrings.push(name);
         }
     }
@@ -83,17 +81,17 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     task_div.appendChild(progressBar);
     task_div.appendChild(skillsUsed);
 
-    setupTooltip(task_div, function() {
-        const estimated_time = estimateTaskTimeInSeconds(task);
-        var tooltip = `Estimated time: ${estimated_time}s`;
+    setupTooltip(task_div, function () {
+        var tooltip = task.definition.name;
+
+        tooltip += `<br><br>Estimated energy used: ${estimateTotalTaskEnergyConsumption(task)}`;
+        tooltip += `<br>Estimated time: ${estimateTaskTimeInSeconds(task)}s`;
         tooltip += "<br>Estimated levels up:";
 
-        for (const skill of task.definition.skills)
-        {
+        for (const skill of task.definition.skills) {
             const skill_progress = GAMESTATE.getSkill(skill);
             const name = SKILL_NAMES[skill];
-            if (!name)
-            {
+            if (!name) {
                 continue;
             }
 
@@ -109,7 +107,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
 
             tooltip += `<br>${name}: ${resulting_level - skill_progress.level}`;
         }
-        
+
         return tooltip;
     });
 
@@ -133,11 +131,14 @@ function updateTaskRendering() {
     }
 }
 
-function estimateTaskTimeInSeconds(task: Task): number {
+function estimateTotalTaskTicks(task: Task): number {
     const progress_mult = calcTaskProgressMultiplier(task);
     const num_ticks = Math.ceil(task.definition.max_progress / progress_mult);
+    return num_ticks;
+}
 
-    return num_ticks * GAMESTATE.tick_interval_ms / 1000;
+function estimateTaskTimeInSeconds(task: Task): number {
+    return estimateTotalTaskTicks(task) * GAMESTATE.tick_interval_ms / 1000;
 }
 
 // MARK: Energy
@@ -157,14 +158,17 @@ function updateEnergyRendering() {
     }
 }
 
+function estimateTotalTaskEnergyConsumption(task: Task): number {
+    return estimateTotalTaskTicks(task) * calcEnergyDrainPerTick(task);
+}
+
 // MARK: Tooltips
 type tooltipLambda = () => string;
 interface ElementWithTooltip extends Element {
     generateTooltip?: tooltipLambda;
 }
 
-function setupTooltip(element: ElementWithTooltip, callback: tooltipLambda)
-{
+function setupTooltip(element: ElementWithTooltip, callback: tooltipLambda) {
     element.generateTooltip = callback;
     element.addEventListener("pointerenter", (e) => {
         showTooltip(element);
@@ -260,10 +264,8 @@ function setupZone() {
     }
 }
 
-function showTooltip(element: ElementWithTooltip)
-{
-    if (!element.generateTooltip)
-    {
+function showTooltip(element: ElementWithTooltip) {
+    if (!element.generateTooltip) {
         console.error("No generateTooltip callback");
         return;
     }
@@ -279,20 +281,6 @@ function showTooltip(element: ElementWithTooltip)
     tooltip_element.style.top = y + "px";
     tooltip_element.style.display = "block";
 }
-
-/*document.addEventListener("pointerover", (e) => {
-    const target = e.target as ElementWithTooltip;
-    if (target && target.generateTooltip) {
-        showTooltip(target);
-    }
-});
-document.addEventListener("pointerleave", (e) => {
-    const target = e.target as ElementWithTooltip;
-    console.log("Generating tooltip for:", target);
-    if (target && target.generateTooltip) {
-        RENDERING.tooltip_element.textContent = "X" + target.generateTooltip();
-    }
-});*/
 
 export function updateRendering() {
     checkZone();

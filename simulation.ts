@@ -102,7 +102,7 @@ function modifyEnergy(delta: number) {
     GAMESTATE.current_energy += delta;
 }
 
-function calcEnergyDrainPerTick(task: Task): number {
+export function calcEnergyDrainPerTick(task: Task): number {
     return 1;
 }
 
