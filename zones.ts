@@ -50,7 +50,7 @@ export const ZONES: Zone[] = [
             { name: "Learn How to Read", type: TaskType.Normal, max_progress: 25, skills: [Skill.Study] },
             { name: "Beg for Money", type: TaskType.Normal, max_progress: 100, skills: [Skill.Charisma] },
             { name: "Hide and Seek", type: TaskType.Normal, max_progress: 100, skills: [Skill.Search, Skill.Subterfuge] },
-            { name: "Whittle Sticks", type: TaskType.Normal, max_progress: 100, skills: [Skill.Crafting] },
+            { name: "Observe Surroundings", type: TaskType.Normal, max_progress: 100, skills: [Skill.Study] },
         ],
     },
     {

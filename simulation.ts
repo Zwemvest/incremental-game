@@ -14,7 +14,8 @@ export class SkillProgress {
 }
 
 export function calcSkillProgress(task_progress: number): number {
-    return task_progress;
+    const xp_mult = 0.25;
+    return task_progress * xp_mult;
 }
 
 export function calcSkillXpNeeded(skill: SkillProgress): number {
