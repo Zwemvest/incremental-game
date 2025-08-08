@@ -1,5 +1,6 @@
 import { Task, TaskDefinition, Skill } from "./zones.js";
-import { clickTask, SkillProgress, GAMESTATE, RENDERING, calcSkillXpNeeded } from "./game.js";
+import { clickTask, SkillProgress, calcSkillXpNeeded } from "./simulation.js";
+import { GAMESTATE, RENDERING } from "./game.js";
 
 let SKILL_NAMES = ["Studying", "Travel"];
 
