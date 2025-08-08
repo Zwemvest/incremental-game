@@ -13,15 +13,19 @@ export class SkillProgress {
     }
 }
 
-function calcSkillProgressPerTick(progress: number): number {
-    return progress;
+export function calcSkillProgress(task_progress: number): number {
+    return task_progress;
 }
 
 export function calcSkillXpNeeded(skill: SkillProgress): number {
+    return calcSkillXpNeededAtLevel(skill.level);
+}
+
+export function calcSkillXpNeededAtLevel(level: number): number {
     const exponent_base = 1.02;
     const mult = 1;
 
-    return Math.pow(exponent_base, skill.level) * mult;
+    return Math.pow(exponent_base, level) * mult;
 }
 
 function addSkillXp(skill: Skill, xp: number) {
@@ -64,7 +68,7 @@ function updateActiveTask() {
         active_task.progress += progress;
         modifyEnergy(-calcEnergyDrainPerTick(active_task));
         for (const skill of active_task.definition.skills) {
-            addSkillXp(skill, calcSkillProgressPerTick(progress));
+            addSkillXp(skill, calcSkillProgress(progress));
         }
 
         if (active_task.progress >= active_task.definition.max_progress)

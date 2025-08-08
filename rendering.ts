@@ -1,5 +1,5 @@
 import { Task, TaskDefinition, Skill, ZONES } from "./zones.js";
-import { clickTask, SkillProgress, calcSkillXpNeeded, calcTaskProgressMultiplier } from "./simulation.js";
+import { clickTask, SkillProgress, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillProgress } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 
 // MARK: Skills
@@ -85,7 +85,32 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
 
     setupTooltip(task_div, function() {
         const estimated_time = estimateTaskTimeInSeconds(task);
-        return `Estimated time: ${estimated_time}s`;
+        var tooltip = `Estimated time: ${estimated_time}s`;
+        tooltip += "<br>Estimated levels up:";
+
+        for (const skill of task.definition.skills)
+        {
+            const skill_progress = GAMESTATE.getSkill(skill);
+            const name = SKILL_NAMES[skill];
+            if (!name)
+            {
+                continue;
+            }
+
+            var xp_gained = calcSkillProgress(task.definition.max_progress);
+            var resulting_level = skill_progress.level;
+            var xp_needed = calcSkillXpNeeded(skill_progress) - skill_progress.progress;
+
+            while (xp_gained > xp_needed) {
+                xp_gained -= xp_needed;
+                resulting_level += 1;
+                xp_needed = calcSkillXpNeededAtLevel(resulting_level);
+            }
+
+            tooltip += `<br>${name}: ${resulting_level - skill_progress.level}`;
+        }
+        
+        return tooltip;
     });
 
     tasks_div.appendChild(task_div);
@@ -248,7 +273,7 @@ function showTooltip(element: ElementWithTooltip)
     const y = elementRect.top;
 
     var tooltip_element = RENDERING.tooltip_element;
-    tooltip_element.textContent = element.generateTooltip();
+    tooltip_element.innerHTML = element.generateTooltip();
 
     tooltip_element.style.left = x + "px";
     tooltip_element.style.top = y + "px";
