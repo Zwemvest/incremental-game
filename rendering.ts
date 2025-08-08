@@ -64,8 +64,24 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     progressBar.className = "progress-bar";
     progressBar.appendChild(progressFill);
 
+    const skillsUsed = document.createElement("p");
+    skillsUsed.className = "skills-used-text";
+    var skillText = "Skills used: ";
+    var skillStrings: string[] = [];
+    for (const skill of task.definition.skills)
+    {
+        const name = SKILL_NAMES[skill];
+        if (name)
+        {
+            skillStrings.push(name);
+        }
+    }
+    skillText += skillStrings.join(", ");
+    skillsUsed.textContent = skillText;
+
     task_div.appendChild(button);
     task_div.appendChild(progressBar);
+    task_div.appendChild(skillsUsed);
 
     tasks_div.appendChild(task_div);
     rendering.task_elements.set(task.definition, task_div);
