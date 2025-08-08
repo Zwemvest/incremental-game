@@ -27,11 +27,13 @@ export class Task {
 }
 
 export class Zone {
+    name: string = "";
     tasks: TaskDefinition[] = [];
 }
 
 export const ZONES: Zone[] = [
     {
+        name: "The Village",
         tasks: [
             { name: "Task 1", type: TaskType.Travel, max_progress: 100, skills: [Skill.Travel] },
             { name: "Task 2", type: TaskType.Normal, max_progress: 50, skills: [Skill.Studying] },
@@ -39,7 +41,8 @@ export const ZONES: Zone[] = [
             { name: "Task 4", type: TaskType.Normal, max_progress: 100, skills: [Skill.Studying] },
         ],
     },
-     {
+    {
+        name: "The Village Watch",
         tasks: [
             { name: "Task 5", type: TaskType.Travel, max_progress: 100, skills: [Skill.Travel] },
             { name: "Task 6", type: TaskType.Normal, max_progress: 50, skills: [Skill.Studying] },

@@ -8,8 +8,21 @@ body {
     margin: 0 auto;
 }
 
-#tasks {
-    max-width: 600px;
+#play-area {
+    display: flex;
+}
+
+#left-column {
+    width: 67%;
+}
+
+#right-column {
+    width: 33%;
+}
+
+#zone-name {
+    text-align: center;
+    margin-top: 0;
 }
 
 .task {

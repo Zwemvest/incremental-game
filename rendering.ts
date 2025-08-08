@@ -1,4 +1,4 @@
-import { Task, TaskDefinition, Skill } from "./zones.js";
+import { Task, TaskDefinition, Skill, ZONES } from "./zones.js";
 import { clickTask, SkillProgress, calcSkillXpNeeded } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 
@@ -72,13 +72,6 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
 }
 
 function updateTaskRendering() {
-    if (RENDERING.current_zone != GAMESTATE.current_zone)
-    {
-        RENDERING.current_zone = GAMESTATE.current_zone;
-        RENDERING.createTasks();
-    }
-
-    // TODO - Track this with a reset count instead
     if (GAMESTATE.energy_reset_count != RENDERING.energy_reset_count) {
         RENDERING.energy_reset_count = GAMESTATE.energy_reset_count;
         RENDERING.createTasks();
@@ -158,10 +151,36 @@ export class Rendering {
             console.error("The element with ID 'energy' was not found.");
             this.energy_element = new HTMLElement();
         }
+
+        setupZone();
+    }
+}
+
+function checkZone() {
+    if (RENDERING.current_zone == GAMESTATE.current_zone) {
+        return;
+    }
+
+    RENDERING.current_zone = GAMESTATE.current_zone;
+    RENDERING.createTasks();
+    setupZone();
+}
+
+function setupZone() {
+    var zone_name = document.getElementById("zone-name");
+    if (!zone_name) {
+        console.error("The element with ID 'zone-name' was not found.");
+        return;
+    }
+
+    const zone = ZONES[GAMESTATE.current_zone];
+    if (zone) {
+        zone_name.textContent = `Zone ${GAMESTATE.current_zone + 1} - ${zone.name}`;
     }
 }
 
 export function updateRendering() {
+    checkZone();
     updateTaskRendering();
     updateSkillRendering();
     updateEnergyRendering();

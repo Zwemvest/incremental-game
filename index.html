@@ -7,15 +7,25 @@
 
 <body>
     <div id="game-area">
-        <div id="energy">
-            <span class="label">Energy</span>
-            <div class="progress-bar">
-                <div class="progress-fill"></div>
-                <span class="progress-value">100</span>
+        <div id="top-bar">
+            <div id="energy">
+                <span class="label">Energy</span>
+                <div class="progress-bar">
+                    <div class="progress-fill"></div>
+                    <span class="progress-value">100</span>
+                </div>
+            </div>
+            <div id="skills"></div>
+        </div>
+
+        <div id="play-area">
+            <div id="left-column">
+                <div id="tasks"></div>
+            </div>
+            <div id="right-column">
+                <h2 id="zone-name">Lorem Ipsum</h2>
             </div>
         </div>
-        <div id="skills"></div>
-        <div id="tasks"></div>
     </div>
 
     <script type="module" src="./build/game.js"></script>
