@@ -1,4 +1,4 @@
-import { Task, TaskDefinition, Skill, ZONES } from "./zones.js";
+import { Task, TaskDefinition, Skill, ZONES, TaskType } from "./zones.js";
 import { clickTask, SkillProgress, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillProgress, calcEnergyDrainPerTick } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 
@@ -51,6 +51,7 @@ function updateSkillRendering() {
 function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering) {
     const task_div = document.createElement("div");
     task_div.className = "task";
+    task_div.classList.add(Object.values(TaskType)[task.definition.type] as string);
 
     const button = document.createElement("button");
     button.className = "task-button";

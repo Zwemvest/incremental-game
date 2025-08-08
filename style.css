@@ -33,6 +33,22 @@ body {
     width: 100%;
 }
 
+.task button:disabled {
+    background: #555;
+}
+
+.task.Travel button:enabled {
+    background: paleturquoise;
+}
+
+.task.Mandatory button:enabled {
+    background: palegoldenrod;
+}
+
+.task.Boss button:enabled {
+    background: palevioletred;
+}
+
 .progress-bar {
     position: relative;
     width: 100%;
