@@ -79,7 +79,8 @@ function updateTaskRendering() {
     }
 
     // TODO - Track this with a reset count instead
-    if (GAMESTATE.did_energy_reset_this_tick) {
+    if (GAMESTATE.energy_reset_count != RENDERING.energy_reset_count) {
+        RENDERING.energy_reset_count = GAMESTATE.energy_reset_count;
         RENDERING.createTasks();
     }
 
@@ -117,6 +118,7 @@ export class Rendering {
     task_elements: Map<TaskDefinition, HTMLElement> = new Map();
     skill_elements: Map<Skill, HTMLElement> = new Map();
 
+    energy_reset_count: number = 0;
     current_zone: number = 0;
 
     public createTasks() {

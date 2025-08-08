@@ -99,7 +99,6 @@ function calcEnergyDrainPerTick(task: Task): number {
 
 function checkEnergyReset() {
     if (GAMESTATE.current_energy > 0) {
-        GAMESTATE.did_energy_reset_this_tick = false;
         return;
     }
 
@@ -110,7 +109,7 @@ function doEnergyReset() {
     GAMESTATE.current_zone = 0;
     GAMESTATE.initializeTasks();
     GAMESTATE.current_energy = GAMESTATE.max_energy;
-    GAMESTATE.did_energy_reset_this_tick = true;
+    GAMESTATE.energy_reset_count += 1;
 }
 
 // MARK: Gamestate
@@ -124,7 +123,7 @@ export class Gamestate {
 
     current_energy = 100;
     max_energy = 100;
-    did_energy_reset_this_tick = false;
+    energy_reset_count = 0;
 
     public initializeTasks() {
         this.active_task = null;
