@@ -95,7 +95,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
                 continue;
             }
 
-            var xp_gained = calcSkillProgress(task.definition.max_progress);
+            var xp_gained = calcSkillProgress(task, task.definition.max_progress);
             var resulting_level = skill_progress.level;
             var xp_needed = calcSkillXpNeeded(skill_progress) - skill_progress.progress;
 
@@ -106,6 +106,11 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
             }
 
             tooltip += `<br>${name}: ${resulting_level - skill_progress.level}`;
+
+            if (task.definition.xp_mult != 1)
+            {
+                tooltip += `<br><br>XP multiplier: ${task.definition.xp_mult}`;
+            }
         }
 
         return tooltip;
