@@ -83,6 +83,10 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     task_div.appendChild(progressBar);
     task_div.appendChild(skillsUsed);
 
+    setupTooltip(task_div, function() {
+        return "Test";
+    });
+
     tasks_div.appendChild(task_div);
     rendering.task_elements.set(task.definition, task_div);
 }
@@ -120,11 +124,29 @@ function updateEnergyRendering() {
     }
 }
 
+// MARK: Tooltips
+type tooltipLambda = () => string;
+interface ElementWithTooltip extends Element {
+    generateTooltip?: tooltipLambda;
+}
+
+function setupTooltip(element: ElementWithTooltip, callback: tooltipLambda)
+{
+    element.generateTooltip = callback;
+    element.addEventListener("pointerenter", (e) => {
+        showTooltip(element);
+    });
+    element.addEventListener("pointerleave", (e) => {
+        RENDERING.tooltip_element.style.display = "none";
+    });
+}
+
 // MARK: Rendering
 
 export class Rendering {
+    tooltip_element: HTMLElement;
     energy_element: HTMLElement;
-    task_elements: Map<TaskDefinition, HTMLElement> = new Map();
+    task_elements: Map<TaskDefinition, ElementWithTooltip> = new Map();
     skill_elements: Map<Skill, HTMLElement> = new Map();
 
     energy_reset_count: number = 0;
@@ -159,6 +181,7 @@ export class Rendering {
     constructor() {
         this.createTasks();
         this.createSkills();
+
         var energy_div = document.getElementById("energy");
         if (energy_div) {
             this.energy_element = energy_div;
@@ -166,6 +189,15 @@ export class Rendering {
         else {
             console.error("The element with ID 'energy' was not found.");
             this.energy_element = new HTMLElement();
+        }
+
+        var tooltip_div = document.getElementById("tooltip");
+        if (tooltip_div) {
+            this.tooltip_element = tooltip_div;
+        }
+        else {
+            console.error("The element with ID 'tooltip' was not found.");
+            this.tooltip_element = new HTMLElement();
         }
 
         setupZone();
@@ -194,6 +226,40 @@ function setupZone() {
         zone_name.textContent = `Zone ${GAMESTATE.current_zone + 1} - ${zone.name}`;
     }
 }
+
+function showTooltip(element: ElementWithTooltip)
+{
+    if (!element.generateTooltip)
+    {
+        console.error("No generateTooltip callback");
+        return;
+    }
+
+    const elementRect = element.getBoundingClientRect();
+    const x = elementRect.right;
+    const y = elementRect.top;
+
+    var tooltip_element = RENDERING.tooltip_element;
+    tooltip_element.textContent = element.generateTooltip();
+
+    tooltip_element.style.left = x + "px";
+    tooltip_element.style.top = y + "px";
+    tooltip_element.style.display = "block";
+}
+
+/*document.addEventListener("pointerover", (e) => {
+    const target = e.target as ElementWithTooltip;
+    if (target && target.generateTooltip) {
+        showTooltip(target);
+    }
+});
+document.addEventListener("pointerleave", (e) => {
+    const target = e.target as ElementWithTooltip;
+    console.log("Generating tooltip for:", target);
+    if (target && target.generateTooltip) {
+        RENDERING.tooltip_element.textContent = "X" + target.generateTooltip();
+    }
+});*/
 
 export function updateRendering() {
     checkZone();
