@@ -1,5 +1,6 @@
 import { Task, ZONES, Skill, TaskType } from "./zones.js";
 import { GAMESTATE } from "./game.js";
+import { Item } from "./items.js";
 
 // MARK: Skills
 
@@ -85,6 +86,7 @@ export function clickTask(task: Task) {
     }
     else {
         GAMESTATE.active_task = task;
+        console.log(GAMESTATE.active_task);
     }
 }
 
@@ -93,6 +95,11 @@ function finishTask(task: Task)
     if (task.definition.type == TaskType.Travel)
     {
         advanceZone();
+    }
+
+    if (task.definition.item != Item.Count)
+    {
+        addItem(task.definition.item, 1);
     }
 
     updateEnabledTasks();
@@ -146,6 +153,14 @@ function doEnergyReset() {
     GAMESTATE.energy_reset_count += 1;
 }
 
+// MARK: Items
+
+function addItem(item: Item, count: number)
+{
+    var oldValue = GAMESTATE.items.get(item) ?? 0;
+    GAMESTATE.items.set(item, oldValue + count);
+}
+
 // MARK: Gamestate
 
 export class Gamestate {
@@ -156,6 +171,7 @@ export class Gamestate {
     current_zone: number = 0;
 
     skills: SkillProgress[] = [];
+    items: Map<Item, number> = new Map();
 
     current_energy = 100;
     max_energy = 100;

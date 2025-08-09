@@ -1,3 +1,5 @@
+import { Item } from "./items.js";
+
 export enum Skill {
     Charisma,
     Study,
@@ -25,6 +27,11 @@ export class TaskDefinition {
     max_progress = 0;
     skills: Skill[] = [];
     xp_mult: number = 1;
+    item: Item = Item.Count;
+
+    constructor(overrides: Partial<TaskDefinition> = {}) {
+        Object.assign(this, overrides);
+    }
 }
 
 export class Task {
@@ -46,63 +53,63 @@ export const ZONES: Zone[] = [
     {
         name: "The Village",
         tasks: [
-            { name: "Join the Watch", type: TaskType.Travel, max_progress: 100, skills: [Skill.Charisma], xp_mult:1 },
-            { name: "Read Noticeboard", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Study], xp_mult:1 },
-            { name: "Train with Weapons", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Combat], xp_mult:1 },
-            { name: "Learn How to Read", type: TaskType.Normal, max_progress: 25, skills: [Skill.Study], xp_mult:1 },
-            { name: "Beg for Money", type: TaskType.Normal, max_progress: 100, skills: [Skill.Charisma], xp_mult:2 },
-            { name: "Hide and Seek", type: TaskType.Normal, max_progress: 100, skills: [Skill.Search, Skill.Subterfuge], xp_mult:1 },
-            { name: "Observe Surroundings", type: TaskType.Normal, max_progress: 100, skills: [Skill.Study], xp_mult:3 },
+            new TaskDefinition({ name: "Join the Watch", type: TaskType.Travel, max_progress: 100, skills: [Skill.Charisma] }),
+            new TaskDefinition({ name: "Read Noticeboard", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Study] }),
+            new TaskDefinition({ name: "Train with Weapons", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Combat] }),
+            new TaskDefinition({ name: "Learn How to Read", max_progress: 25, skills: [Skill.Study] }),
+            new TaskDefinition({ name: "Beg for Money", max_progress: 100, skills: [Skill.Charisma], xp_mult: 2, item: Item.Coin }),
+            new TaskDefinition({ name: "Hide and Seek", max_progress: 100, skills: [Skill.Search, Skill.Subterfuge] }),
+            new TaskDefinition({ name: "Observe Surroundings", max_progress: 100, skills: [Skill.Study], xp_mult: 3 }),
         ],
     },
     {
         name: "The Village Watch",
         tasks: [
-            { name: "Notice Smoke in the Distance", type: TaskType.Travel, max_progress: 100, skills: [Skill.Survival], xp_mult:1 },
-            { name: "Learn Routines", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Study], xp_mult:1 },
-            { name: "Deal with Drunkards", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Charisma], xp_mult:1 },
-            { name: "Chit-chat", type: TaskType.Normal, max_progress: 25, skills: [Skill.Charisma], xp_mult:2 },
-            { name: "Sparring", type: TaskType.Normal, max_progress: 100, skills: [Skill.Combat], xp_mult:1 },
-            { name: "Fletch Arrows", type: TaskType.Normal, max_progress: 100, skills: [Skill.Crafting], xp_mult:1 },
-            { name: "Prepare Travel Supplies", type: TaskType.Normal, max_progress: 100, skills: [Skill.Travel, Skill.Survival], xp_mult:1 },
-            { name: "PERK PLACEHOLDER", type: TaskType.Normal, max_progress: 100, skills: [Skill.Travel, Skill.Survival], xp_mult:1 },
+            new TaskDefinition({ name: "Notice Smoke in the Distance", type: TaskType.Travel, max_progress: 100, skills: [Skill.Survival] }),
+            new TaskDefinition({ name: "Learn Routines", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Study] }),
+            new TaskDefinition({ name: "Deal with Drunkards", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Charisma] }),
+            new TaskDefinition({ name: "Chit-chat", max_progress: 25, skills: [Skill.Charisma], xp_mult: 2 }),
+            new TaskDefinition({ name: "Sparring", max_progress: 100, skills: [Skill.Combat] }),
+            new TaskDefinition({ name: "Fletch Arrows", max_progress: 100, skills: [Skill.Crafting], item: Item.Arrow }),
+            new TaskDefinition({ name: "Prepare Travel Supplies", max_progress: 100, skills: [Skill.Travel, Skill.Survival] }),
+            new TaskDefinition({ name: "PERK PLACEHOLDER", max_progress: 100, skills: [Skill.Travel, Skill.Survival] }),
         ],
     },
     {
         name: "The Raid",
         tasks: [
-            { name: "Enter the Wilderness", type: TaskType.Travel, max_progress: 100, skills: [Skill.Travel], xp_mult:1 },
-            { name: "Fight a Goblin", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Combat], xp_mult:1 },
-            { name: "Warn Villagers", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Charisma], xp_mult:1 },
-            { name: "Salvage Food", type: TaskType.Normal, max_progress: 25, skills: [Skill.Search], xp_mult:1 },
-            { name: "Rescue Villager", type: TaskType.Normal, max_progress: 100, skills: [Skill.Subterfuge, Skill.Search], xp_mult:1 },
-            { name: "Treat Villager Wounds", type: TaskType.Normal, max_progress: 100, skills: [Skill.Survival, Skill.Crafting], xp_mult:1 },
-            { name: "Goblin Warlord", type: TaskType.Boss, max_progress: 100, skills: [Skill.Combat], xp_mult:1 },
+            new TaskDefinition({ name: "Enter the Wilderness", type: TaskType.Travel, max_progress: 100, skills: [Skill.Travel] }),
+            new TaskDefinition({ name: "Fight a Goblin", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Combat] }),
+            new TaskDefinition({ name: "Warn Villagers", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Charisma] }),
+            new TaskDefinition({ name: "Salvage Food", max_progress: 25, skills: [Skill.Search], item: Item.Food }),
+            new TaskDefinition({ name: "Rescue Villager", max_progress: 100, skills: [Skill.Subterfuge, Skill.Search] }),
+            new TaskDefinition({ name: "Treat Villager Wounds", max_progress: 100, skills: [Skill.Survival, Skill.Crafting] }),
+            new TaskDefinition({ name: "Goblin Warlord", type: TaskType.Boss, max_progress: 100, skills: [Skill.Combat] }),
         ],
     },
     {
         name: "The Wilderness",
         tasks: [
-            { name: "Find Cave Entrance", type: TaskType.Travel, max_progress: 100, skills: [Skill.Travel, Skill.Search], xp_mult:1 },
-            { name: "Look for Tracks", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Search, Skill.Subterfuge], xp_mult:1 },
-            { name: "Survive the Night", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Survival], xp_mult:1 },
-            { name: "Find an Amulet", type: TaskType.Mandatory, max_progress: 25, skills: [Skill.Search, Skill.Magic], xp_mult:1 },
-            { name: "Build a Fire", type: TaskType.Normal, max_progress: 100, skills: [Skill.Survival, Skill.Crafting], xp_mult:1 },
-            { name: "Forage for Mushrooms", type: TaskType.Normal, max_progress: 100, skills: [Skill.Search], xp_mult:1 },
-            { name: "Befried a Deer", type: TaskType.Normal, max_progress: 100, skills: [Skill.Charisma], xp_mult:1 },
-            { name: "FOREST CREATURE PLACEHOLDER", type: TaskType.Boss, max_progress: 100, skills: [Skill.Combat], xp_mult:1 },
+            new TaskDefinition({ name: "Find Cave Entrance", type: TaskType.Travel, max_progress: 100, skills: [Skill.Travel, Skill.Search] }),
+            new TaskDefinition({ name: "Look for Tracks", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Search, Skill.Subterfuge] }),
+            new TaskDefinition({ name: "Survive the Night", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Survival] }),
+            new TaskDefinition({ name: "Find an Amulet", type: TaskType.Mandatory, max_progress: 25, skills: [Skill.Search, Skill.Magic] }),
+            new TaskDefinition({ name: "Build a Fire", max_progress: 100, skills: [Skill.Survival, Skill.Crafting] }),
+            new TaskDefinition({ name: "Forage for Mushrooms", max_progress: 100, skills: [Skill.Search], item: Item.Mushroom }),
+            new TaskDefinition({ name: "Befried a Deer", max_progress: 100, skills: [Skill.Charisma] }),
+            new TaskDefinition({ name: "FOREST CREATURE PLACEHOLDER", type: TaskType.Boss, max_progress: 100, skills: [Skill.Combat] }),
         ],
     },
     {
         name: "The Cave System",
         tasks: [
-            { name: "Leave Via Back Entrance", type: TaskType.Travel, max_progress: 100, skills: [Skill.Travel], xp_mult:1 },
-            { name: "Find a Way Through", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Search], xp_mult:1 },
-            { name: "Rescue Captives", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Charisma, Skill.Subterfuge], xp_mult:1 },
-            { name: "Steal Supplies", type: TaskType.Normal, max_progress: 25, skills: [Skill.Subterfuge], xp_mult:1 },
-            { name: "Try Casting a Spell", type: TaskType.Normal, max_progress: 100, skills: [Skill.Magic, Skill.Study], xp_mult:1 },
-            { name: "Inspect Wall Paitings", type: TaskType.Normal, max_progress: 100, skills: [Skill.Study], xp_mult:1 },
-            { name: "Goblin Chieftain", type: TaskType.Boss, max_progress: 100, skills: [Skill.Combat], xp_mult:1 },
+            new TaskDefinition({ name: "Leave Via Back Entrance", type: TaskType.Travel, max_progress: 100, skills: [Skill.Travel] }),
+            new TaskDefinition({ name: "Find a Way Through", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Search] }),
+            new TaskDefinition({ name: "Rescue Captives", type: TaskType.Mandatory, max_progress: 50, skills: [Skill.Charisma, Skill.Subterfuge] }),
+            new TaskDefinition({ name: "Steal Supplies", max_progress: 25, skills: [Skill.Subterfuge], item: Item.GoblinSupplies }),
+            new TaskDefinition({ name: "Try Casting a Spell", max_progress: 100, skills: [Skill.Magic, Skill.Study] }),
+            new TaskDefinition({ name: "Inspect Wall Paitings", max_progress: 100, skills: [Skill.Study] }),
+            new TaskDefinition({ name: "Goblin Chieftain", type: TaskType.Boss, max_progress: 100, skills: [Skill.Combat] }),
         ],
     },
 ]

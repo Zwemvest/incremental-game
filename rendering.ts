@@ -1,5 +1,5 @@
 import { Task, TaskDefinition, Skill, ZONES, TaskType } from "./zones.js";
-import { clickTask, SkillProgress, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillProgress, calcEnergyDrainPerTick } from "./simulation.js";
+import { clickTask, SkillProgress, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillProgress, calcEnergyDrainPerTick, Gamestate } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 
 // MARK: Skills
@@ -133,11 +133,17 @@ function updateTaskRendering() {
         if (fill) {
             fill.style.width = `${task.progress * 100 / task.definition.max_progress}%`;
         }
+        else {
+            console.error("No progress-fill");
+        }
         
         var button = task_element?.querySelector<HTMLInputElement>(".task-button");
         if (button)
         {
             button.disabled = !task.enabled;
+        }
+        else {
+            console.error("No task-button");
         }
     }
 }
@@ -227,9 +233,6 @@ export class Rendering {
     }
 
     constructor() {
-        this.createTasks();
-        this.createSkills();
-
         var energy_div = document.getElementById("energy");
         if (energy_div) {
             this.energy_element = energy_div;
@@ -247,6 +250,12 @@ export class Rendering {
             console.error("The element with ID 'tooltip' was not found.");
             this.tooltip_element = new HTMLElement();
         }
+    }
+
+    public start()
+    {
+        this.createTasks();
+        this.createSkills();
 
         setupZone();
     }
