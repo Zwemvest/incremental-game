@@ -101,3 +101,15 @@ body {
     position: absolute;
     background: #000000AA;
 }
+
+#items {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.item {
+    width: 80px;
+    text-align: center;
+}

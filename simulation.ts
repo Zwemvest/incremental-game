@@ -4,6 +4,8 @@ import { Item } from "./items.js";
 
 // MARK: Skills
 
+var progress_mult = 1;
+
 export class SkillProgress {
     skill: Skill;
     level: number = 0;
@@ -52,7 +54,7 @@ export function calcTaskProgressMultiplier(task: Task): number {
         mult *= Math.pow(exponent, GAMESTATE.getSkill(skill).level);
     }
 
-    return mult;
+    return mult * progress_mult;
 }
 
 function calcTaskProgressPerTick(task: Task): number {
@@ -223,3 +225,5 @@ export function updateGamestate() {
     updateActiveTask();
     checkEnergyReset();
 }
+
+(window as any).setProgressMult = (new_mult: number) => progress_mult = new_mult;

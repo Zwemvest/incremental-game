@@ -1,6 +1,7 @@
 import { Task, TaskDefinition, Skill, ZONES, TaskType } from "./zones.js";
 import { clickTask, SkillProgress, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillProgress, calcEnergyDrainPerTick, Gamestate } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
+import { Item, ITEMS } from "./items.js";
 
 // MARK: Skills
 
@@ -195,6 +196,54 @@ function setupTooltip(element: ElementWithTooltip, callback: tooltipLambda) {
     });
 }
 
+// MARK: Items
+
+function createItemDiv(item: Item, items_div: HTMLElement)
+{
+    const item_div = document.createElement("div");
+    item_div.className = "item";
+
+    const name = document.createElement("div");
+    name.className = "item-name";
+    name.textContent = `${ITEMS[item]?.name}`;
+
+    item_div.appendChild(name);
+
+    items_div.appendChild(item_div);
+    RENDERING.item_elements.set(item, item_div);
+}
+
+function createItems() {
+    var items_div = document.getElementById("items");
+    if (!items_div) {
+        console.error("The element with ID 'items' was not found.");
+        return;
+    }
+
+    items_div.innerHTML = "";
+
+    for (const item of GAMESTATE.items.keys())
+    {
+        createItemDiv(item, items_div);
+    }
+}
+
+function updateItems() {
+    var needs_recreation = false;
+    for (const item of GAMESTATE.items.keys())
+    {
+        if (!RENDERING.item_elements.has(item))
+        {
+            needs_recreation = true;
+        }
+    }
+
+    if (needs_recreation)
+    {
+        createItems();
+    }
+}
+
 // MARK: Rendering
 
 export class Rendering {
@@ -202,6 +251,7 @@ export class Rendering {
     energy_element: HTMLElement;
     task_elements: Map<TaskDefinition, ElementWithTooltip> = new Map();
     skill_elements: Map<Skill, HTMLElement> = new Map();
+    item_elements: Map<Item, HTMLElement> = new Map();
 
     energy_reset_count: number = 0;
     current_zone: number = 0;
@@ -307,4 +357,5 @@ export function updateRendering() {
     updateTaskRendering();
     updateSkillRendering();
     updateEnergyRendering();
+    updateItems();
 }
