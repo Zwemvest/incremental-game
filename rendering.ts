@@ -2,6 +2,7 @@ import { Task, TaskDefinition, SkillType, ZONES, TaskType } from "./zones.js";
 import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS } from "./items.js";
+import { PerkDefinition, PerkType, PERKS } from "./perks.js";
 
 // MARK: Skills
 
@@ -320,6 +321,48 @@ function updateItems() {
     }
 }
 
+// MARK: Perks
+
+function createPerkDiv(perk: PerkType, perks_div: HTMLElement) {
+    const perk_div = document.createElement("div");
+    perk_div.className = "perk";
+
+    var perk_definition = PERKS[perk] as PerkDefinition;
+
+    perk_div.textContent = perk_definition.icon;
+
+    setupTooltip(perk_div, function () {
+        var tooltip = perk_definition.name;
+        tooltip += `<br>${perk_definition.tooltip}`;
+        return tooltip;
+    });
+
+    perks_div.appendChild(perk_div);
+    RENDERING.perk_elements.set(perk, perk_div);
+}
+
+function createPerks() {
+    var perks_div = document.getElementById("perks");
+    if (!perks_div) {
+        console.error("The element with ID 'perks' was not found.");
+        return;
+    }
+
+    perks_div.innerHTML = "";
+
+    for (const perk of GAMESTATE.perks.keys())
+    {
+        createPerkDiv(perk, perks_div);
+    }
+}
+
+function updatePerks() {
+    if (GAMESTATE.perks.size != RENDERING.perk_elements.size)
+    {
+        createPerks();
+    }
+}
+
 // MARK: Rendering
 
 export class Rendering {
@@ -328,6 +371,7 @@ export class Rendering {
     task_elements: Map<TaskDefinition, ElementWithTooltip> = new Map();
     skill_elements: Map<SkillType, HTMLElement> = new Map();
     item_elements: Map<ItemType, HTMLElement> = new Map();
+    perk_elements: Map<PerkType, HTMLElement> = new Map();
 
     energy_reset_count: number = 0;
     current_zone: number = 0;
@@ -384,6 +428,7 @@ export class Rendering {
         this.createSkills();
 
         setupZone();
+        createPerks();
     }
 }
 
@@ -434,4 +479,5 @@ export function updateRendering() {
     updateSkillRendering();
     updateEnergyRendering();
     updateItems();
+    updatePerks();
 }

@@ -15,7 +15,7 @@ export class PerkDefinition {
     icon = "";
 }
 
-export var PerkS: PerkDefinition[] = [
+export var PERKS: PerkDefinition[] = [
     {
         enum: PerkType.Reading, name: "How to Read", tooltip: "Improves Study speed by 50%", icon: "📖",
     },
