@@ -31,8 +31,8 @@ export var ITEMS: ItemDefinition[] = [
         on_consume: (amount) => { GAMESTATE.getSkill(SkillType.Combat).speed_modifier += 0.1 * amount; },
     },
     {
-        enum: ItemType.Food, name: "Food", tooltip: "Improves Survival speed by 10%", icon: "🍲",
-        on_consume: (amount) => { GAMESTATE.getSkill(SkillType.Survival).speed_modifier += 0.1 * amount; },
+        enum: ItemType.Food, name: "Food", tooltip: "Gives 5 Energy", icon: "🍲",
+        on_consume: (amount) => { GAMESTATE.current_energy += 5 * amount; },
     },
     {
         enum: ItemType.Mushroom, name: "Mushroom", tooltip: "Improves Magic speed by 10%", icon: "🍄",
