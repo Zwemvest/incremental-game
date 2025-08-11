@@ -1,6 +1,7 @@
 import { Task, ZONES, SkillType, TaskType } from "./zones.js";
 import { GAMESTATE } from "./game.js";
 import { ItemDefinition, ITEMS, ItemType } from "./items.js";
+import { PerkType } from "./perks.js";
 
 // MARK: Skills
 
@@ -128,6 +129,11 @@ function finishTask(task: Task) {
     {
         task.progress = 0;
     }
+    
+    if (task.reps == task.definition.max_reps && task.definition.perk != PerkType.Count)
+    {
+        addPerk(task.definition.perk);
+    }
 
     updateEnabledTasks();
 }
@@ -211,6 +217,11 @@ function halveItemCounts() {
     }
 }
 
+// MARK: Perks
+function addPerk(perk: PerkType) {
+    GAMESTATE.perks.set(perk, true);
+}
+
 // MARK: Gamestate
 
 export class Gamestate {
@@ -222,6 +233,7 @@ export class Gamestate {
 
     skills: Skill[] = [];
     items: Map<ItemType, number> = new Map();
+    perks: Map<PerkType, boolean> = new Map();
 
     current_energy = 100;
     max_energy = 100;
@@ -257,6 +269,10 @@ export class Gamestate {
             return new Skill(skill);
         }
         return ret;
+    }
+
+    public hasPerk(perk: PerkType): boolean {
+        return this.perks.get(perk) == true;
     }
 
     public start() {

@@ -28,7 +28,7 @@ function createSkillDiv(skill: Skill, skills_div: HTMLElement, rendering: Render
     setupTooltip(skill_div, function () {
         var tooltip = `${SKILL_NAMES[skill.type]}`;
         tooltip += `<br>Speed multiplier: x${calcSkillTaskProgressMultiplier(skill.type).toFixed(2)}`;
-        tooltip += `<br>XP: ${skill.progress.toFixed(2)}/${calcSkillXpNeeded(skill).toFixed(2)})}`;
+        tooltip += `<br>XP: ${skill.progress.toFixed(2)}/${calcSkillXpNeeded(skill).toFixed(2)}`;
         return tooltip;
     });
 
