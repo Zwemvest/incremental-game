@@ -53,6 +53,11 @@ function removeTemporarySkillBonuses() {
 
 // MARK: Tasks
 
+export function calcTaskCost(task: Task): number {
+    const base_cost = 10;
+    return base_cost * task.definition.cost_multiplier;
+}
+
 export function calcTaskProgressMultiplier(task: Task): number {
     var mult = 1;
 
@@ -76,7 +81,8 @@ function updateActiveTask() {
         return;
     }
 
-    if (active_task.progress < active_task.definition.max_progress) {
+    const cost = calcTaskCost(active_task);
+    if (active_task.progress < cost) {
         const progress = calcTaskProgressPerTick(active_task);
         active_task.progress += progress;
         modifyEnergy(-calcEnergyDrainPerTick(active_task));
@@ -84,7 +90,7 @@ function updateActiveTask() {
             addSkillXp(skill, calcSkillProgress(active_task, progress));
         }
 
-        if (active_task.progress >= active_task.definition.max_progress) {
+        if (active_task.progress >= cost) {
             finishTask(active_task);
         }
     }
@@ -116,7 +122,7 @@ function updateEnabledTasks() {
     var has_unfinished_mandatory_task = false;
 
     for (var task of GAMESTATE.tasks) {
-        const finished = task.progress >= task.definition.max_progress
+        const finished = task.progress >= calcTaskCost(task);
         task.enabled = !finished;
         has_unfinished_mandatory_task = has_unfinished_mandatory_task || (task.definition.type == TaskType.Mandatory && !finished);
     }

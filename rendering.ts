@@ -1,5 +1,5 @@
 import { Task, TaskDefinition, SkillType, ZONES, TaskType } from "./zones.js";
-import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillProgress, calcEnergyDrainPerTick, clickItem } from "./simulation.js";
+import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillProgress, calcEnergyDrainPerTick, clickItem, calcTaskCost } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS } from "./items.js";
 
@@ -111,7 +111,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
                 continue;
             }
 
-            var xp_gained = calcSkillProgress(task, task.definition.max_progress);
+            var xp_gained = calcSkillProgress(task, calcTaskCost(task));
             var resulting_level = skill_progress.level;
             var xp_needed = calcSkillXpNeeded(skill_progress) - skill_progress.progress;
 
@@ -146,7 +146,7 @@ function updateTaskRendering() {
         var task_element = RENDERING.task_elements.get(task.definition);
         var fill = task_element?.querySelector<HTMLDivElement>(".progress-fill");
         if (fill) {
-            fill.style.width = `${task.progress * 100 / task.definition.max_progress}%`;
+            fill.style.width = `${task.progress * 100 / calcTaskCost(task)}%`;
         }
         else {
             console.error("No progress-fill");
@@ -165,7 +165,7 @@ function updateTaskRendering() {
 
 function estimateTotalTaskTicks(task: Task): number {
     const progress_mult = calcTaskProgressMultiplier(task);
-    const num_ticks = Math.ceil(task.definition.max_progress / progress_mult);
+    const num_ticks = Math.ceil(calcTaskCost(task) / progress_mult);
     return num_ticks;
 }
 
