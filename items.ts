@@ -17,28 +17,29 @@ export class ItemDefinition {
     enum = ItemType.Count;
     name = "";
     tooltip = "";
+    icon = "";
     on_consume: itemUselambda = () => { };
 }
 
 export var ITEMS: ItemDefinition[] = [
     {
-        enum: ItemType.Coin, name: "Coin", tooltip: "Improves Charisma speed by 10%",
+        enum: ItemType.Coin, name: "Coin", tooltip: "Improves Charisma speed by 10%", icon: "💰",
         on_consume: (amount) => { GAMESTATE.getSkill(SkillType.Charisma).speed_modifier += 0.1 * amount; },
     },
     {
-        enum: ItemType.Arrow, name: "Arrow", tooltip: "Improves Combat speed by 10%",
+        enum: ItemType.Arrow, name: "Arrow", tooltip: "Improves Combat speed by 10%", icon: "🏹",
         on_consume: (amount) => { GAMESTATE.getSkill(SkillType.Combat).speed_modifier += 0.1 * amount; },
     },
     {
-        enum: ItemType.Food, name: "Food", tooltip: "Improves Survival speed by 10%",
+        enum: ItemType.Food, name: "Food", tooltip: "Improves Survival speed by 10%", icon: "🍲",
         on_consume: (amount) => { GAMESTATE.getSkill(SkillType.Survival).speed_modifier += 0.1 * amount; },
     },
     {
-        enum: ItemType.Mushroom, name: "Mushroom", tooltip: "Improves Magic speed by 10%",
+        enum: ItemType.Mushroom, name: "Mushroom", tooltip: "Improves Magic speed by 10%", icon: "🍄",
         on_consume: (amount) => { GAMESTATE.getSkill(SkillType.Magic).speed_modifier += 0.1 * amount; },
     },
     {
-        enum: ItemType.GoblinSupplies, name: "Goblin Supplies", tooltip: "Improves Subterfuge and  Combat speed by 10%",
+        enum: ItemType.GoblinSupplies, name: "Goblin Supplies", tooltip: "Improves Subterfuge and  Combat speed by 10%", icon: "📦",
         on_consume: (amount) => {
             GAMESTATE.getSkill(SkillType.Subterfuge).speed_modifier += 0.1 * amount;
             GAMESTATE.getSkill(SkillType.Combat).speed_modifier += 0.1 * amount;

@@ -31,6 +31,8 @@ body {
 
 .task button {
     width: 100%;
+    display: flex;
+    align-items: center;
 }
 
 .task button:disabled {
@@ -47,6 +49,13 @@ body {
 
 .task.Boss button:enabled {
     background: palevioletred;
+}
+
+.task .task-item-indicator {
+  width: 16px;
+  height: 16px;
+  margin-left: 3px;
+  vertical-align: middle;
 }
 
 .progress-bar {

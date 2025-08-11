@@ -80,6 +80,14 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     skillText += skillStrings.join(", ");
     skillsUsed.textContent = skillText;
 
+    if (task.definition.item != ItemType.Count)
+    {
+        var item_indicator = document.createElement("div");
+        item_indicator.className = "task-item-indicator";
+        item_indicator.textContent = ITEMS[task.definition.item]?.icon as string;
+        button.appendChild(item_indicator);
+    }
+
     task_div.appendChild(button);
     task_div.appendChild(progressBar);
     task_div.appendChild(skillsUsed);
