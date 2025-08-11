@@ -55,10 +55,13 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     task_div.className = "task";
     task_div.classList.add(Object.values(TaskType)[task.definition.type] as string);
 
-    const button = document.createElement("button");
-    button.className = "task-button";
-    button.textContent = `${task.definition.name}`;
-    button.addEventListener("click", () => { clickTask(task); });
+    const task_upper_div = document.createElement("div");
+    task_upper_div.className = "task-upper";
+
+    const task_button = document.createElement("button");
+    task_button.className = "task-button";
+    task_button.textContent = `${task.definition.name}`;
+    task_button.addEventListener("click", () => { clickTask(task); });
 
     const progressFill = document.createElement("div");
     progressFill.className = "progress-fill";
@@ -85,10 +88,26 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
         var item_indicator = document.createElement("div");
         item_indicator.className = "task-item-indicator";
         item_indicator.textContent = ITEMS[task.definition.item]?.icon as string;
-        button.appendChild(item_indicator);
+        task_button.appendChild(item_indicator);
     }
 
-    task_div.appendChild(button);
+    const task_reps_div = document.createElement("div");
+    task_reps_div.className = "task-reps";
+
+    if (task.definition.type != TaskType.Travel)
+    {
+        for (var i = 0; i < task.definition.max_reps; ++i)
+        {
+            const task_rep_div = document.createElement("div");
+            task_rep_div.className = "task-rep";
+            task_reps_div.appendChild(task_rep_div);
+        }
+    }
+
+    task_upper_div.appendChild(task_button);
+    task_upper_div.appendChild(task_reps_div);
+
+    task_div.appendChild(task_upper_div);
     task_div.appendChild(progressBar);
     task_div.appendChild(skillsUsed);
 
@@ -143,8 +162,8 @@ function updateTaskRendering() {
     }
 
     for (const task of GAMESTATE.tasks) {
-        var task_element = RENDERING.task_elements.get(task.definition);
-        var fill = task_element?.querySelector<HTMLDivElement>(".progress-fill");
+        var task_element = RENDERING.task_elements.get(task.definition) as HTMLElement;
+        var fill = task_element.querySelector<HTMLDivElement>(".progress-fill");
         if (fill) {
             fill.style.width = `${task.progress * 100 / calcTaskCost(task)}%`;
         }
@@ -152,13 +171,19 @@ function updateTaskRendering() {
             console.error("No progress-fill");
         }
         
-        var button = task_element?.querySelector<HTMLInputElement>(".task-button");
+        var button = task_element.querySelector<HTMLInputElement>(".task-button");
         if (button)
         {
             button.disabled = !task.enabled;
         }
         else {
             console.error("No task-button");
+        }
+
+        var reps = task_element.getElementsByClassName("task-rep");
+        for (var i = 0; i < task.reps; ++i)
+        {
+            (reps[i] as HTMLElement).classList.add("finished");
         }
     }
 }

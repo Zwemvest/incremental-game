@@ -30,7 +30,7 @@ body {
 }
 
 .task button {
-    width: 100%;
+    width: 50%;
     display: flex;
     align-items: center;
 }
@@ -52,10 +52,30 @@ body {
 }
 
 .task .task-item-indicator {
-  width: 16px;
-  height: 16px;
-  margin-left: 3px;
-  vertical-align: middle;
+    width: 16px;
+    height: 16px;
+    margin-left: 3px;
+    vertical-align: middle;
+}
+
+.task-upper {
+    display: flex;
+}
+
+.task-reps {
+    width: 50%;
+    display: flex;
+}
+
+.task-rep {
+    width: 20px;
+    height: 20px;
+    background: grey;
+    margin: 3px;
+}
+
+.task-rep.finished {
+    background: lightgreen;
 }
 
 .progress-bar {
