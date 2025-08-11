@@ -95,6 +95,11 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     setupTooltip(task_div, function () {
         var tooltip = task.definition.name;
 
+        if (task.definition.item != ItemType.Count)
+        {
+            tooltip += `<br><br>Gives item ${ITEMS[task.definition.item]?.icon}${ITEMS[task.definition.item]?.name}`;
+        }
+
         tooltip += `<br><br>Estimated energy used: ${estimateTotalTaskEnergyConsumption(task)}`;
         tooltip += `<br>Estimated time: ${estimateTaskTimeInSeconds(task)}s`;
         tooltip += "<br>Estimated levels up:";
@@ -268,7 +273,7 @@ function updateItems() {
         {
             var item_definition = ITEMS[item] as ItemDefinition;
             var item_count = GAMESTATE.items.get(item);
-            const text = `${item_definition.name} (${item_count})`;
+            const text = `${item_definition.icon} (${item_count})`;
             if (text != button.textContent)
             {
                 button.textContent = text;
