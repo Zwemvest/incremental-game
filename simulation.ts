@@ -45,6 +45,12 @@ function addSkillXp(skill: SkillType, xp: number) {
     }
 }
 
+function removeTemporarySkillBonuses() {
+    for (var skill of GAMESTATE.skills.values()) {
+        skill.speed_modifier = 1;
+    }
+}
+
 // MARK: Tasks
 
 export function calcTaskProgressMultiplier(task: Task): number {
@@ -78,8 +84,7 @@ function updateActiveTask() {
             addSkillXp(skill, calcSkillProgress(active_task, progress));
         }
 
-        if (active_task.progress >= active_task.definition.max_progress)
-        {
+        if (active_task.progress >= active_task.definition.max_progress) {
             finishTask(active_task);
         }
     }
@@ -95,15 +100,12 @@ export function clickTask(task: Task) {
     }
 }
 
-function finishTask(task: Task)
-{
-    if (task.definition.type == TaskType.Travel)
-    {
+function finishTask(task: Task) {
+    if (task.definition.type == TaskType.Travel) {
         advanceZone();
     }
 
-    if (task.definition.item != ItemType.Count)
-    {
+    if (task.definition.item != ItemType.Count) {
         addItem(task.definition.item, 1);
     }
 
@@ -154,14 +156,16 @@ function checkEnergyReset() {
 function doEnergyReset() {
     GAMESTATE.current_zone = 0;
     resetTasks();
+
     GAMESTATE.current_energy = GAMESTATE.max_energy;
     GAMESTATE.energy_reset_count += 1;
+
+    removeTemporarySkillBonuses();
 }
 
 // MARK: Items
 
-function addItem(item: ItemType, count: number)
-{
+function addItem(item: ItemType, count: number) {
     var oldValue = GAMESTATE.items.get(item) ?? 0;
     GAMESTATE.items.set(item, oldValue + count);
 }
@@ -170,8 +174,7 @@ export function clickItem(item: ItemType) {
     var definition = ITEMS[item] as ItemDefinition;
     var oldValue = GAMESTATE.items.get(item) ?? 0;
 
-    if (oldValue <= 0)
-    {
+    if (oldValue <= 0) {
         console.error("Not held item?");
         return;
     }
