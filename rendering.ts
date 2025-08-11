@@ -99,6 +99,14 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
         task_button.appendChild(item_indicator);
     }
 
+    if (task.definition.perk != PerkType.Count && !GAMESTATE.hasPerk(task.definition.perk))
+    {
+        var item_indicator = document.createElement("div");
+        item_indicator.className = "task-perk-indicator";
+        item_indicator.textContent = PERKS[task.definition.perk]?.icon as string;
+        task_button.appendChild(item_indicator);
+    }
+
     const task_reps_div = document.createElement("div");
     task_reps_div.className = "task-reps";
 
@@ -125,6 +133,11 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
         if (task.definition.item != ItemType.Count)
         {
             tooltip += `<br><br>Gives item ${ITEMS[task.definition.item]?.icon}${ITEMS[task.definition.item]?.name}`;
+        }
+
+        if (task.definition.perk != PerkType.Count && !GAMESTATE.hasPerk(task.definition.perk))
+        {
+            tooltip += `<br><br>Gives a permanent Perk`;
         }
 
         tooltip += `<br><br>Estimated energy used: ${estimateTotalTaskEnergyConsumption(task)}`;
