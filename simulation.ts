@@ -173,6 +173,7 @@ function doEnergyReset() {
     GAMESTATE.energy_reset_count += 1;
 
     removeTemporarySkillBonuses();
+    halveItemCounts();
 }
 
 // MARK: Items
@@ -193,6 +194,13 @@ export function clickItem(item: ItemType) {
 
     definition.on_consume(oldValue);
     GAMESTATE.items.set(item, 0);
+}
+
+function halveItemCounts() {
+    for (var [key, value] of GAMESTATE.items)
+    {
+        GAMESTATE.items.set(key, Math.ceil(value / 2));
+    }
 }
 
 // MARK: Gamestate
