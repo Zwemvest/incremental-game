@@ -1,5 +1,5 @@
 import { Task, TaskDefinition, SkillType, ZONES, TaskType } from "./zones.js";
-import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillProgress, calcEnergyDrainPerTick, clickItem, calcTaskCost } from "./simulation.js";
+import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS } from "./items.js";
 
@@ -24,6 +24,13 @@ function createSkillDiv(skill: Skill, skills_div: HTMLElement, rendering: Render
 
     skill_div.appendChild(name);
     skill_div.appendChild(progressBar);
+
+    setupTooltip(skill_div, function () {
+        var tooltip = `${SKILL_NAMES[skill.type]}`;
+        tooltip += `<br>Speed multiplier: x${calcSkillTaskProgressMultiplier(skill.type).toFixed(2)}`;
+        tooltip += `<br>XP: ${skill.progress.toFixed(2)}/${calcSkillXpNeeded(skill).toFixed(2)})}`;
+        return tooltip;
+    });
 
     skills_div.appendChild(skill_div);
     rendering.skill_elements.set(skill.type, skill_div);
@@ -130,7 +137,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
                 continue;
             }
 
-            var xp_gained = calcSkillProgress(task, calcTaskCost(task));
+            var xp_gained = calcSkillXp(task, calcTaskCost(task));
             var resulting_level = skill_progress.level;
             var xp_needed = calcSkillXpNeeded(skill_progress) - skill_progress.progress;
 

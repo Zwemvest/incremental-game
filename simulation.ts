@@ -17,7 +17,7 @@ export class Skill {
     }
 }
 
-export function calcSkillProgress(task: Task, task_progress: number): number {
+export function calcSkillXp(task: Task, task_progress: number): number {
     const xp_mult = 0.25;
     return task_progress * xp_mult * task.definition.xp_mult;
 }
@@ -51,6 +51,17 @@ function removeTemporarySkillBonuses() {
     }
 }
 
+export function calcSkillTaskProgressMultiplier(skill_type: SkillType): number {
+    var mult = 1;
+
+    const exponent = 1.01;
+    var skill = GAMESTATE.getSkill(skill_type);
+    mult *= Math.pow(exponent, skill.level);
+    mult *= skill.speed_modifier;
+
+    return mult;
+}
+
 // MARK: Tasks
 
 export function calcTaskCost(task: Task): number {
@@ -62,10 +73,7 @@ export function calcTaskProgressMultiplier(task: Task): number {
     var mult = 1;
 
     for (const skill_type of task.definition.skills) {
-        const exponent = 1.01;
-        var skill = GAMESTATE.getSkill(skill_type);
-        mult *= Math.pow(exponent, skill.level);
-        mult *= skill.speed_modifier;
+        mult *= calcSkillTaskProgressMultiplier(skill_type);
     }
 
     return mult * progress_mult;
@@ -87,7 +95,7 @@ function updateActiveTask() {
         active_task.progress += progress;
         modifyEnergy(-calcEnergyDrainPerTick(active_task));
         for (const skill of active_task.definition.skills) {
-            addSkillXp(skill, calcSkillProgress(active_task, progress));
+            addSkillXp(skill, calcSkillXp(active_task, progress));
         }
 
         if (active_task.progress >= cost) {
