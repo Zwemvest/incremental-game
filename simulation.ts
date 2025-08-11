@@ -1,18 +1,19 @@
-import { Task, ZONES, Skill, TaskType } from "./zones.js";
+import { Task, ZONES, SkillType, TaskType } from "./zones.js";
 import { GAMESTATE } from "./game.js";
-import { Item } from "./items.js";
+import { ItemDefinition, ITEMS, ItemType } from "./items.js";
 
 // MARK: Skills
 
 var progress_mult = 1;
 
-export class SkillProgress {
-    skill: Skill;
+export class Skill {
+    type: SkillType;
     level: number = 0;
     progress: number = 0;
+    speed_modifier: number = 1;
 
-    constructor(skill: Skill) {
-        this.skill = skill;
+    constructor(type: SkillType) {
+        this.type = type;
     }
 }
 
@@ -21,7 +22,7 @@ export function calcSkillProgress(task: Task, task_progress: number): number {
     return task_progress * xp_mult * task.definition.xp_mult;
 }
 
-export function calcSkillXpNeeded(skill: SkillProgress): number {
+export function calcSkillXpNeeded(skill: Skill): number {
     return calcSkillXpNeededAtLevel(skill.level);
 }
 
@@ -32,7 +33,7 @@ export function calcSkillXpNeededAtLevel(level: number): number {
     return Math.pow(exponent_base, level) * mult;
 }
 
-function addSkillXp(skill: Skill, xp: number) {
+function addSkillXp(skill: SkillType, xp: number) {
     var skill_entry = GAMESTATE.getSkill(skill);
 
     skill_entry.progress += xp;
@@ -49,9 +50,11 @@ function addSkillXp(skill: Skill, xp: number) {
 export function calcTaskProgressMultiplier(task: Task): number {
     var mult = 1;
 
-    for (const skill of task.definition.skills) {
+    for (const skill_type of task.definition.skills) {
         const exponent = 1.01;
-        mult *= Math.pow(exponent, GAMESTATE.getSkill(skill).level);
+        var skill = GAMESTATE.getSkill(skill_type);
+        mult *= Math.pow(exponent, skill.level);
+        mult *= skill.speed_modifier;
     }
 
     return mult * progress_mult;
@@ -99,7 +102,7 @@ function finishTask(task: Task)
         advanceZone();
     }
 
-    if (task.definition.item != Item.Count)
+    if (task.definition.item != ItemType.Count)
     {
         addItem(task.definition.item, 1);
     }
@@ -157,10 +160,24 @@ function doEnergyReset() {
 
 // MARK: Items
 
-function addItem(item: Item, count: number)
+function addItem(item: ItemType, count: number)
 {
     var oldValue = GAMESTATE.items.get(item) ?? 0;
     GAMESTATE.items.set(item, oldValue + count);
+}
+
+export function clickItem(item: ItemType) {
+    var definition = ITEMS[item] as ItemDefinition;
+    var oldValue = GAMESTATE.items.get(item) ?? 0;
+
+    if (oldValue <= 0)
+    {
+        console.error("Not held item?");
+        return;
+    }
+
+    definition.on_consume(oldValue);
+    GAMESTATE.items.set(item, 0);
 }
 
 // MARK: Gamestate
@@ -172,8 +189,8 @@ export class Gamestate {
     active_task: Task | null = null;
     current_zone: number = 0;
 
-    skills: SkillProgress[] = [];
-    items: Map<Item, number> = new Map();
+    skills: Skill[] = [];
+    items: Map<ItemType, number> = new Map();
 
     current_energy = 100;
     max_energy = 100;
@@ -192,8 +209,8 @@ export class Gamestate {
     }
 
     private initializeSkills() {
-        for (let i = 0; i < Skill.Count; i++) {
-            this.skills.push(new SkillProgress(i));
+        for (let i = 0; i < SkillType.Count; i++) {
+            this.skills.push(new Skill(i));
         }
     }
 
@@ -202,11 +219,11 @@ export class Gamestate {
         this.initializeSkills();
     }
 
-    public getSkill(skill: Skill): SkillProgress {
+    public getSkill(skill: SkillType): Skill {
         const ret = this.skills[skill];
         if (!ret) {
             console.log("Couldn't find skill");
-            return new SkillProgress(skill);
+            return new Skill(skill);
         }
         return ret;
     }

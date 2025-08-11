@@ -1,19 +1,19 @@
-import { Task, TaskDefinition, Skill, ZONES, TaskType } from "./zones.js";
-import { clickTask, SkillProgress, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillProgress, calcEnergyDrainPerTick, Gamestate } from "./simulation.js";
+import { Task, TaskDefinition, SkillType, ZONES, TaskType } from "./zones.js";
+import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillProgress, calcEnergyDrainPerTick, clickItem } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
-import { Item, ItemDefinition, ITEMS } from "./items.js";
+import { ItemType, ItemDefinition, ITEMS } from "./items.js";
 
 // MARK: Skills
 
 let SKILL_NAMES = ["Charisma", "Study", "Combat", "Search", "Subterfuge", "Crafting", "Survival", "Travel", "Magic"];
 
-function createSkillDiv(skill: SkillProgress, skills_div: HTMLElement, rendering: Rendering) {
+function createSkillDiv(skill: Skill, skills_div: HTMLElement, rendering: Rendering) {
     const skill_div = document.createElement("div");
     skill_div.className = "skill";
 
     const name = document.createElement("div");
     name.className = "skill-name";
-    name.textContent = `${SKILL_NAMES[skill.skill]}`;
+    name.textContent = `${SKILL_NAMES[skill.type]}`;
 
     const progressFill = document.createElement("div");
     progressFill.className = "progress-fill";
@@ -26,19 +26,20 @@ function createSkillDiv(skill: SkillProgress, skills_div: HTMLElement, rendering
     skill_div.appendChild(progressBar);
 
     skills_div.appendChild(skill_div);
-    rendering.skill_elements.set(skill.skill, skill_div);
+    rendering.skill_elements.set(skill.type, skill_div);
 }
 
 function updateSkillRendering() {
     for (const skill of GAMESTATE.skills) {
-        var fill = RENDERING.skill_elements.get(skill.skill)?.querySelector<HTMLDivElement>(".progress-fill");
+        var element = RENDERING.skill_elements.get(skill.type) as HTMLElement;
+        var fill = element.querySelector<HTMLDivElement>(".progress-fill");
         if (fill) {
             fill.style.width = `${skill.progress * 100 / calcSkillXpNeeded(skill)}%`;
         }
 
-        var name = RENDERING.skill_elements.get(skill.skill)?.querySelector<HTMLDivElement>(".skill-name");
+        var name = element.querySelector<HTMLDivElement>(".skill-name");
         if (name) {
-            const new_html = `${SKILL_NAMES[skill.skill]}<br>(${skill.level})`;
+            const new_html = `${SKILL_NAMES[skill.type]}<br>(${skill.level})`;
             // Avoid flickering in the debugger
             if (new_html != name.innerHTML) {
                 name.innerHTML = new_html;
@@ -198,18 +199,18 @@ function setupTooltip(element: ElementWithTooltip, callback: tooltipLambda) {
 
 // MARK: Items
 
-function createItemDiv(item: Item, items_div: HTMLElement)
+function createItemDiv(item: ItemType, items_div: HTMLElement)
 {
     const item_div = document.createElement("div");
     item_div.className = "item";
 
     var item_definition = ITEMS[item] as ItemDefinition;
 
-    const name = document.createElement("div");
-    name.className = "item-name";
-    name.textContent = `${item_definition.name}`;
+    const button = document.createElement("button");
+    button.className = "item-button";
+    button.addEventListener("click", () => { clickItem(item); });
 
-    item_div.appendChild(name);
+    item_div.appendChild(button);
 
     setupTooltip(item_div, function () {
         var tooltip = item_definition.name;
@@ -250,6 +251,28 @@ function updateItems() {
     {
         createItems();
     }
+
+    for (const item of GAMESTATE.items.keys())
+    {
+        var element = RENDERING.item_elements.get(item) as HTMLElement;
+        var button = element.querySelector<HTMLInputElement>(".item-button");
+        if (button)
+        {
+            var item_definition = ITEMS[item] as ItemDefinition;
+            var item_count = GAMESTATE.items.get(item);
+            const text = `${item_definition.name} (${item_count})`;
+            if (text != button.textContent)
+            {
+                button.textContent = text;
+            }
+
+            button.disabled = item_count == 0;
+        }
+        else
+        {
+            console.error("Couldn't find item-button");
+        }
+    }
 }
 
 // MARK: Rendering
@@ -258,8 +281,8 @@ export class Rendering {
     tooltip_element: HTMLElement;
     energy_element: HTMLElement;
     task_elements: Map<TaskDefinition, ElementWithTooltip> = new Map();
-    skill_elements: Map<Skill, HTMLElement> = new Map();
-    item_elements: Map<Item, HTMLElement> = new Map();
+    skill_elements: Map<SkillType, HTMLElement> = new Map();
+    item_elements: Map<ItemType, HTMLElement> = new Map();
 
     energy_reset_count: number = 0;
     current_zone: number = 0;
