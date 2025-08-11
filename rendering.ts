@@ -1,7 +1,7 @@
 import { Task, TaskDefinition, Skill, ZONES, TaskType } from "./zones.js";
 import { clickTask, SkillProgress, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillProgress, calcEnergyDrainPerTick, Gamestate } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
-import { Item, ITEMS } from "./items.js";
+import { Item, ItemDefinition, ITEMS } from "./items.js";
 
 // MARK: Skills
 
@@ -203,11 +203,19 @@ function createItemDiv(item: Item, items_div: HTMLElement)
     const item_div = document.createElement("div");
     item_div.className = "item";
 
+    var item_definition = ITEMS[item] as ItemDefinition;
+
     const name = document.createElement("div");
     name.className = "item-name";
-    name.textContent = `${ITEMS[item]?.name}`;
+    name.textContent = `${item_definition.name}`;
 
     item_div.appendChild(name);
+
+    setupTooltip(item_div, function () {
+        var tooltip = item_definition.name;
+        tooltip += `<br>${item_definition.tooltip}`;
+        return tooltip;
+    });
 
     items_div.appendChild(item_div);
     RENDERING.item_elements.set(item, item_div);
