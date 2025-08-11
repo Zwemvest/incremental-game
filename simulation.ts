@@ -115,6 +115,12 @@ function finishTask(task: Task) {
         addItem(task.definition.item, 1);
     }
 
+    task.reps += 1;
+    if (task.reps < task.definition.max_reps)
+    {
+        task.progress = 0;
+    }
+
     updateEnabledTasks();
 }
 
@@ -122,7 +128,7 @@ function updateEnabledTasks() {
     var has_unfinished_mandatory_task = false;
 
     for (var task of GAMESTATE.tasks) {
-        const finished = task.progress >= calcTaskCost(task);
+        const finished = task.reps >= task.definition.max_reps;
         task.enabled = !finished;
         has_unfinished_mandatory_task = has_unfinished_mandatory_task || (task.definition.type == TaskType.Mandatory && !finished);
     }
