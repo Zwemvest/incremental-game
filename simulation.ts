@@ -60,6 +60,24 @@ export function calcSkillTaskProgressMultiplier(skill_type: SkillType): number {
     mult *= Math.pow(exponent, skill.level);
     mult *= skill.speed_modifier;
 
+    switch (skill_type) {
+        case SkillType.Study:
+            if (GAMESTATE.hasPerk(PerkType.Reading)) {
+                mult *= 1.5;
+            }
+            break;
+        case SkillType.Charisma:
+            if (GAMESTATE.hasPerk(PerkType.VillagerGratitude)) {
+                mult *= 1.5;
+            }
+            break;
+        case SkillType.Magic:
+            if (GAMESTATE.hasPerk(PerkType.Amulet)) {
+                mult *= 1.5;
+            }
+            break;
+    }
+
     return mult;
 }
 
@@ -125,13 +143,11 @@ function finishTask(task: Task) {
     }
 
     task.reps += 1;
-    if (task.reps < task.definition.max_reps)
-    {
+    if (task.reps < task.definition.max_reps) {
         task.progress = 0;
     }
-    
-    if (task.reps == task.definition.max_reps && task.definition.perk != PerkType.Count)
-    {
+
+    if (task.reps == task.definition.max_reps && task.definition.perk != PerkType.Count) {
         addPerk(task.definition.perk);
     }
 
@@ -211,14 +227,18 @@ export function clickItem(item: ItemType) {
 }
 
 function halveItemCounts() {
-    for (var [key, value] of GAMESTATE.items)
-    {
+    for (var [key, value] of GAMESTATE.items) {
         GAMESTATE.items.set(key, Math.ceil(value / 2));
     }
 }
 
 // MARK: Perks
 function addPerk(perk: PerkType) {
+    if (perk == PerkType.EnergySpell && !GAMESTATE.hasPerk(perk))
+    {
+        GAMESTATE.max_energy += 50;
+    }
+
     GAMESTATE.perks.set(perk, true);
 }
 
