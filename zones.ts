@@ -31,6 +31,7 @@ export class TaskDefinition {
     item: ItemType = ItemType.Count;
     perk: PerkType = PerkType.Count;
     max_reps: number = 1;
+    zone_id: number = 0;
 
     constructor(overrides: Partial<TaskDefinition> = {}) {
         Object.assign(this, overrides);
@@ -118,3 +119,9 @@ export const ZONES: Zone[] = [
     },
 ]
 
+ZONES.forEach((zone, index) => {
+    for (var task of zone.tasks)
+    {
+        task.zone_id = index;
+    }
+} );

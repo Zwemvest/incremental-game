@@ -112,7 +112,10 @@ function storeSkillLevelsForNextGameOver() {
 
 export function calcTaskCost(task: Task): number {
     const base_cost = 10;
-    return base_cost * task.definition.cost_multiplier;
+    const zone_exponent = 1.5;
+    const zone_mult = Math.pow(zone_exponent, task.definition.zone_id);
+
+    return base_cost * task.definition.cost_multiplier * zone_mult;
 }
 
 export function calcTaskProgressMultiplier(task: Task): number {
