@@ -444,6 +444,9 @@ export class Rendering {
         createPerks();
 
         updateRendering();
+
+        // Unhide the game now that it's ready
+        (document.getElementById("game-area") as HTMLElement).style.display = "block";
     }
 }
 
