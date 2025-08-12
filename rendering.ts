@@ -442,6 +442,8 @@ export class Rendering {
 
         setupZone();
         createPerks();
+
+        updateRendering();
     }
 }
 

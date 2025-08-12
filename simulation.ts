@@ -84,7 +84,7 @@ export function calcSkillTaskProgressMultiplier(skill_type: SkillType): number {
 export function getSkill(skill: SkillType): Skill {
     const ret = GAMESTATE.skills[skill];
     if (!ret) {
-        console.log("Couldn't find skill");
+        console.error("Couldn't find skill");
         return new Skill(skill);
     }
     return ret;
@@ -144,7 +144,6 @@ export function clickTask(task: Task) {
     }
     else {
         GAMESTATE.active_task = task;
-        console.log(GAMESTATE.active_task);
     }
 }
 
@@ -167,6 +166,7 @@ function finishTask(task: Task) {
     }
 
     updateEnabledTasks();
+    saveGame();
 }
 
 function updateEnabledTasks() {
@@ -233,6 +233,7 @@ function doEnergyReset() {
 
     removeTemporarySkillBonuses();
     halveItemCounts();
+    saveGame();
 }
 
 // MARK: Items
@@ -275,6 +276,53 @@ export function hasPerk(perk: PerkType): boolean {
     return GAMESTATE.perks.get(perk) == true;
 }
 
+// MARK: Persistence
+
+function saveGame() {
+    const saveData: any = {};
+
+    for (const key in GAMESTATE) {
+        if (key == "active_task")
+        {
+            continue; // This would feel weird for the player if was persisted
+        }
+
+        if (GAMESTATE.hasOwnProperty(key)) {
+            const value = (GAMESTATE as any)[key];
+            // Check if the value is a Map and convert it to an array
+            if (value instanceof Map) {
+                saveData[key] = Array.from(value.entries());
+            } else {
+                saveData[key] = value;
+            }
+        }
+    }
+
+    // Save to localStorage
+    localStorage.setItem("incrementalGameSave", JSON.stringify(saveData));
+}
+
+function loadGame(): boolean {
+    const saved_game = localStorage.getItem("incrementalGameSave");
+    if (!saved_game)
+    {
+        return false;
+    }
+
+    const data = JSON.parse(saved_game);
+    Object.keys(data).forEach(key => {
+        const value = data[key];
+        // Check if the value is an array of entries and convert it back to a Map
+        if (Array.isArray(value) && value.every(entry => Array.isArray(entry) && entry.length === 2)) {
+            (GAMESTATE as any)[key] = new Map(value);
+        } else {
+            (GAMESTATE as any)[key] = value;
+        }
+    });
+
+    return true;
+}
+
 // MARK: Gamestate
 
 export class Gamestate {
@@ -293,8 +341,11 @@ export class Gamestate {
     energy_reset_count = 0;
 
     public start() {
-        resetTasks();
-        initializeSkills();
+        if (!loadGame())
+        {
+            resetTasks();
+            initializeSkills();
+        }
     }
 }
 

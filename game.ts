@@ -9,8 +9,11 @@ function gameLoop() {
 export var GAMESTATE = new Gamestate();
 export var RENDERING = new Rendering();
 
-setInterval(gameLoop, GAMESTATE.tick_interval_ms);
-GAMESTATE.start();
-RENDERING.start();
+document.addEventListener("DOMContentLoaded", () => {
+    GAMESTATE.start();
+    RENDERING.start();
+
+    setInterval(gameLoop, GAMESTATE.tick_interval_ms);
+});
 
 (window as any).getGamestate = GAMESTATE;
