@@ -34,6 +34,17 @@
     </div>
 
     <div id="tooltip"></div>
+    <div id="game-over-overlay" style="display:none">
+        <div id="game-over-box">
+            <h2 id=>Game Over</h2>
+            <p>You used up all your energy.</p>
+            <p>Half your items will disappear.</p>
+            <p>You keep all your Skills and Perks.</p>
+            <button id="game-over-dismiss">Restart</button>
+            <h3>Skills gained:</h3>
+            <div id="game-over-skillgain"></div>
+        </div>
+    </div>
 
     <script type="module" src="./build/game.js"></script>
     <script type="module" src="./build/simulation.js"></script>

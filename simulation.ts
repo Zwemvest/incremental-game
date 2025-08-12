@@ -52,12 +52,16 @@ function removeTemporarySkillBonuses() {
     }
 }
 
+export function calcSkillTaskProgressMultiplierFromLevel(level: number) : number {
+    const exponent = 1.01;
+    return Math.pow(exponent, level);
+}
+
 export function calcSkillTaskProgressMultiplier(skill_type: SkillType): number {
     var mult = 1;
 
-    const exponent = 1.01;
     var skill = getSkill(skill_type);
-    mult *= Math.pow(exponent, skill.level);
+    mult *= calcSkillTaskProgressMultiplierFromLevel(skill.level);
     mult *= skill.speed_modifier;
 
     switch (skill_type) {
@@ -93,8 +97,16 @@ export function getSkill(skill: SkillType): Skill {
 function initializeSkills() {
     for (let i = 0; i < SkillType.Count; i++) {
         GAMESTATE.skills.push(new Skill(i));
+        GAMESTATE.skills_at_start_of_reset.push(0);
     }
 }
+
+function storeSkillLevelsForNextGameOver() {
+    for (let i = 0; i < SkillType.Count; i++) {
+        GAMESTATE.skills_at_start_of_reset[i] = getSkill(i).level;
+    }
+}
+
 
 // MARK: Tasks
 
@@ -221,18 +233,20 @@ function checkEnergyReset() {
         return;
     }
 
-    doEnergyReset();
+    GAMESTATE.is_in_game_over = true;
 }
 
-function doEnergyReset() {
+export function doEnergyReset() {
     GAMESTATE.current_zone = 0;
     resetTasks();
 
     GAMESTATE.current_energy = GAMESTATE.max_energy;
     GAMESTATE.energy_reset_count += 1;
+    GAMESTATE.is_in_game_over = false;
 
     removeTemporarySkillBonuses();
     halveItemCounts();
+    storeSkillLevelsForNextGameOver();
     saveGame();
 }
 
@@ -329,10 +343,12 @@ export class Gamestate {
     active_task: Task | null = null;
     current_zone: number = 0;
 
+    skills_at_start_of_reset: number[] = [];
     skills: Skill[] = [];
     items: Map<ItemType, number> = new Map();
     perks: Map<PerkType, boolean> = new Map();
 
+    is_in_game_over = false;
     current_energy = 100;
     max_energy = 100;
     energy_reset_count = 0;
@@ -355,6 +371,10 @@ function advanceZone() {
 }
 
 export function updateGamestate() {
+    if (GAMESTATE.is_in_game_over) {
+        return;
+    }
+
     updateActiveTask();
     checkEnergyReset();
 }

@@ -1,5 +1,5 @@
 import { Task, TaskDefinition, SkillType, ZONES, TaskType } from "./zones.js";
-import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk } from "./simulation.js";
+import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS } from "./items.js";
 import { PerkDefinition, PerkType, PERKS } from "./perks.js";
@@ -376,10 +376,73 @@ function updatePerks() {
     }
 }
 
+// MARK: Game over
+
+function populateGameOver(game_over_div: HTMLElement) {
+    game_over_div.style.display = "flex";
+
+    var skill_gain = game_over_div.querySelector("#game-over-skillgain");
+    if (!skill_gain)
+    {
+        console.error("No skill gain text");
+        return;
+    }
+
+    var has_gained_some_skill = false;
+    skill_gain.innerHTML = "";
+
+    for (let i = 0; i < SkillType.Count; i++) {
+        const current_level = getSkill(i).level;
+        const starting_level = GAMESTATE.skills_at_start_of_reset[i] as number;
+        const skill_diff = current_level - starting_level;
+
+        if (skill_diff > 0)
+        {
+            has_gained_some_skill = true;
+            var skill_gain_text = document.createElement("p");
+            skill_gain_text.textContent = `${SKILL_NAMES[i]}: +${skill_diff} (x${calcSkillTaskProgressMultiplierFromLevel(skill_diff).toFixed(2)} speed)`;
+
+            skill_gain.appendChild(skill_gain_text);
+        }
+    }
+
+    if (!has_gained_some_skill)
+    {
+        var skill_gain_text = document.createElement("p");
+        skill_gain_text.textContent = `None`;
+
+        skill_gain.appendChild(skill_gain_text);
+    }
+}
+
+function setupGameOverRestartListener(game_over_div: HTMLElement) {
+    var button = game_over_div.querySelector("#game-over-dismiss");
+
+    if (!button)
+    {
+        console.error("No game over button");
+        return;
+    }
+
+    button.addEventListener("click", () => {
+        game_over_div.style.display = "none";
+        doEnergyReset();
+    });
+}
+
+function updateGameOver() {
+    const showing_game_over = RENDERING.game_over_element.style.display != "none";
+    if (!showing_game_over && GAMESTATE.is_in_game_over)
+    {
+        populateGameOver(RENDERING.game_over_element);
+    }
+}
+
 // MARK: Rendering
 
 export class Rendering {
     tooltip_element: HTMLElement;
+    game_over_element: HTMLElement;
     energy_element: HTMLElement;
     task_elements: Map<TaskDefinition, ElementWithTooltip> = new Map();
     skill_elements: Map<SkillType, HTMLElement> = new Map();
@@ -433,6 +496,15 @@ export class Rendering {
             console.error("The element with ID 'tooltip' was not found.");
             this.tooltip_element = new HTMLElement();
         }
+
+        var game_over_div = document.getElementById("game-over-overlay");
+        if (game_over_div) {
+            this.game_over_element = game_over_div;
+        }
+        else {
+            console.error("The element with ID 'game-over-overlay' was not found.");
+            this.game_over_element = new HTMLElement();
+        }
     }
 
     public start()
@@ -442,6 +514,7 @@ export class Rendering {
 
         setupZone();
         createPerks();
+        setupGameOverRestartListener(this.game_over_element);
 
         updateRendering();
 
@@ -498,4 +571,5 @@ export function updateRendering() {
     updateEnergyRendering();
     updateItems();
     updatePerks();
+    updateGameOver();
 }
