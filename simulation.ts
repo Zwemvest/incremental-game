@@ -19,8 +19,17 @@ export class Skill {
 }
 
 export function calcSkillXp(task: Task, task_progress: number): number {
-    const xp_mult = 0.25;
-    return task_progress * xp_mult * task.definition_id.xp_mult;
+    const xp_mult = 8;
+    var xp = task_progress * xp_mult * task.definition_id.xp_mult;
+
+    if (hasPerk(PerkType.Writing))
+    {
+        xp *= 1.5;
+    }
+
+    xp *= Math.pow(1.1, task.definition_id.zone_id);
+
+    return xp;
 }
 
 export function calcSkillXpNeeded(skill: Skill): number {
@@ -29,9 +38,9 @@ export function calcSkillXpNeeded(skill: Skill): number {
 
 export function calcSkillXpNeededAtLevel(level: number): number {
     const exponent_base = 1.02;
-    const mult = 1;
+    const base_amount = 10;
 
-    return Math.pow(exponent_base, level) * mult;
+    return Math.pow(exponent_base, level) * base_amount;
 }
 
 function addSkillXp(skill: SkillType, xp: number) {
@@ -40,7 +49,7 @@ function addSkillXp(skill: SkillType, xp: number) {
     skill_entry.progress += xp;
     const xp_to_level_up = calcSkillXpNeeded(skill_entry);
 
-    if (skill_entry.progress >= xp_to_level_up) {
+    while (skill_entry.progress >= xp_to_level_up) {
         skill_entry.progress -= xp_to_level_up;
         skill_entry.level += 1;
     }
@@ -57,11 +66,10 @@ export function calcSkillTaskProgressMultiplierFromLevel(level: number): number 
     return Math.pow(exponent, level);
 }
 
-export function calcSkillTaskProgressMultiplier(skill_type: SkillType): number {
+function calcSkillTaskProgressWithoutLevel(skill_type: SkillType): number {
     var mult = 1;
 
     var skill = getSkill(skill_type);
-    mult *= calcSkillTaskProgressMultiplierFromLevel(skill.level);
     mult *= skill.speed_modifier;
 
     switch (skill_type) {
@@ -82,6 +90,13 @@ export function calcSkillTaskProgressMultiplier(skill_type: SkillType): number {
             break;
     }
 
+    return mult;
+}
+
+export function calcSkillTaskProgressMultiplier(skill_type: SkillType): number {
+    var skill = getSkill(skill_type);
+    var mult = calcSkillTaskProgressWithoutLevel(skill_type);
+    mult *= calcSkillTaskProgressMultiplierFromLevel(skill.level);
     return mult;
 }
 
@@ -112,7 +127,7 @@ function storeSkillLevelsForNextGameOver() {
 
 export function calcTaskCost(task: Task): number {
     const base_cost = 10;
-    const zone_exponent = 1.5;
+    const zone_exponent = 1.7;
     const zone_mult = Math.pow(zone_exponent, task.definition_id.zone_id);
 
     return base_cost * task.definition_id.cost_multiplier * zone_mult;
@@ -121,8 +136,16 @@ export function calcTaskCost(task: Task): number {
 export function calcTaskProgressMultiplier(task: Task): number {
     var mult = 1;
 
+    var skill_level_mult = 1;
     for (const skill_type of task.definition_id.skills) {
-        mult *= calcSkillTaskProgressMultiplier(skill_type);
+        skill_level_mult *= calcSkillTaskProgressMultiplierFromLevel(getSkill(skill_type).level);
+    }
+
+    // Avoid multi-skill tasks scaling much faster than all other tasks
+    mult *= Math.pow(skill_level_mult, 1 / task.definition_id.skills.length);
+
+    for (const skill_type of task.definition_id.skills) {
+        mult *= calcSkillTaskProgressWithoutLevel(skill_type);
     }
 
     return mult * progress_mult;
@@ -202,7 +225,7 @@ function updateEnabledTasks() {
     }
 }
 
-function resetTasks() {
+export function resetTasks() {
     initializeTasks();
     updateEnabledTasks();
 }
@@ -320,7 +343,6 @@ export function saveGame() {
         }
         return value;
     });
-    console.log(json);
 
     localStorage.setItem("incrementalGameSave", json);
 }
@@ -337,7 +359,7 @@ function loadGame(): boolean {
         }
         return value;
     });
-    console.log(data);
+
     Object.keys(data).forEach(key => {
         const value = data[key];
         // Check if the value is an array of entries and convert it back to a Map
@@ -397,3 +419,4 @@ export function updateGamestate() {
 }
 
 (window as any).setProgressMult = (new_mult: number) => progress_mult = new_mult;
+(window as any).saveGame = () => saveGame();

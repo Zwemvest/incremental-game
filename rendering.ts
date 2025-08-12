@@ -163,12 +163,13 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
 
             tooltip += `<br>${name}: ${resulting_level - skill_progress.level}`;
 
-            if (task.definition_id.xp_mult != 1)
-            {
-                tooltip += `<br><br>XP multiplier: ${task.definition_id.xp_mult}`;
-            }
         }
-
+        
+        if (task.definition_id.xp_mult != 1)
+        {
+            tooltip += `<br><br>XP multiplier: ${task.definition_id.xp_mult}`;
+        }
+        
         return tooltip;
     });
 

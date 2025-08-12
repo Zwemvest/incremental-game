@@ -1,5 +1,5 @@
 import { Rendering, updateRendering } from "./rendering.js";
-import { Gamestate, saveGame, updateGamestate } from "./simulation.js";
+import { Gamestate, saveGame, updateGamestate, resetTasks } from "./simulation.js";
 
 function gameLoop() {
     updateGamestate();
@@ -23,4 +23,9 @@ document.addEventListener("DOMContentLoaded", () => {
     GAMESTATE.initialize();
     RENDERING.start();
     saveGame();
+}
+(window as any).resetZone = () => {
+    resetTasks();
+    RENDERING = new Rendering();
+    RENDERING.start();
 }

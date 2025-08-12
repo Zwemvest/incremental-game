@@ -24,25 +24,28 @@ export class ItemDefinition {
 
 export var ITEMS: ItemDefinition[] = [
     {
-        enum: ItemType.Coin, name: "Coin", tooltip: "Improves Charisma speed by 10%", icon: "💰",
-        on_consume: (amount) => { getSkill(SkillType.Charisma).speed_modifier += 0.1 * amount; },
+        enum: ItemType.Coin, name: "Coin", tooltip: "Improves Charisma speed by 15%", icon: "💰",
+        on_consume: (amount) => { getSkill(SkillType.Charisma).speed_modifier += 0.15 * amount; },
     },
     {
-        enum: ItemType.Arrow, name: "Arrow", tooltip: "Improves Combat speed by 10%", icon: "🏹",
-        on_consume: (amount) => { getSkill(SkillType.Combat).speed_modifier += 0.1 * amount; },
+        enum: ItemType.Arrow, name: "Arrow", tooltip: "Improves Combat speed by 15%", icon: "🏹",
+        on_consume: (amount) => { getSkill(SkillType.Combat).speed_modifier += 0.15 * amount; },
     },
     {
         enum: ItemType.Food, name: "Food", tooltip: "Gives 5 Energy", icon: "🍲",
         on_consume: (amount) => { GAMESTATE.current_energy += 5 * amount; },
     },
     {
-        enum: ItemType.Mushroom, name: "Mushroom", tooltip: "Improves Magic speed by 10%", icon: "🍄",
-        on_consume: (amount) => { getSkill(SkillType.Magic).speed_modifier += 0.1 * amount; },
+        enum: ItemType.Mushroom, name: "Mushroom", tooltip: "Improves Magic speed by 20% and Search speed by 10%", icon: "🍄",
+        on_consume: (amount) => {
+            getSkill(SkillType.Magic).speed_modifier += 0.2 * amount;
+            getSkill(SkillType.Search).speed_modifier += 0.1 * amount;
+        },
     },
     {
-        enum: ItemType.GoblinSupplies, name: "Goblin Supplies", tooltip: "Improves Subterfuge and  Combat speed by 10%", icon: "📦",
+        enum: ItemType.GoblinSupplies, name: "Goblin Supplies", tooltip: "Improves Subterfuge speed by 15% and Combat speed by 10%", icon: "📦",
         on_consume: (amount) => {
-            getSkill(SkillType.Subterfuge).speed_modifier += 0.1 * amount;
+            getSkill(SkillType.Subterfuge).speed_modifier += 0.15 * amount;
             getSkill(SkillType.Combat).speed_modifier += 0.1 * amount;
         },
     },
