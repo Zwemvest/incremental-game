@@ -1,5 +1,5 @@
 import { Task, TaskDefinition, SkillType, ZONES, TaskType } from "./zones.js";
-import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier } from "./simulation.js";
+import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS } from "./items.js";
 import { PerkDefinition, PerkType, PERKS } from "./perks.js";
@@ -99,7 +99,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
         task_button.appendChild(item_indicator);
     }
 
-    if (task.definition.perk != PerkType.Count && !GAMESTATE.hasPerk(task.definition.perk))
+    if (task.definition.perk != PerkType.Count && !hasPerk(task.definition.perk))
     {
         var item_indicator = document.createElement("div");
         item_indicator.className = "task-perk-indicator";
@@ -135,7 +135,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
             tooltip += `<br><br>Gives item ${ITEMS[task.definition.item]?.icon}${ITEMS[task.definition.item]?.name}`;
         }
 
-        if (task.definition.perk != PerkType.Count && !GAMESTATE.hasPerk(task.definition.perk))
+        if (task.definition.perk != PerkType.Count && !hasPerk(task.definition.perk))
         {
             tooltip += `<br><br>Gives a permanent Perk`;
         }
@@ -145,7 +145,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
         tooltip += "<br>Estimated levels up:";
 
         for (const skill of task.definition.skills) {
-            const skill_progress = GAMESTATE.getSkill(skill);
+            const skill_progress = getSkill(skill);
             const name = SKILL_NAMES[skill];
             if (!name) {
                 continue;

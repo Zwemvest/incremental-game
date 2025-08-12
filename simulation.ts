@@ -35,7 +35,7 @@ export function calcSkillXpNeededAtLevel(level: number): number {
 }
 
 function addSkillXp(skill: SkillType, xp: number) {
-    var skill_entry = GAMESTATE.getSkill(skill);
+    var skill_entry = getSkill(skill);
 
     skill_entry.progress += xp;
     const xp_to_level_up = calcSkillXpNeeded(skill_entry);
@@ -56,29 +56,44 @@ export function calcSkillTaskProgressMultiplier(skill_type: SkillType): number {
     var mult = 1;
 
     const exponent = 1.01;
-    var skill = GAMESTATE.getSkill(skill_type);
+    var skill = getSkill(skill_type);
     mult *= Math.pow(exponent, skill.level);
     mult *= skill.speed_modifier;
 
     switch (skill_type) {
         case SkillType.Study:
-            if (GAMESTATE.hasPerk(PerkType.Reading)) {
+            if (hasPerk(PerkType.Reading)) {
                 mult *= 1.5;
             }
             break;
         case SkillType.Charisma:
-            if (GAMESTATE.hasPerk(PerkType.VillagerGratitude)) {
+            if (hasPerk(PerkType.VillagerGratitude)) {
                 mult *= 1.5;
             }
             break;
         case SkillType.Magic:
-            if (GAMESTATE.hasPerk(PerkType.Amulet)) {
+            if (hasPerk(PerkType.Amulet)) {
                 mult *= 1.5;
             }
             break;
     }
 
     return mult;
+}
+
+export function getSkill(skill: SkillType): Skill {
+    const ret = GAMESTATE.skills[skill];
+    if (!ret) {
+        console.log("Couldn't find skill");
+        return new Skill(skill);
+    }
+    return ret;
+}
+
+function initializeSkills() {
+    for (let i = 0; i < SkillType.Count; i++) {
+        GAMESTATE.skills.push(new Skill(i));
+    }
 }
 
 // MARK: Tasks
@@ -173,7 +188,21 @@ function updateEnabledTasks() {
 }
 
 function resetTasks() {
-    GAMESTATE.initializeTasks();
+    initializeTasks();
+    updateEnabledTasks();
+}
+
+function initializeTasks() {
+    GAMESTATE.active_task = null;
+    GAMESTATE.tasks = [];
+
+    const zone = ZONES[GAMESTATE.current_zone];
+    if (zone) {
+        for (const task of zone.tasks) {
+            GAMESTATE.tasks.push(new Task(task));
+        }
+    }
+
     updateEnabledTasks();
 }
 
@@ -234,12 +263,16 @@ function halveItemCounts() {
 
 // MARK: Perks
 function addPerk(perk: PerkType) {
-    if (perk == PerkType.EnergySpell && !GAMESTATE.hasPerk(perk))
+    if (perk == PerkType.EnergySpell && !hasPerk(perk))
     {
         GAMESTATE.max_energy += 50;
     }
 
     GAMESTATE.perks.set(perk, true);
+}
+
+export function hasPerk(perk: PerkType): boolean {
+    return GAMESTATE.perks.get(perk) == true;
 }
 
 // MARK: Gamestate
@@ -259,44 +292,9 @@ export class Gamestate {
     max_energy = 100;
     energy_reset_count = 0;
 
-    public initializeTasks() {
-        this.active_task = null;
-        this.tasks = [];
-
-        const zone = ZONES[this.current_zone];
-        if (zone) {
-            for (const task of zone.tasks) {
-                this.tasks.push(new Task(task));
-            }
-        }
-    }
-
-    private initializeSkills() {
-        for (let i = 0; i < SkillType.Count; i++) {
-            this.skills.push(new Skill(i));
-        }
-    }
-
-    constructor() {
-        this.initializeTasks();
-        this.initializeSkills();
-    }
-
-    public getSkill(skill: SkillType): Skill {
-        const ret = this.skills[skill];
-        if (!ret) {
-            console.log("Couldn't find skill");
-            return new Skill(skill);
-        }
-        return ret;
-    }
-
-    public hasPerk(perk: PerkType): boolean {
-        return this.perks.get(perk) == true;
-    }
-
     public start() {
         resetTasks();
+        initializeSkills();
     }
 }
 

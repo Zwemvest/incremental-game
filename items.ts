@@ -1,5 +1,6 @@
 import { GAMESTATE } from "./game.js";
 import { SkillType } from "./zones.js";
+import { getSkill } from "./simulation.js"
 
 export enum ItemType {
     Coin,
@@ -24,11 +25,11 @@ export class ItemDefinition {
 export var ITEMS: ItemDefinition[] = [
     {
         enum: ItemType.Coin, name: "Coin", tooltip: "Improves Charisma speed by 10%", icon: "💰",
-        on_consume: (amount) => { GAMESTATE.getSkill(SkillType.Charisma).speed_modifier += 0.1 * amount; },
+        on_consume: (amount) => { getSkill(SkillType.Charisma).speed_modifier += 0.1 * amount; },
     },
     {
         enum: ItemType.Arrow, name: "Arrow", tooltip: "Improves Combat speed by 10%", icon: "🏹",
-        on_consume: (amount) => { GAMESTATE.getSkill(SkillType.Combat).speed_modifier += 0.1 * amount; },
+        on_consume: (amount) => { getSkill(SkillType.Combat).speed_modifier += 0.1 * amount; },
     },
     {
         enum: ItemType.Food, name: "Food", tooltip: "Gives 5 Energy", icon: "🍲",
@@ -36,13 +37,13 @@ export var ITEMS: ItemDefinition[] = [
     },
     {
         enum: ItemType.Mushroom, name: "Mushroom", tooltip: "Improves Magic speed by 10%", icon: "🍄",
-        on_consume: (amount) => { GAMESTATE.getSkill(SkillType.Magic).speed_modifier += 0.1 * amount; },
+        on_consume: (amount) => { getSkill(SkillType.Magic).speed_modifier += 0.1 * amount; },
     },
     {
         enum: ItemType.GoblinSupplies, name: "Goblin Supplies", tooltip: "Improves Subterfuge and  Combat speed by 10%", icon: "📦",
         on_consume: (amount) => {
-            GAMESTATE.getSkill(SkillType.Subterfuge).speed_modifier += 0.1 * amount;
-            GAMESTATE.getSkill(SkillType.Combat).speed_modifier += 0.1 * amount;
+            getSkill(SkillType.Subterfuge).speed_modifier += 0.1 * amount;
+            getSkill(SkillType.Combat).speed_modifier += 0.1 * amount;
         },
     },
 ]
