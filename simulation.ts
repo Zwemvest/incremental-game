@@ -388,6 +388,7 @@ export class Gamestate {
     perks: Map<PerkType, boolean> = new Map();
 
     is_in_game_over = false;
+    is_at_end_of_content = false;
     current_energy = 100;
     max_energy = 100;
     energy_reset_count = 0;
@@ -405,6 +406,12 @@ export class Gamestate {
 }
 
 function advanceZone() {
+    if ((GAMESTATE.current_zone + 1) >= ZONES.length)
+    {
+        GAMESTATE.is_at_end_of_content = true;
+        return;
+    }
+
     GAMESTATE.current_zone += 1;
     resetTasks();
 }

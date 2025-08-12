@@ -178,3 +178,21 @@ body {
 #game-over-box {
     text-align: center;
 }
+
+#end-of-content-overlay {
+    position: fixed;
+    display: flex;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    justify-content: center;
+    align-items: center;
+
+    background: #0008;
+}
+
+#end-of-content-box {
+    text-align: center;
+}
+

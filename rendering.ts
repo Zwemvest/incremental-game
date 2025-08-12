@@ -164,7 +164,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
             tooltip += `<br>${name}: ${resulting_level - skill_progress.level}`;
 
         }
-        
+
         if (task.definition_id.xp_mult != 1)
         {
             tooltip += `<br><br>XP multiplier: ${task.definition_id.xp_mult}`;
@@ -202,10 +202,13 @@ function updateTaskRendering() {
             console.error("No task-button");
         }
 
-        var reps = task_element.getElementsByClassName("task-rep");
-        for (var i = 0; i < task.reps; ++i)
+        if (task.definition_id.type != TaskType.Travel)
         {
-            (reps[i] as HTMLElement).classList.add("finished");
+            var reps = task_element.getElementsByClassName("task-rep");
+            for (var i = 0; i < task.reps; ++i)
+            {
+                (reps[i] as HTMLElement).classList.add("finished");
+            }
         }
     }
 }
@@ -440,11 +443,30 @@ function setupGameOverRestartListener(game_over_div: HTMLElement) {
     });
 }
 
+function populateEndOfContent(end_of_content_div: HTMLElement) {
+    end_of_content_div.style.display = "flex";
+
+    var reset_count = end_of_content_div.querySelector("#end-of-content-reset-count");
+    if (!reset_count)
+    {
+        console.error("No reset count text");
+        return;
+    }
+
+    reset_count.textContent = `You've done ${GAMESTATE.energy_reset_count} energy resets`;
+}
+
 function updateGameOver() {
     const showing_game_over = RENDERING.game_over_element.style.display != "none";
     if (!showing_game_over && GAMESTATE.is_in_game_over)
     {
         populateGameOver(RENDERING.game_over_element);
+    }
+
+    const showing_end_of_content = RENDERING.end_of_content_element.style.display != "none";
+    if (!showing_end_of_content && GAMESTATE.is_at_end_of_content)
+    {
+        populateEndOfContent(RENDERING.end_of_content_element);
     }
 }
 
@@ -461,6 +483,7 @@ function formatOrdinal(n: number): string {
 export class Rendering {
     tooltip_element: HTMLElement;
     game_over_element: HTMLElement;
+    end_of_content_element: HTMLElement;
     energy_element: HTMLElement;
     task_elements: Map<TaskDefinition, ElementWithTooltip> = new Map();
     skill_elements: Map<SkillType, HTMLElement> = new Map();
@@ -522,6 +545,15 @@ export class Rendering {
         else {
             console.error("The element with ID 'game-over-overlay' was not found.");
             this.game_over_element = new HTMLElement();
+        }
+
+        var end_of_content_div = document.getElementById("end-of-content-overlay");
+        if (end_of_content_div) {
+            this.end_of_content_element = end_of_content_div;
+        }
+        else {
+            console.error("The element with ID 'end-of-content-overlay' was not found.");
+            this.end_of_content_element = new HTMLElement();
         }
     }
 
