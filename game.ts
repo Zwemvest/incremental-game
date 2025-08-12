@@ -17,3 +17,9 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 (window as any).getGamestate = GAMESTATE;
+(window as any).resetSave = () => {
+    GAMESTATE = new Gamestate();
+    RENDERING = new Rendering();
+    GAMESTATE.initialize();
+    RENDERING.start();
+}

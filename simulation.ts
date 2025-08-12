@@ -264,8 +264,7 @@ function halveItemCounts() {
 
 // MARK: Perks
 function addPerk(perk: PerkType) {
-    if (perk == PerkType.EnergySpell && !hasPerk(perk))
-    {
+    if (perk == PerkType.EnergySpell && !hasPerk(perk)) {
         GAMESTATE.max_energy += 50;
     }
 
@@ -282,8 +281,7 @@ function saveGame() {
     const saveData: any = {};
 
     for (const key in GAMESTATE) {
-        if (key == "active_task")
-        {
+        if (key == "active_task") {
             continue; // This would feel weird for the player if was persisted
         }
 
@@ -304,8 +302,7 @@ function saveGame() {
 
 function loadGame(): boolean {
     const saved_game = localStorage.getItem("incrementalGameSave");
-    if (!saved_game)
-    {
+    if (!saved_game) {
         return false;
     }
 
@@ -341,11 +338,14 @@ export class Gamestate {
     energy_reset_count = 0;
 
     public start() {
-        if (!loadGame())
-        {
-            resetTasks();
-            initializeSkills();
+        if (!loadGame()) {
+            this.initialize();
         }
+    }
+
+    public initialize() {
+        resetTasks();
+        initializeSkills();
     }
 }
 
