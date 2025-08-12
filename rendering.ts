@@ -413,6 +413,15 @@ function populateGameOver(game_over_div: HTMLElement) {
 
         skill_gain.appendChild(skill_gain_text);
     }
+
+    var reset_count = game_over_div.querySelector("#game-over-reset-count");
+    if (!reset_count)
+    {
+        console.error("No reset count text");
+        return;
+    }
+
+    reset_count.textContent = `You've now done your ${formatOrdinal(GAMESTATE.energy_reset_count + 1)} energy reset`;
 }
 
 function setupGameOverRestartListener(game_over_div: HTMLElement) {
@@ -436,6 +445,14 @@ function updateGameOver() {
     {
         populateGameOver(RENDERING.game_over_element);
     }
+}
+
+// MARK: Formatting
+
+function formatOrdinal(n: number): string {
+    const suffix = ["th", "st", "nd", "rd"];
+    const remainder = n % 100;
+    return n + ((suffix[(remainder - 20) % 10] || suffix[remainder] || suffix[0]) as string);
 }
 
 // MARK: Rendering
