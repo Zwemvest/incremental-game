@@ -1,5 +1,5 @@
 import { Rendering, updateRendering } from "./rendering.js";
-import { Gamestate, updateGamestate } from "./simulation.js";
+import { Gamestate, saveGame, updateGamestate } from "./simulation.js";
 
 function gameLoop() {
     updateGamestate();
@@ -22,4 +22,5 @@ document.addEventListener("DOMContentLoaded", () => {
     RENDERING = new Rendering();
     GAMESTATE.initialize();
     RENDERING.start();
+    saveGame();
 }

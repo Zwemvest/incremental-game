@@ -61,14 +61,14 @@ function updateSkillRendering() {
 function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering) {
     const task_div = document.createElement("div");
     task_div.className = "task";
-    task_div.classList.add(Object.values(TaskType)[task.definition.type] as string);
+    task_div.classList.add(Object.values(TaskType)[task.definition_id.type] as string);
 
     const task_upper_div = document.createElement("div");
     task_upper_div.className = "task-upper";
 
     const task_button = document.createElement("button");
     task_button.className = "task-button";
-    task_button.textContent = `${task.definition.name}`;
+    task_button.textContent = `${task.definition_id.name}`;
     task_button.addEventListener("click", () => { clickTask(task); });
 
     const progressFill = document.createElement("div");
@@ -82,7 +82,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     skillsUsed.className = "skills-used-text";
     var skillText = "Skills used: ";
     var skillStrings: string[] = [];
-    for (const skill of task.definition.skills) {
+    for (const skill of task.definition_id.skills) {
         const name = SKILL_NAMES[skill];
         if (name) {
             skillStrings.push(name);
@@ -91,28 +91,28 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     skillText += skillStrings.join(", ");
     skillsUsed.textContent = skillText;
 
-    if (task.definition.item != ItemType.Count)
+    if (task.definition_id.item != ItemType.Count)
     {
         var item_indicator = document.createElement("div");
         item_indicator.className = "task-item-indicator";
-        item_indicator.textContent = ITEMS[task.definition.item]?.icon as string;
+        item_indicator.textContent = ITEMS[task.definition_id.item]?.icon as string;
         task_button.appendChild(item_indicator);
     }
 
-    if (task.definition.perk != PerkType.Count && !hasPerk(task.definition.perk))
+    if (task.definition_id.perk != PerkType.Count && !hasPerk(task.definition_id.perk))
     {
         var item_indicator = document.createElement("div");
         item_indicator.className = "task-perk-indicator";
-        item_indicator.textContent = PERKS[task.definition.perk]?.icon as string;
+        item_indicator.textContent = PERKS[task.definition_id.perk]?.icon as string;
         task_button.appendChild(item_indicator);
     }
 
     const task_reps_div = document.createElement("div");
     task_reps_div.className = "task-reps";
 
-    if (task.definition.type != TaskType.Travel)
+    if (task.definition_id.type != TaskType.Travel)
     {
-        for (var i = 0; i < task.definition.max_reps; ++i)
+        for (var i = 0; i < task.definition_id.max_reps; ++i)
         {
             const task_rep_div = document.createElement("div");
             task_rep_div.className = "task-rep";
@@ -128,14 +128,14 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     task_div.appendChild(skillsUsed);
 
     setupTooltip(task_div, function () {
-        var tooltip = task.definition.name;
+        var tooltip = task.definition_id.name;
 
-        if (task.definition.item != ItemType.Count)
+        if (task.definition_id.item != ItemType.Count)
         {
-            tooltip += `<br><br>Gives item ${ITEMS[task.definition.item]?.icon}${ITEMS[task.definition.item]?.name}`;
+            tooltip += `<br><br>Gives item ${ITEMS[task.definition_id.item]?.icon}${ITEMS[task.definition_id.item]?.name}`;
         }
 
-        if (task.definition.perk != PerkType.Count && !hasPerk(task.definition.perk))
+        if (task.definition_id.perk != PerkType.Count && !hasPerk(task.definition_id.perk))
         {
             tooltip += `<br><br>Gives a permanent Perk`;
         }
@@ -144,7 +144,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
         tooltip += `<br>Estimated time: ${estimateTaskTimeInSeconds(task)}s`;
         tooltip += "<br>Estimated levels up:";
 
-        for (const skill of task.definition.skills) {
+        for (const skill of task.definition_id.skills) {
             const skill_progress = getSkill(skill);
             const name = SKILL_NAMES[skill];
             if (!name) {
@@ -163,9 +163,9 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
 
             tooltip += `<br>${name}: ${resulting_level - skill_progress.level}`;
 
-            if (task.definition.xp_mult != 1)
+            if (task.definition_id.xp_mult != 1)
             {
-                tooltip += `<br><br>XP multiplier: ${task.definition.xp_mult}`;
+                tooltip += `<br><br>XP multiplier: ${task.definition_id.xp_mult}`;
             }
         }
 
@@ -173,7 +173,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     });
 
     tasks_div.appendChild(task_div);
-    rendering.task_elements.set(task.definition, task_div);
+    rendering.task_elements.set(task.definition_id, task_div);
 }
 
 function updateTaskRendering() {
@@ -183,7 +183,7 @@ function updateTaskRendering() {
     }
 
     for (const task of GAMESTATE.tasks) {
-        var task_element = RENDERING.task_elements.get(task.definition) as HTMLElement;
+        var task_element = RENDERING.task_elements.get(task.definition_id) as HTMLElement;
         var fill = task_element.querySelector<HTMLDivElement>(".progress-fill");
         if (fill) {
             fill.style.width = `${task.progress * 100 / calcTaskCost(task)}%`;
