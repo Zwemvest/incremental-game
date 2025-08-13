@@ -38,6 +38,7 @@ body {
 
 #energy .progress-bar {
     height: 20px;
+    border-radius: 12px;
 }
 
 #energy {
@@ -65,19 +66,24 @@ body {
 
 .task button:disabled {
     background: #AAA;
+    background: linear-gradient(5deg, #888, #aaa);
     color: #000;
 }
 
+.task.Normal button:enabled {
+    background: linear-gradient(5deg, rgb(24, 214, 97), rgb(65, 241, 124));
+}
+
 .task.Travel button:enabled {
-    background: paleturquoise;
+    background: linear-gradient(5deg, rgb(24, 122, 214), rgb(65, 156, 241));
 }
 
 .task.Mandatory button:enabled {
-    background: palegoldenrod;
+    background: linear-gradient(5deg, rgb(255, 220, 78), rgb(251, 253, 149));
 }
 
 .task.Boss button:enabled {
-    background: palevioletred;
+    background: linear-gradient(5deg, rgb(214, 60, 60), rgb(236, 107, 107));
 }
 
 .task .task-item-indicator {
@@ -118,6 +124,7 @@ body {
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 20px;
+    justify-content: center;
 }
 
 .skill {
