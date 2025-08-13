@@ -58,17 +58,19 @@ function updateSkillRendering() {
 
 // MARK: Tasks
 
+let TASK_TYPE_NAMES = ["Normal", "Travel", "Mandatory", "Boss"];
+
 function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering) {
     const task_div = document.createElement("div");
     task_div.className = "task";
-    task_div.classList.add(Object.values(TaskType)[task.definition_id.type] as string);
+    task_div.classList.add(Object.values(TaskType)[task.definition.type] as string);
 
     const task_upper_div = document.createElement("div");
     task_upper_div.className = "task-upper";
 
     const task_button = document.createElement("button");
     task_button.className = "task-button";
-    task_button.textContent = `${task.definition_id.name}`;
+    task_button.textContent = `${task.definition.name}`;
     task_button.addEventListener("click", () => { clickTask(task); });
 
     const progressFill = document.createElement("div");
@@ -82,7 +84,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     skillsUsed.className = "skills-used-text";
     var skillText = "Skills used: ";
     var skillStrings: string[] = [];
-    for (const skill of task.definition_id.skills) {
+    for (const skill of task.definition.skills) {
         const name = SKILL_NAMES[skill];
         if (name) {
             skillStrings.push(name);
@@ -91,28 +93,28 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     skillText += skillStrings.join(", ");
     skillsUsed.textContent = skillText;
 
-    if (task.definition_id.item != ItemType.Count)
+    if (task.definition.item != ItemType.Count)
     {
         var item_indicator = document.createElement("div");
         item_indicator.className = "task-item-indicator";
-        item_indicator.textContent = ITEMS[task.definition_id.item]?.icon as string;
+        item_indicator.textContent = ITEMS[task.definition.item]?.icon as string;
         task_button.appendChild(item_indicator);
     }
 
-    if (task.definition_id.perk != PerkType.Count && !hasPerk(task.definition_id.perk))
+    if (task.definition.perk != PerkType.Count && !hasPerk(task.definition.perk))
     {
         var item_indicator = document.createElement("div");
         item_indicator.className = "task-perk-indicator";
-        item_indicator.textContent = PERKS[task.definition_id.perk]?.icon as string;
+        item_indicator.textContent = PERKS[task.definition.perk]?.icon as string;
         task_button.appendChild(item_indicator);
     }
 
     const task_reps_div = document.createElement("div");
     task_reps_div.className = "task-reps";
 
-    if (task.definition_id.type != TaskType.Travel)
+    if (task.definition.type != TaskType.Travel)
     {
-        for (var i = 0; i < task.definition_id.max_reps; ++i)
+        for (var i = 0; i < task.definition.max_reps; ++i)
         {
             const task_rep_div = document.createElement("div");
             task_rep_div.className = "task-rep";
@@ -128,14 +130,16 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     task_div.appendChild(skillsUsed);
 
     setupTooltip(task_div, function () {
-        var tooltip = `<h3>${task.definition_id.name}</h3>`;
+        var tooltip = `<h3>${task.definition.name}</h3>`;
 
-        if (task.definition_id.item != ItemType.Count)
+        tooltip += `<p>Type: ${TASK_TYPE_NAMES[task.definition.type]}</p>`;
+
+        if (task.definition.item != ItemType.Count)
         {
-            tooltip += `<p>Gives item ${ITEMS[task.definition_id.item]?.icon}${ITEMS[task.definition_id.item]?.name}</p>`;
+            tooltip += `<p>Gives item ${ITEMS[task.definition.item]?.icon}${ITEMS[task.definition.item]?.name}</p>`;
         }
 
-        if (task.definition_id.perk != PerkType.Count && !hasPerk(task.definition_id.perk))
+        if (task.definition.perk != PerkType.Count && !hasPerk(task.definition.perk))
         {
             tooltip += `<p>Gives a permanent Perk</p>`;
         }
@@ -144,7 +148,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
         tooltip += `<br>Estimated time: ${estimateTaskTimeInSeconds(task)}s`;
         tooltip += "<br>Estimated levels up:";
 
-        for (const skill of task.definition_id.skills) {
+        for (const skill of task.definition.skills) {
             const skill_progress = getSkill(skill);
             const name = SKILL_NAMES[skill];
             if (!name) {
@@ -165,16 +169,32 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
 
         }
 
-        if (task.definition_id.xp_mult != 1)
+        if (task.definition.xp_mult != 1)
         {
-            tooltip += `<br><br>XP multiplier: ${task.definition_id.xp_mult}`;
+            tooltip += `<br><br>XP multiplier: ${task.definition.xp_mult}`;
+        }
+
+        if (task_button.disabled)
+        {
+            if (task.definition.type == TaskType.Travel)
+            {
+                tooltip += `<br><br>Disabled until you complete the Mandatory tasks`;
+            }
+            else if (task.reps >= task.definition.max_reps)
+            {
+                tooltip += `<br><br>Disabled due to being fully completed`;
+            }
+            else
+            {
+                console.error("Task disabled for unknown reason");
+            }
         }
         
         return tooltip;
     });
 
     tasks_div.appendChild(task_div);
-    rendering.task_elements.set(task.definition_id, task_div);
+    rendering.task_elements.set(task.definition, task_div);
 }
 
 function updateTaskRendering() {
@@ -184,7 +204,7 @@ function updateTaskRendering() {
     }
 
     for (const task of GAMESTATE.tasks) {
-        var task_element = RENDERING.task_elements.get(task.definition_id) as HTMLElement;
+        var task_element = RENDERING.task_elements.get(task.definition) as HTMLElement;
         var fill = task_element.querySelector<HTMLDivElement>(".progress-fill");
         if (fill) {
             fill.style.width = `${task.progress * 100 / calcTaskCost(task)}%`;
@@ -202,7 +222,7 @@ function updateTaskRendering() {
             console.error("No task-button");
         }
 
-        if (task.definition_id.type != TaskType.Travel)
+        if (task.definition.type != TaskType.Travel)
         {
             var reps = task_element.getElementsByClassName("task-rep");
             for (var i = 0; i < task.reps; ++i)

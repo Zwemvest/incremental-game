@@ -20,14 +20,14 @@ export class Skill {
 
 export function calcSkillXp(task: Task, task_progress: number): number {
     const xp_mult = 8;
-    var xp = task_progress * xp_mult * task.definition_id.xp_mult;
+    var xp = task_progress * xp_mult * task.definition.xp_mult;
 
     if (hasPerk(PerkType.Writing))
     {
         xp *= 1.5;
     }
 
-    xp *= Math.pow(1.1, task.definition_id.zone_id);
+    xp *= Math.pow(1.1, task.definition.zone_id);
 
     return xp;
 }
@@ -128,23 +128,23 @@ function storeSkillLevelsForNextGameOver() {
 export function calcTaskCost(task: Task): number {
     const base_cost = 10;
     const zone_exponent = 1.7;
-    const zone_mult = Math.pow(zone_exponent, task.definition_id.zone_id);
+    const zone_mult = Math.pow(zone_exponent, task.definition.zone_id);
 
-    return base_cost * task.definition_id.cost_multiplier * zone_mult;
+    return base_cost * task.definition.cost_multiplier * zone_mult;
 }
 
 export function calcTaskProgressMultiplier(task: Task): number {
     var mult = 1;
 
     var skill_level_mult = 1;
-    for (const skill_type of task.definition_id.skills) {
+    for (const skill_type of task.definition.skills) {
         skill_level_mult *= calcSkillTaskProgressMultiplierFromLevel(getSkill(skill_type).level);
     }
 
     // Avoid multi-skill tasks scaling much faster than all other tasks
-    mult *= Math.pow(skill_level_mult, 1 / task.definition_id.skills.length);
+    mult *= Math.pow(skill_level_mult, 1 / task.definition.skills.length);
 
-    for (const skill_type of task.definition_id.skills) {
+    for (const skill_type of task.definition.skills) {
         mult *= calcSkillTaskProgressWithoutLevel(skill_type);
     }
 
@@ -166,7 +166,7 @@ function updateActiveTask() {
         const progress = calcTaskProgressPerTick(active_task);
         active_task.progress += progress;
         modifyEnergy(-calcEnergyDrainPerTick(active_task));
-        for (const skill of active_task.definition_id.skills) {
+        for (const skill of active_task.definition.skills) {
             addSkillXp(skill, calcSkillXp(active_task, progress));
         }
 
@@ -186,21 +186,21 @@ export function clickTask(task: Task) {
 }
 
 function finishTask(task: Task) {
-    if (task.definition_id.type == TaskType.Travel) {
+    if (task.definition.type == TaskType.Travel) {
         advanceZone();
     }
 
-    if (task.definition_id.item != ItemType.Count) {
-        addItem(task.definition_id.item, 1);
+    if (task.definition.item != ItemType.Count) {
+        addItem(task.definition.item, 1);
     }
 
     task.reps += 1;
-    if (task.reps < task.definition_id.max_reps) {
+    if (task.reps < task.definition.max_reps) {
         task.progress = 0;
     }
 
-    if (task.reps == task.definition_id.max_reps && task.definition_id.perk != PerkType.Count) {
-        addPerk(task.definition_id.perk);
+    if (task.reps == task.definition.max_reps && task.definition.perk != PerkType.Count) {
+        addPerk(task.definition.perk);
     }
 
     updateEnabledTasks();
@@ -211,14 +211,14 @@ function updateEnabledTasks() {
     var has_unfinished_mandatory_task = false;
 
     for (var task of GAMESTATE.tasks) {
-        const finished = task.reps >= task.definition_id.max_reps;
+        const finished = task.reps >= task.definition.max_reps;
         task.enabled = !finished;
-        has_unfinished_mandatory_task = has_unfinished_mandatory_task || (task.definition_id.type == TaskType.Mandatory && !finished);
+        has_unfinished_mandatory_task = has_unfinished_mandatory_task || (task.definition.type == TaskType.Mandatory && !finished);
     }
 
     if (has_unfinished_mandatory_task) {
         for (var task of GAMESTATE.tasks) {
-            if (task.definition_id.type == TaskType.Travel) {
+            if (task.definition.type == TaskType.Travel) {
                 task.enabled = false;
             }
         }
@@ -355,7 +355,7 @@ function loadGame(): boolean {
     }
 
     const data = JSON.parse(saved_game, function(key, value) {
-        if (key == "definition_id") {
+        if (key == "definition") {
             return TASK_LOOKUP.get(value); // Replace ID with the actual object
         }
         return value;
@@ -428,3 +428,4 @@ export function updateGamestate() {
 
 (window as any).setProgressMult = (new_mult: number) => progress_mult = new_mult;
 (window as any).saveGame = () => saveGame();
+(window as any).doEnergyReset = () => doEnergyReset();

@@ -40,13 +40,13 @@ export class TaskDefinition {
 }
 
 export class Task {
-    definition_id: TaskDefinition;
+    definition: TaskDefinition;
     progress: number = 0;
     reps: number = 0;
     enabled: boolean = true;
 
     constructor(definition: TaskDefinition) {
-        this.definition_id = definition;
+        this.definition = definition;
     }
 }
 
