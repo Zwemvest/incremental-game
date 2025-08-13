@@ -364,9 +364,12 @@ function createPerkDiv(perk: PerkType, perks_div: HTMLElement) {
     const perk_div = document.createElement("div");
     perk_div.className = "perk";
 
+    const perk_text = document.createElement("span");
+    perk_text.className = "perk-text";
+
     var perk_definition = PERKS[perk] as PerkDefinition;
 
-    perk_div.textContent = perk_definition.icon;
+    perk_text.textContent = perk_definition.icon;
 
     setupTooltip(perk_div, function () {
         var tooltip = `<h3>${perk_definition.name}</h3>`;
@@ -374,6 +377,7 @@ function createPerkDiv(perk: PerkType, perks_div: HTMLElement) {
         return tooltip;
     });
 
+    perk_div.appendChild(perk_text);
     perks_div.appendChild(perk_div);
     RENDERING.perk_elements.set(perk, perk_div);
 }

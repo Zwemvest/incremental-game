@@ -2,15 +2,17 @@
 */
 
 :root {
-    --element-background-color: rgb(111, 190, 255);
+    --element-background-color: rgb(39, 122, 190);
+    --element-foreground-color: rgb(52, 159, 247);
 }
 
 /* MARK: Main areas
 */
 
 body {
-    background: rgb(172, 218, 255);
+    background: linear-gradient(120deg, #102661, #8c386d);
     color: #000;
+    height: 100vh;
 }
 
 #game-area {
@@ -34,6 +36,7 @@ body {
 #zone-name {
     text-align: center;
     margin-top: 0;
+    color: #FFF;
 }
 
 #energy .progress-bar {
@@ -65,21 +68,20 @@ body {
 }
 
 .task button:disabled {
-    background: #AAA;
-    background: linear-gradient(5deg, #888, #aaa);
+    background: linear-gradient(5deg, #777, #999);
     color: #000;
 }
 
 .task.Normal button:enabled {
-    background: linear-gradient(5deg, rgb(24, 214, 97), rgb(65, 241, 124));
+    background: linear-gradient(5deg, rgb(22, 196, 88), rgb(53, 197, 101));
 }
 
 .task.Travel button:enabled {
-    background: linear-gradient(5deg, rgb(24, 122, 214), rgb(65, 156, 241));
+    background: linear-gradient(5deg, rgb(23, 112, 196), rgb(54, 132, 204));
 }
 
 .task.Mandatory button:enabled {
-    background: linear-gradient(5deg, rgb(255, 220, 78), rgb(251, 253, 149));
+    background: linear-gradient(5deg, rgb(224, 193, 68), rgb(220, 221, 130));
 }
 
 .task.Boss button:enabled {
@@ -107,13 +109,13 @@ body {
 .task-rep {
     width: 24px;
     height: 24px;
-    background: grey;
+    background: #555;
     margin: 3px;
     border-radius: 5px;
 }
 
 .task-rep.finished {
-    background: lightgreen;
+    background: #00BB00;
 }
 
 /* MARK: Skills
@@ -177,6 +179,7 @@ body {
     width: 100%;
     height: 100%;
     border-radius: 8px;
+    background: var(--element-foreground-color);
 }
 
 /* MARK: Perks
@@ -205,12 +208,15 @@ body {
     height: 48px;
     text-align: center;
     font-size: 1.5em;
+    border-radius: 8px;
+    background: var(--element-foreground-color);
+    align-items: center;
+    justify-content: center;
+    display: flex;
 }
 
-.perk button {
-    width: 100%;
-    height: 100%;
-    border-radius: 8px;
+.perk-text {
+    vertical-align: center;
 }
 
 /* MARK: Various
@@ -268,14 +274,14 @@ body {
     position: relative;
     width: 100%;
     height: 10px;
-    background: grey;
+    background: #555;
     overflow: hidden;
     border-radius: 5px;
 }
 
 .progress-fill {
     height: 100%;
-    background: #00CC00;
+    background: #00BB00;
     transition: width 0.2s;
 }
 
