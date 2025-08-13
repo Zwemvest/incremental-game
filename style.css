@@ -1,6 +1,16 @@
+/* MARK: Variables
+*/
+
+:root {
+    --element-background-color: rgb(111, 190, 255);
+}
+
+/* MARK: Main areas
+*/
+
 body {
-    background: #333;
-    color: #fff;
+    background: rgb(172, 218, 255);
+    color: #000;
 }
 
 #game-area {
@@ -18,7 +28,7 @@ body {
 
 #right-column {
     width: 33%;
-    margin-left: 5px;
+    margin-left: 8px;
 }
 
 #zone-name {
@@ -26,9 +36,22 @@ body {
     margin-top: 0;
 }
 
+#energy .progress-bar {
+    height: 20px;
+}
+
+#energy {
+    margin-bottom: 8px;
+}
+
+/* MARK: Tasks
+*/
+
 .task {
-    width: 100%;
-    padding-bottom: 8px;
+    margin-bottom: 8px;
+    background: var(--element-background-color);
+    border-radius: 8px;
+    padding: 5px;
 }
 
 .task button {
@@ -36,10 +59,13 @@ body {
     height: 30px;
     display: flex;
     align-items: center;
+    border-radius: 8px;
+    margin-bottom: 5px;
 }
 
 .task button:disabled {
-    background: #555;
+    background: #AAA;
+    color: #000;
 }
 
 .task.Travel button:enabled {
@@ -62,12 +88,14 @@ body {
 }
 
 .task-upper {
+    width: 100%;
     display: flex;
 }
 
 .task-reps {
     width: 50%;
     display: flex;
+    margin-left: 3px;
 }
 
 .task-rep {
@@ -75,36 +103,15 @@ body {
     height: 24px;
     background: grey;
     margin: 3px;
+    border-radius: 5px;
 }
 
 .task-rep.finished {
     background: lightgreen;
 }
 
-.progress-bar {
-    position: relative;
-    width: 100%;
-    height: 10px;
-    background: #555;
-    overflow: hidden;
-}
-
-#energy .progress-bar {
-    height: 20px;
-}
-
-.progress-fill {
-    height: 100%;
-    background: #00CC00;
-    transition: width 0.2s;
-}
-
-.progress-value {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-}
+/* MARK: Skills
+*/
 
 #skills {
     display: flex;
@@ -116,6 +123,9 @@ body {
 .skill {
     width: 80px;
     text-align: center;
+    background: var(--element-background-color);
+    border-radius: 8px;
+    padding: 5px;
 }
 
 .skill .progress-bar {
@@ -129,38 +139,75 @@ body {
     margin-bottom: 2px;
 }
 
-#tooltip {
-    position: absolute;
-    background: #000000AA;
-}
+/* MARK: Items
+*/
 
 #items {
+    margin-bottom: 20px;
+    background: var(--element-background-color);
+    border-radius: 8px;
+    padding: 5px;
+}
+
+#items-name {
+    margin: 5px;
+}
+
+#items-list {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .item {
-    width: 64px;
+    width: 48px;
+    height: 48px;
     text-align: center;
 }
 
 .item button {
     width: 100%;
+    height: 100%;
+    border-radius: 8px;
 }
 
+/* MARK: Perks
+*/
+
 #perks {
+    margin-bottom: 20px;
+    background: var(--element-background-color);
+    border-radius: 8px;
+    padding: 5px;
+}
+
+#perks-name {
+    margin: 5px;
+}
+
+#perks-list {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
-    margin-bottom: 20px;
+    margin-bottom: 5px;
 }
 
 .perk {
-    width: 64px;
+    width: 48px;
+    height: 48px;
     text-align: center;
+    font-size: 1.5em;
 }
+
+.perk button {
+    width: 100%;
+    height: 100%;
+    border-radius: 8px;
+}
+
+/* MARK: Various
+*/
 
 #game-over-overlay {
     position: fixed;
@@ -196,3 +243,38 @@ body {
     text-align: center;
 }
 
+#tooltip {
+    position: absolute;
+    background: #000000AA;
+    color: #FFF;
+    margin-left: 5px;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+#tooltip h3 {
+    margin-top: 3px;
+    margin-bottom: 8px;
+}
+
+.progress-bar {
+    position: relative;
+    width: 100%;
+    height: 10px;
+    background: grey;
+    overflow: hidden;
+    border-radius: 5px;
+}
+
+.progress-fill {
+    height: 100%;
+    background: #00CC00;
+    transition: width 0.2s;
+}
+
+.progress-value {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}

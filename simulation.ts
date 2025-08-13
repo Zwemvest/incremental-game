@@ -228,6 +228,7 @@ function updateEnabledTasks() {
 export function resetTasks() {
     initializeTasks();
     updateEnabledTasks();
+    GAMESTATE.is_at_end_of_content = false;
 }
 
 function initializeTasks() {

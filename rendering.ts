@@ -27,8 +27,8 @@ function createSkillDiv(skill: Skill, skills_div: HTMLElement, rendering: Render
     skill_div.appendChild(progressBar);
 
     setupTooltip(skill_div, function () {
-        var tooltip = `${SKILL_NAMES[skill.type]}`;
-        tooltip += `<br>Speed multiplier: x${calcSkillTaskProgressMultiplier(skill.type).toFixed(2)}`;
+        var tooltip = `<h3>${SKILL_NAMES[skill.type]}</h3>`;
+        tooltip += `Speed multiplier: x${calcSkillTaskProgressMultiplier(skill.type).toFixed(2)}`;
         tooltip += `<br>XP: ${skill.progress.toFixed(2)}/${calcSkillXpNeeded(skill).toFixed(2)}`;
         return tooltip;
     });
@@ -128,19 +128,19 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     task_div.appendChild(skillsUsed);
 
     setupTooltip(task_div, function () {
-        var tooltip = task.definition_id.name;
+        var tooltip = `<h3>${task.definition_id.name}</h3>`;
 
         if (task.definition_id.item != ItemType.Count)
         {
-            tooltip += `<br><br>Gives item ${ITEMS[task.definition_id.item]?.icon}${ITEMS[task.definition_id.item]?.name}`;
+            tooltip += `<p>Gives item ${ITEMS[task.definition_id.item]?.icon}${ITEMS[task.definition_id.item]?.name}</p>`;
         }
 
         if (task.definition_id.perk != PerkType.Count && !hasPerk(task.definition_id.perk))
         {
-            tooltip += `<br><br>Gives a permanent Perk`;
+            tooltip += `<p>Gives a permanent Perk</p>`;
         }
 
-        tooltip += `<br><br>Estimated energy used: ${estimateTotalTaskEnergyConsumption(task)}`;
+        tooltip += `Estimated energy used: ${estimateTotalTaskEnergyConsumption(task)}`;
         tooltip += `<br>Estimated time: ${estimateTaskTimeInSeconds(task)}s`;
         tooltip += "<br>Estimated levels up:";
 
@@ -276,8 +276,8 @@ function createItemDiv(item: ItemType, items_div: HTMLElement)
     item_div.appendChild(button);
 
     setupTooltip(item_div, function () {
-        var tooltip = item_definition.name;
-        tooltip += `<br>${item_definition.tooltip}`;
+        var tooltip = `<h3>${item_definition.name}</h3>`;
+        tooltip += `${item_definition.tooltip}`;
         return tooltip;
     });
 
@@ -286,9 +286,9 @@ function createItemDiv(item: ItemType, items_div: HTMLElement)
 }
 
 function createItems() {
-    var items_div = document.getElementById("items");
+    var items_div = document.getElementById("items-list");
     if (!items_div) {
-        console.error("The element with ID 'items' was not found.");
+        console.error("The element with ID 'items-list' was not found.");
         return;
     }
 
@@ -349,8 +349,8 @@ function createPerkDiv(perk: PerkType, perks_div: HTMLElement) {
     perk_div.textContent = perk_definition.icon;
 
     setupTooltip(perk_div, function () {
-        var tooltip = perk_definition.name;
-        tooltip += `<br>${perk_definition.tooltip}`;
+        var tooltip = `<h3>${perk_definition.name}</h3>`;
+        tooltip += `${perk_definition.tooltip}`;
         return tooltip;
     });
 
@@ -359,9 +359,9 @@ function createPerkDiv(perk: PerkType, perks_div: HTMLElement) {
 }
 
 function createPerks() {
-    var perks_div = document.getElementById("perks");
+    var perks_div = document.getElementById("perks-list");
     if (!perks_div) {
-        console.error("The element with ID 'perks' was not found.");
+        console.error("The element with ID 'perks-list' was not found.");
         return;
     }
 
@@ -603,8 +603,8 @@ function showTooltip(element: ElementWithTooltip) {
     }
 
     const elementRect = element.getBoundingClientRect();
-    const x = elementRect.right;
-    const y = elementRect.top;
+    const x = elementRect.right + window.scrollX;
+    const y = elementRect.top + window.scrollY;
 
     var tooltip_element = RENDERING.tooltip_element;
     tooltip_element.innerHTML = element.generateTooltip();
