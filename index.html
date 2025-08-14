@@ -6,73 +6,80 @@
 <title>Test Game</title>
 
 <body>
+    <div id="background"></div>
     <!-- Hidden until game's ready to render -->
-    <div id="game-area" style="display:none">
-        <div id="top-area">
-            <div id="top-bar">
-                <div id="energy">
-                    <span class="label"></span>
-                    <div class="progress-bar">
-                        <div class="progress-fill"></div>
-                        <span class="progress-value">100</span>
+    <main>
+        <div id="game-area" style="display:none">
+            <div id="top-area">
+                <div id="top-bar">
+                    <div id="energy">
+                        <span class="label"></span>
+                        <div class="progress-bar">
+                            <div class="progress-fill"></div>
+                            <span class="progress-value">100</span>
+                        </div>
+                    </div>
+                    <div id="skills"></div>
+                </div>
+
+                <div id="settings-area">
+                    <button id="open-settings">⚙</button>
+                </div>
+            </div>
+
+            <div id="play-area">
+                <div id="left-column">
+                    <div id="tasks"></div>
+                </div>
+                <div id="right-column">
+                    <h2 id="zone-name">Lorem Ipsum</h2>
+                    <div id="items">
+                        <h3 id="items-name">Items</h3>
+                        <div id="items-list"></div>
+                    </div>
+                    <div id="perks">
+                        <h3 id="perks-name">Perks</h3>
+                        <div id="perks-list"></div>
                     </div>
                 </div>
-                <div id="skills"></div>
-            </div>
-
-            <div id="settings-area">
-                <button id="open-settings">⚙</button>
             </div>
         </div>
 
-        <div id="play-area">
-            <div id="left-column">
-                <div id="tasks"></div>
-            </div>
-            <div id="right-column">
-                <h2 id="zone-name">Lorem Ipsum</h2>
-                <div id="items">
-                    <h3 id="items-name">Items</h3>
-                    <div id="items-list"></div>
-                </div>
-                <div id="perks">
-                    <h3 id="perks-name">Perks</h3>
-                    <div id="perks-list"></div>
-                </div>
+        <div id="tooltip" style="display:none"></div>
+        <div id="game-over-overlay" style="display:none">
+            <div id="game-over-box">
+                <h2 id=>Game Over</h2>
+                <p>You used up all your energy.</p>
+                <p>Half your items will disappear.</p>
+                <p>You keep all your Skills and Perks.</p>
+                <button id="game-over-dismiss">Restart</button>
+                <h3>Skills gained during run:</h3>
+                <div id="game-over-skillgain"></div>
+                <h3 id="game-over-reset-count"></h3>
             </div>
         </div>
-    </div>
 
-    <div id="tooltip" style="display:none"></div>
-    <div id="game-over-overlay" style="display:none">
-        <div id="game-over-box">
-            <h2 id=>Game Over</h2>
-            <p>You used up all your energy.</p>
-            <p>Half your items will disappear.</p>
-            <p>You keep all your Skills and Perks.</p>
-            <button id="game-over-dismiss">Restart</button>
-            <h3>Skills gained during run:</h3>
-            <div id="game-over-skillgain"></div>
-            <h3 id="game-over-reset-count"></h3>
+        <div id="end-of-content-overlay" style="display:none">
+            <div id="end-of-content-box">
+                <h2 id=>End of Content</h2>
+                <p>You've reached the end of all content that exists!</p>
+                <p>Congrats on winning the game. Fow now.</p>
+                <h3 id="end-of-content-reset-count"></h3>
+            </div>
         </div>
-    </div>
 
-    <div id="end-of-content-overlay" style="display:none">
-        <div id="end-of-content-box">
-            <h2 id=>End of Content</h2>
-            <p>You've reached the end of all content that exists!</p>
-            <p>Congrats on winning the game. Fow now.</p>
-            <h3 id="end-of-content-reset-count"></h3>
+        <div id="settings-overlay" style="display:none">
+            <div id="settings">
+                <button id="close-settings">X</button>
+                <button id="save">Save</button>
+                <button id="load">Load</button>
+            </div>
         </div>
-    </div>
+    </main>
 
-    <div id="settings-overlay" style="display:none">
-        <div id="settings">
-            <button id="close-settings">X</button>
-            <button id="save">Save</button>
-            <button id="load">Load</button>
-        </div>
-    </div>
+    <footer>
+        <div id="messages"></div>
+    </footer>
 
     <script type="module" src="./build/game.js"></script>
     <script type="module" src="./build/simulation.js"></script>

@@ -2,6 +2,7 @@ import { Task, ZONES, SkillType, TaskType, TASK_LOOKUP, TaskDefinition } from ".
 import { GAMESTATE } from "./game.js";
 import { ItemDefinition, ITEMS, ItemType } from "./items.js";
 import { PerkType } from "./perks.js";
+import { SkillUpContext, EventType, RenderEvent } from "./events.js";
 
 // MARK: Skills
 
@@ -47,11 +48,19 @@ function addSkillXp(skill: SkillType, xp: number) {
     var skill_entry = getSkill(skill);
 
     skill_entry.progress += xp;
-    const xp_to_level_up = calcSkillXpNeeded(skill_entry);
+    var xp_to_level_up = calcSkillXpNeeded(skill_entry);
 
+    const old_level = skill_entry.level;
     while (skill_entry.progress >= xp_to_level_up) {
         skill_entry.progress -= xp_to_level_up;
         skill_entry.level += 1;
+        xp_to_level_up = calcSkillXpNeeded(skill_entry);
+    }
+
+    if (skill_entry.level > old_level) {
+        const context: SkillUpContext = {skill: skill_entry.type, new_level: skill_entry.level};
+        const event = new RenderEvent(EventType.SkillUp, context);
+        GAMESTATE.queueRenderEvent(event);
     }
 }
 
@@ -409,6 +418,8 @@ export class Gamestate {
     max_energy = 100;
     energy_reset_count = 0;
 
+    pending_render_events: RenderEvent[] = [];
+
     public start() {
         if (!loadGame()) {
             this.initialize();
@@ -418,6 +429,16 @@ export class Gamestate {
     public initialize() {
         resetTasks();
         initializeSkills();
+    }
+
+    public popRenderEvents(): RenderEvent[] {
+        var events = this.pending_render_events;
+        this.pending_render_events = [];
+        return events;
+    }
+
+    public queueRenderEvent(event: RenderEvent) {
+        this.pending_render_events.push(event);
     }
 }
 
