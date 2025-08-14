@@ -23,8 +23,7 @@ export function calcSkillXp(task: Task, task_progress: number): number {
     const xp_mult = 8;
     var xp = task_progress * xp_mult * task.definition.xp_mult;
 
-    if (hasPerk(PerkType.Writing))
-    {
+    if (hasPerk(PerkType.Writing)) {
         xp *= 1.5;
     }
 
@@ -58,7 +57,7 @@ function addSkillXp(skill: SkillType, xp: number) {
     }
 
     if (skill_entry.level > old_level) {
-        const context: SkillUpContext = {skill: skill_entry.type, new_level: skill_entry.level};
+        const context: SkillUpContext = { skill: skill_entry.type, new_level: skill_entry.level };
         const event = new RenderEvent(EventType.SkillUp, context);
         GAMESTATE.queueRenderEvent(event);
     }
@@ -212,6 +211,11 @@ function finishTask(task: Task) {
         addPerk(task.definition.perk);
     }
 
+    if (!GAMESTATE.repeat_tasks)
+    {
+        GAMESTATE.active_task = null;
+    }
+
     updateEnabledTasks();
     saveGame();
 }
@@ -252,6 +256,10 @@ function initializeTasks() {
     }
 
     updateEnabledTasks();
+}
+
+export function toggleRepeatTasks() {
+    GAMESTATE.repeat_tasks = !GAMESTATE.repeat_tasks;
 }
 
 // MARK: Energy
@@ -360,7 +368,7 @@ export function saveGame() {
 }
 
 function parseSave(save: string): any {
-    const data = JSON.parse(save, function(key, value) {
+    const data = JSON.parse(save, function (key, value) {
         if (key == "definition") {
             return TASK_LOOKUP.get(value); // Replace ID with the actual object
         }
@@ -406,6 +414,7 @@ export class Gamestate {
     tasks: Task[] = [];
     active_task: Task | null = null;
     current_zone: number = 0;
+    repeat_tasks = true;
 
     skills_at_start_of_reset: number[] = [];
     skills: Skill[] = [];
@@ -443,8 +452,7 @@ export class Gamestate {
 }
 
 function advanceZone() {
-    if ((GAMESTATE.current_zone + 1) >= ZONES.length)
-    {
+    if ((GAMESTATE.current_zone + 1) >= ZONES.length) {
         GAMESTATE.is_at_end_of_content = true;
         return;
     }

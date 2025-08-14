@@ -200,6 +200,11 @@ button:hover:enabled {
     background: var(--element-foreground-color);
 }
 
+#controls .element {
+    width: 64px;
+    height: 64px;
+}
+
 /* MARK: Perks
 */
 

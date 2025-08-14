@@ -1,5 +1,5 @@
 import { Task, TaskDefinition, SkillType, ZONES, TaskType } from "./zones.js";
-import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel, saveGame, SAVE_LOCATION } from "./simulation.js";
+import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel, saveGame, SAVE_LOCATION, toggleRepeatTasks } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS } from "./items.js";
 import { PerkDefinition, PerkType, PERKS } from "./perks.js";
@@ -276,9 +276,6 @@ function createItemDiv(item: ItemType, items_div: HTMLElement) {
 
     var item_definition = ITEMS[item] as ItemDefinition;
 
-    //const button = document.createElement("button");
-    //button.className = "item-button";
-    button.textContent
     button.addEventListener("click", () => { clickItem(item); });
 
     setupTooltip(button, function () {
@@ -589,6 +586,34 @@ function handleEvents() {
     }
 }
 
+// MARK: Controls
+
+function setupControls() {
+    var rep_control = document.createElement("button");
+    rep_control.className = "element";
+
+    function setRepControlName() {
+        rep_control.textContent = GAMESTATE.repeat_tasks ? "Repeat Tasks" : "Don't Repeat Tasks";
+    }
+    setRepControlName();
+
+    rep_control.addEventListener("click", () => {
+        toggleRepeatTasks();
+        setRepControlName();
+    });
+
+    setupTooltip(rep_control, function () {
+        var tooltip = `<h3>${rep_control.textContent}</h3>`;
+        
+        tooltip += "Toggle between repeating Tasks if they have multiple reps, or only doing a single rep";
+
+        return tooltip;
+    });
+
+    RENDERING.controls_list_element.appendChild(rep_control);
+    RENDERING.control_elements.set("rep_control", rep_control);
+}
+
 // MARK: Rendering
 
 export class Rendering {
@@ -602,6 +627,8 @@ export class Rendering {
     skill_elements: Map<SkillType, HTMLElement> = new Map();
     item_elements: Map<ItemType, HTMLElement> = new Map();
     perk_elements: Map<PerkType, HTMLElement> = new Map();
+    control_elements: Map<string, HTMLElement> = new Map();
+    controls_list_element: HTMLElement;
 
     energy_reset_count: number = 0;
     current_zone: number = 0;
@@ -686,6 +713,15 @@ export class Rendering {
             console.error("The element with ID 'messages' was not found.");
             this.messages_element = new HTMLElement();
         }
+
+        var controls_div = document.getElementById("controls-list");
+        if (controls_div) {
+            this.controls_list_element = controls_div;
+        }
+        else {
+            console.error("The element with ID 'controls-list' was not found.");
+            this.controls_list_element = new HTMLElement();
+        }
     }
 
     public start() {
@@ -696,6 +732,7 @@ export class Rendering {
         createPerks();
         setupGameOverRestartListener(this.game_over_element);
         setupSettings(this.settings_element);
+        setupControls();
 
         updateRendering();
 
