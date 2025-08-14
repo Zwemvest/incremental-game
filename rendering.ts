@@ -502,12 +502,41 @@ function formatOrdinal(n: number): string {
     return n + ((suffix[(remainder - 20) % 10] || suffix[remainder] || suffix[0]) as string);
 }
 
+// MARK: Settings
+
+function setupSettings(settings_div: HTMLElement) {
+    var open_button = document.querySelector("#open-settings");
+
+    if (!open_button)
+    {
+        console.error("No open settings button");
+        return;
+    }
+
+    open_button.addEventListener("click", () => {
+        settings_div.style.display = "flex";
+    });
+
+    var close_button = settings_div.querySelector("#close-settings");
+
+    if (!close_button)
+    {
+        console.error("No close settings button");
+        return;
+    }
+
+    close_button.addEventListener("click", () => {
+        settings_div.style.display = "none";
+    });
+}
+
 // MARK: Rendering
 
 export class Rendering {
     tooltip_element: HTMLElement;
     game_over_element: HTMLElement;
     end_of_content_element: HTMLElement;
+    settings_element: HTMLElement;
     energy_element: HTMLElement;
     task_elements: Map<TaskDefinition, ElementWithTooltip> = new Map();
     skill_elements: Map<SkillType, HTMLElement> = new Map();
@@ -579,6 +608,15 @@ export class Rendering {
             console.error("The element with ID 'end-of-content-overlay' was not found.");
             this.end_of_content_element = new HTMLElement();
         }
+
+        var settings_div = document.getElementById("settings-overlay");
+        if (settings_div) {
+            this.settings_element = settings_div;
+        }
+        else {
+            console.error("The element with ID 'settings-overlay' was not found.");
+            this.settings_element = new HTMLElement();
+        }
     }
 
     public start()
@@ -589,6 +627,7 @@ export class Rendering {
         setupZone();
         createPerks();
         setupGameOverRestartListener(this.game_over_element);
+        setupSettings(this.settings_element);
 
         updateRendering();
 

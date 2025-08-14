@@ -46,6 +46,21 @@ body {
 
 #energy {
     margin-bottom: 8px;
+    width: 840px;
+}
+
+#top-area {
+    display: flex;
+    gap: 10px;
+}
+
+#open-settings {
+    width: 48px;
+    height: 48px;
+    text-align: center;
+    font-size: 2em;
+    border-radius: 8px;
+    background: var(--element-foreground-color);
 }
 
 /* MARK: Tasks
@@ -130,7 +145,7 @@ body {
 }
 
 .skill {
-    width: 80px;
+    width: 70px;
     text-align: center;
     background: var(--element-background-color);
     border-radius: 8px;
@@ -138,7 +153,7 @@ body {
 }
 
 .skill .progress-bar {
-    width: 80px;
+    width: 70px;
     text-align: center;
     margin-top: 5px;
 }
@@ -219,7 +234,7 @@ body {
     vertical-align: center;
 }
 
-/* MARK: Various
+/* MARK: Game over
 */
 
 #game-over-overlay {
@@ -241,11 +256,12 @@ body {
 
 #end-of-content-overlay {
     position: fixed;
-    display: flex;
     top: 0;
     left: 0;
     height: 100%;
     width: 100%;
+
+    display: flex;
     justify-content: center;
     align-items: center;
 
@@ -255,6 +271,9 @@ body {
 #end-of-content-box {
     text-align: center;
 }
+
+/* MARK: Tooltips
+*/
 
 #tooltip {
     position: absolute;
@@ -269,6 +288,9 @@ body {
     margin-top: 3px;
     margin-bottom: 8px;
 }
+
+/* MARK: Progress bars
+*/
 
 .progress-bar {
     position: relative;
@@ -290,4 +312,55 @@ body {
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+}
+
+/* MARK: Settings
+*/
+
+#settings-overlay {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
+    background: #0008;
+}
+
+#settings {
+    position: relative;
+    height: 200px;
+    width: 200px;
+    justify-content: center;
+    align-items: center;
+    background: var(--element-background-color);
+    border-radius: 8px;
+    border: #000;
+    border-width: 2px;
+    border-style: solid;
+    padding: 8px;
+    display: flex;
+    gap: 10px;
+}
+
+#settings button {
+    border-radius: 8px;
+    background: var(--element-foreground-color);
+    font-size: 1em;
+}
+
+#close-settings {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 32px;
+    height: 32px;
+    font-size: 1em;
+    border-radius: 8px;
+    background: var(--element-foreground-color);
 }
