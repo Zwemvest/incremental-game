@@ -318,6 +318,8 @@ export function hasPerk(perk: PerkType): boolean {
 
 // MARK: Persistence
 
+export const SAVE_LOCATION = "incrementalGameSave";
+
 export function saveGame() {
     const saveData: any = {};
 
@@ -345,22 +347,37 @@ export function saveGame() {
         return value;
     });
 
-    localStorage.setItem("incrementalGameSave", json);
+    localStorage.setItem(SAVE_LOCATION, json);
 }
 
-function loadGame(): boolean {
-    const saved_game = localStorage.getItem("incrementalGameSave");
-    if (!saved_game) {
-        return false;
-    }
-
-    const data = JSON.parse(saved_game, function(key, value) {
+function parseSave(save: string): any {
+    const data = JSON.parse(save, function(key, value) {
         if (key == "definition") {
             return TASK_LOOKUP.get(value); // Replace ID with the actual object
         }
         return value;
     });
 
+    return data;
+}
+
+function loadGame(): boolean {
+    const saved_game = localStorage.getItem(SAVE_LOCATION);
+    if (!saved_game) {
+        return false;
+    }
+
+    try {
+        const data = parseSave(saved_game);
+        loadGameFromData(data);
+    } catch (e) {
+        return false;
+    }
+
+    return true;
+}
+
+function loadGameFromData(data: any) {
     Object.keys(data).forEach(key => {
         const value = data[key];
         // Check if the value is an array of entries and convert it back to a Map
@@ -370,8 +387,6 @@ function loadGame(): boolean {
             (GAMESTATE as any)[key] = value;
         }
     });
-
-    return true;
 }
 
 // MARK: Gamestate

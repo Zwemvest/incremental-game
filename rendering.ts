@@ -1,5 +1,5 @@
 import { Task, TaskDefinition, SkillType, ZONES, TaskType } from "./zones.js";
-import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel } from "./simulation.js";
+import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel, saveGame, SAVE_LOCATION } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS } from "./items.js";
 import { PerkDefinition, PerkType, PERKS } from "./perks.js";
@@ -527,6 +527,68 @@ function setupSettings(settings_div: HTMLElement) {
 
     close_button.addEventListener("click", () => {
         settings_div.style.display = "none";
+    });
+
+    setupPersistence(settings_div);
+}
+
+function setupPersistence(settings_div: HTMLElement) {
+    var save_button = settings_div.querySelector("#save");
+
+    if (!save_button)
+    {
+        console.error("No save button");
+        return;
+    }
+
+    save_button.addEventListener("click", () => {
+        saveGame();
+        const save_data = localStorage.getItem(SAVE_LOCATION);
+        if (!save_data)
+        {
+            console.error("No save data");
+            return;
+        }
+
+        var file_name = `Incremental_save_Reset_${GAMESTATE.energy_reset_count}_energy_${GAMESTATE.current_energy.toFixed(0)}.json`;
+
+        const blob = new Blob([save_data], { type: "application/json" });
+        const url = URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.download = file_name;
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
+    });
+
+    var load_button = settings_div.querySelector("#load");
+
+    if (!load_button)
+    {
+        console.error("No load button");
+        return;
+    }
+
+    load_button.addEventListener("click", () => {
+        const input = document.createElement("input");
+        input.type = "file";
+        input.accept = "application/json";
+        input.addEventListener("change", (e) => {
+            var element = e.target as HTMLInputElement;
+            const file = (element.files as FileList)[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (event) => {
+                const fileText = event.target?.result as string;
+                localStorage.setItem(SAVE_LOCATION, fileText as string);
+                location.reload();
+            };
+            reader.readAsText(file);
+        });
+
+        input.click();
     });
 }
 
