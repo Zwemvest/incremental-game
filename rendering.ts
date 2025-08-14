@@ -279,6 +279,7 @@ function setupInfoTooltips() {
     setupTooltip(item_info, function () {
         var tooltip = `<h3>Items</h3>`;
         tooltip += `Items can be used to get bonuses that last until the next Energy Reset`;
+        tooltip += `<br>Right-click to use all rather than just one`;
         return tooltip;
     });
     
@@ -306,7 +307,8 @@ function createItemDiv(item: ItemType, items_div: HTMLElement) {
 
     var item_definition = ITEMS[item] as ItemDefinition;
 
-    button.addEventListener("click", () => { clickItem(item); });
+    button.addEventListener("click", () => { clickItem(item, false); });
+    button.addEventListener("contextmenu", () => { clickItem(item, true); });
 
     setupTooltip(button, function () {
         var tooltip = `<h3>${item_definition.name}</h3>`;
@@ -511,15 +513,26 @@ function setupSettings(settings_div: HTMLElement) {
         settings_div.style.display = "flex";
     });
 
+    setupTooltip(open_button, function () {
+        var tooltip = `<h3>Open Settings Menu</h3>`;
+        return tooltip;
+    });
+
     var close_button = settings_div.querySelector("#close-settings");
 
     if (!close_button) {
         console.error("No close settings button");
         return;
     }
+    
 
     close_button.addEventListener("click", () => {
         settings_div.style.display = "none";
+    });
+
+    setupTooltip(close_button, function () {
+        var tooltip = `<h3>Close Settings Menu</h3>`;
+        return tooltip;
     });
 
     setupPersistence(settings_div);
@@ -556,6 +569,12 @@ function setupPersistence(settings_div: HTMLElement) {
         URL.revokeObjectURL(url);
     });
 
+    setupTooltip(save_button, function () {
+        var tooltip = `<h3>Export Save</h3>`;
+        tooltip += `Save the game's progress to disk`;
+        return tooltip;
+    });
+
     var load_button = settings_div.querySelector("#load");
 
     if (!load_button) {
@@ -581,6 +600,12 @@ function setupPersistence(settings_div: HTMLElement) {
         });
 
         input.click();
+    });
+
+    setupTooltip(load_button, function () {
+        var tooltip = `<h3>Import Save</h3>`;
+        tooltip += `Load the game's progress from disk`;
+        return tooltip;
     });
 }
 
@@ -710,6 +735,12 @@ export class Rendering {
             console.error("The element with ID 'energy' was not found.");
             this.energy_element = new HTMLElement();
         }
+
+        setupTooltip(this.energy_element, function () {
+            var tooltip = `<h3>Energy - ${GAMESTATE.current_energy}/${GAMESTATE.max_energy}</h3>`;
+            tooltip += `Energy goes down over time while you have a Task active`;
+            return tooltip;
+        });
 
         var tooltip_div = document.getElementById("tooltip");
         if (tooltip_div) {

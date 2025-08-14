@@ -301,19 +301,20 @@ function addItem(item: ItemType, count: number) {
     GAMESTATE.items.set(item, oldValue + count);
 }
 
-export function clickItem(item: ItemType) {
+export function clickItem(item: ItemType, use_all: boolean) {
     var definition = ITEMS[item] as ItemDefinition;
-    var oldValue = GAMESTATE.items.get(item) ?? 0;
+    var old_value = GAMESTATE.items.get(item) ?? 0;
 
-    if (oldValue <= 0) {
+    if (old_value <= 0) {
         console.error("Not held item?");
         return;
     }
 
-    definition.on_consume(oldValue);
-    GAMESTATE.items.set(item, 0);
+    const num_used = use_all ? old_value : 1;
+    definition.on_consume(num_used);
+    GAMESTATE.items.set(item, old_value - num_used);
 
-    const context: UsedItemContext = { item: item, count: oldValue };
+    const context: UsedItemContext = { item: item, count: num_used };
     const event = new RenderEvent(EventType.UsedItem, context);
     GAMESTATE.queueRenderEvent(event);
 }
