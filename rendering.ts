@@ -3,7 +3,7 @@ import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTask
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS } from "./items.js";
 import { PerkDefinition, PerkType, PERKS } from "./perks.js";
-import { EventType, SkillUpContext } from "./events.js";
+import { EventType, GainedPerkContext, SkillUpContext, UsedItemContext } from "./events.js";
 
 // MARK: Skills
 
@@ -565,8 +565,20 @@ function handleEvents() {
 
         switch (event.type) {
             case EventType.SkillUp:
-                var context = event.context as SkillUpContext;
-                message_div.textContent = `${SKILL_NAMES[context.skill]} is now ${context.new_level}`;
+                var skill_context = event.context as SkillUpContext;
+                message_div.textContent = `${SKILL_NAMES[skill_context.skill]} is now ${skill_context.new_level}`;
+                break;
+            case EventType.GainedPerk:
+                var perk_context = event.context as GainedPerkContext;
+                const perk = PERKS[perk_context.perk] as PerkDefinition;
+                message_div.innerHTML = `Unlocked ${perk.icon}${perk.name}`;
+                message_div.innerHTML += `<br>${perk.tooltip}`;
+                break;
+            case EventType.UsedItem:
+                var item_context = event.context as UsedItemContext;
+                const item = ITEMS[item_context.item] as ItemDefinition;
+                message_div.innerHTML = `Used ${item_context.count} ${item.icon}${item.name}`;
+                message_div.innerHTML += `<br>${item.get_effect_text(item_context.count)}`;
                 break;
             default:
                 break;

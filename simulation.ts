@@ -2,7 +2,7 @@ import { Task, ZONES, SkillType, TaskType, TASK_LOOKUP, TaskDefinition } from ".
 import { GAMESTATE } from "./game.js";
 import { ItemDefinition, ITEMS, ItemType } from "./items.js";
 import { PerkType } from "./perks.js";
-import { SkillUpContext, EventType, RenderEvent } from "./events.js";
+import { SkillUpContext, EventType, RenderEvent, GainedPerkContext, UsedItemContext } from "./events.js";
 
 // MARK: Skills
 
@@ -312,6 +312,10 @@ export function clickItem(item: ItemType) {
 
     definition.on_consume(oldValue);
     GAMESTATE.items.set(item, 0);
+
+    const context: UsedItemContext = { item: item, count: oldValue };
+    const event = new RenderEvent(EventType.UsedItem, context);
+    GAMESTATE.queueRenderEvent(event);
 }
 
 function halveItemCounts() {
@@ -327,6 +331,10 @@ function addPerk(perk: PerkType) {
     }
 
     GAMESTATE.perks.set(perk, true);
+    
+    const context: GainedPerkContext = { perk: perk };
+    const event = new RenderEvent(EventType.GainedPerk, context);
+    GAMESTATE.queueRenderEvent(event);
 }
 
 export function hasPerk(perk: PerkType): boolean {

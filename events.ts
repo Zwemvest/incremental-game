@@ -1,7 +1,11 @@
+import { ItemType } from "./items.js";
+import { PerkType } from "./perks.js";
 import { SkillType } from "./zones.js";
 
 export enum EventType {
     SkillUp,
+    GainedPerk,
+    UsedItem,
 
     Count
 }
@@ -21,4 +25,13 @@ export class RenderEvent {
 export class SkillUpContext extends EventContext {
     skill: SkillType = SkillType.Count;
     new_level: number = 0;
+}
+
+export class GainedPerkContext extends EventContext {
+    perk: PerkType = PerkType.Count;
+}
+
+export class UsedItemContext extends EventContext {
+    item: ItemType = ItemType.Count;
+    count: number = 0;
 }
