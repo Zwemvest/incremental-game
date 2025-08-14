@@ -267,6 +267,36 @@ function setupTooltip(element: ElementWithTooltip, callback: tooltipLambda) {
     });
 }
 
+function setupInfoTooltips() {
+    const item_info = document.querySelector<HTMLElement>("#items .section-info");
+
+    if (!item_info)
+    {
+        console.error("No item info element");
+        return;
+    }
+    
+    setupTooltip(item_info, function () {
+        var tooltip = `<h3>Items</h3>`;
+        tooltip += `Items can be used to get bonuses that last until the next Energy Reset`;
+        return tooltip;
+    });
+    
+    const perk_info = document.querySelector<HTMLElement>("#perks .section-info");
+
+    if (!perk_info)
+    {
+        console.error("No perk info element");
+        return;
+    }
+    
+    setupTooltip(perk_info, function () {
+        var tooltip = `<h3>Perks</h3>`;
+        tooltip += `Perks are permanent bonuses with a variety of effects`;
+        return tooltip;
+    });
+}
+
 // MARK: Items
 
 function createItemDiv(item: ItemType, items_div: HTMLElement) {
@@ -745,6 +775,7 @@ export class Rendering {
         setupGameOverRestartListener(this.game_over_element);
         setupSettings(this.settings_element);
         setupControls();
+        setupInfoTooltips();
 
         updateRendering();
 

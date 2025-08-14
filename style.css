@@ -175,6 +175,7 @@ button:hover:enabled {
 */
 
 .sidebar-section {
+    position: relative;
     margin-bottom: 20px;
     background: var(--element-background-color);
     border-radius: 8px;
@@ -198,6 +199,21 @@ button:hover:enabled {
     text-align: center;
     border-radius: 8px;
     background: var(--element-foreground-color);
+}
+
+.sidebar-section .section-info {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+    margin: 5px;
+    width: 24px;
+    height: 24px;
+    text-align: center;
+
+    border-radius: 100px;
+    border: #000;
+    border-width: 2px;
+    border-style: solid;
 }
 
 #controls .element {
