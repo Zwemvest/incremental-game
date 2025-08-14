@@ -246,6 +246,7 @@ body {
     width: 100%;
     justify-content: center;
     align-items: center;
+    color: white;
 
     background: #0008;
 }
@@ -260,6 +261,7 @@ body {
     left: 0;
     height: 100%;
     width: 100%;
+    color: white;
 
     display: flex;
     justify-content: center;
