@@ -65,6 +65,10 @@ body {
     background: var(--element-foreground-color);
 }
 
+button:hover:enabled {
+    filter: brightness(1.1);
+}
+
 /* MARK: Tasks
 */
 
