@@ -270,25 +270,25 @@ function setupTooltip(element: ElementWithTooltip, callback: tooltipLambda) {
 // MARK: Items
 
 function createItemDiv(item: ItemType, items_div: HTMLElement) {
-    const item_div = document.createElement("div");
-    item_div.className = "item";
+    const button = document.createElement("button");
+    button.className = "item-button";
+    button.classList.add("element");
 
     var item_definition = ITEMS[item] as ItemDefinition;
 
-    const button = document.createElement("button");
-    button.className = "item-button";
+    //const button = document.createElement("button");
+    //button.className = "item-button";
+    button.textContent
     button.addEventListener("click", () => { clickItem(item); });
 
-    item_div.appendChild(button);
-
-    setupTooltip(item_div, function () {
+    setupTooltip(button, function () {
         var tooltip = `<h3>${item_definition.name}</h3>`;
         tooltip += `${item_definition.tooltip}`;
         return tooltip;
     });
 
-    items_div.appendChild(item_div);
-    RENDERING.item_elements.set(item, item_div);
+    items_div.appendChild(button);
+    RENDERING.item_elements.set(item, button);
 }
 
 function createItems() {
@@ -318,8 +318,7 @@ function updateItems() {
     }
 
     for (const item of GAMESTATE.items.keys()) {
-        var element = RENDERING.item_elements.get(item) as HTMLElement;
-        var button = element.querySelector<HTMLInputElement>(".item-button");
+        var button = RENDERING.item_elements.get(item) as HTMLInputElement;
         if (button) {
             var item_definition = ITEMS[item] as ItemDefinition;
             var item_count = GAMESTATE.items.get(item);
@@ -341,6 +340,7 @@ function updateItems() {
 function createPerkDiv(perk: PerkType, perks_div: HTMLElement) {
     const perk_div = document.createElement("div");
     perk_div.className = "perk";
+    perk_div.classList.add("element");
 
     const perk_text = document.createElement("span");
     perk_text.className = "perk-text";

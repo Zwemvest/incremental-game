@@ -14,8 +14,7 @@ body {
     min-height: 100vh;
     background: linear-gradient(120deg, #102661, #8c386d);
     background-attachment: fixed;
-}  
-
+}
 
 #game-area {
     max-width: 900px;
@@ -56,13 +55,16 @@ body {
     gap: 10px;
 }
 
+button {
+    border-radius: 8px;
+    background: var(--element-foreground-color);
+}
+
 #open-settings {
     width: 48px;
     height: 48px;
     text-align: center;
     font-size: 2em;
-    border-radius: 8px;
-    background: var(--element-foreground-color);
 }
 
 button:hover:enabled {
@@ -169,36 +171,31 @@ button:hover:enabled {
     margin-bottom: 2px;
 }
 
-/* MARK: Items
+/* MARK: Sidebar
 */
 
-#items {
+.sidebar-section {
     margin-bottom: 20px;
     background: var(--element-background-color);
     border-radius: 8px;
     padding: 5px;
 }
 
-#items-name {
+.sidebar-section .section-name {
     margin: 5px;
 }
 
-#items-list {
+.sidebar-section .elements-list {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
     margin-bottom: 5px;
 }
 
-.item {
+.sidebar-section .element {
     width: 48px;
     height: 48px;
     text-align: center;
-}
-
-.item button {
-    width: 100%;
-    height: 100%;
     border-radius: 8px;
     background: var(--element-foreground-color);
 }
@@ -206,44 +203,17 @@ button:hover:enabled {
 /* MARK: Perks
 */
 
-#perks {
-    margin-bottom: 20px;
-    background: var(--element-background-color);
-    border-radius: 8px;
-    padding: 5px;
-}
-
-#perks-name {
-    margin: 5px;
-}
-
-#perks-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    margin-bottom: 5px;
-}
-
 .perk {
-    width: 48px;
-    height: 48px;
-    text-align: center;
     font-size: 1.5em;
-    border-radius: 8px;
-    background: var(--element-foreground-color);
     align-items: center;
     justify-content: center;
     display: flex;
 }
 
-.perk-text {
-    vertical-align: center;
-}
-
 /* MARK: Game over
 */
 
-#game-over-overlay {
+.full-screen-overlay {
     position: fixed;
     display: flex;
     top: 0;
@@ -259,21 +229,6 @@ button:hover:enabled {
 
 #game-over-box {
     text-align: center;
-}
-
-#end-of-content-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-    color: white;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background: #0008;
 }
 
 #end-of-content-box {
@@ -325,21 +280,6 @@ button:hover:enabled {
 /* MARK: Settings
 */
 
-#settings-overlay {
-    position: fixed;
-
-    top: 0;
-    left: 0;
-    height: 100%;
-    width: 100%;
-
-    display: flex;
-    justify-content: center;
-    align-items: center;
-
-    background: #0008;
-}
-
 #settings {
     position: relative;
     height: 200px;
@@ -357,8 +297,6 @@ button:hover:enabled {
 }
 
 #settings button {
-    border-radius: 8px;
-    background: var(--element-foreground-color);
     font-size: 1em;
 }
 
@@ -369,8 +307,6 @@ button:hover:enabled {
     width: 32px;
     height: 32px;
     font-size: 1em;
-    border-radius: 8px;
-    background: var(--element-foreground-color);
 }
 
 /* MARK: Messages
