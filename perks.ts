@@ -4,7 +4,7 @@ export enum PerkType {
     VillagerGratitude,
     Amulet,
     EnergySpell,
-    Zone6,
+    ExperiencedTraveler,
     Zone7,
     Zone8,
     Zone9,
@@ -37,7 +37,7 @@ export var PERKS: PerkDefinition[] = [
         enum: PerkType.EnergySpell, name: "Energetic Spell", tooltip: "Increases starting Energy by 50", icon: "✨",
     },
     {
-        enum: PerkType.Zone6, name: "Placeholder", tooltip: "???", icon: "?",
+        enum: PerkType.ExperiencedTraveler, name: "Experienced Traveler", tooltip: "Improves Travel speed by 50%", icon: "🦶",
     },
     {
         enum: PerkType.Zone7, name: "Placeholder", tooltip: "???", icon: "?",
