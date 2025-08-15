@@ -6,7 +6,7 @@ export enum PerkType {
     EnergySpell,
     ExperiencedTraveler,
     UndergroundConnection,
-    Zone8,
+    MinorTimeCompression,
     Zone9,
     Zone10,
 
@@ -43,7 +43,7 @@ export var PERKS: PerkDefinition[] = [
         enum: PerkType.UndergroundConnection, name: "Underground Connection", tooltip: "Improves Subterfuge speed by 40% and Charisma speed by 20%", icon: "🗡️",
     },
     {
-        enum: PerkType.Zone8, name: "Placeholder", tooltip: "???", icon: "?",
+        enum: PerkType.MinorTimeCompression, name: "Minor Time Compression", tooltip: "Tasks that are completed instantly (in a single tick) now cost 80% less energy", icon: "✨",
     },
     {
         enum: PerkType.Zone9, name: "Placeholder", tooltip: "???", icon: "?",

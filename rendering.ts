@@ -142,7 +142,15 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
         }
 
         tooltip += `Estimated energy used: ${estimateTotalTaskEnergyConsumption(task)}`;
-        tooltip += `<br>Estimated time: ${estimateTaskTimeInSeconds(task)}s`;
+        const task_ticks = estimateTotalTaskTicks(task);
+        if (task_ticks == 1)
+        {
+            tooltip += `<br>Estimated time: one tick`;
+        }
+        else
+        {
+            tooltip += `<br>Estimated time: ${estimateTaskTimeInSeconds(task)}s`;
+        }
         tooltip += "<br>Estimated levels up:";
 
         for (const skill of task.definition.skills) {
@@ -250,7 +258,8 @@ function updateEnergyRendering() {
 }
 
 function estimateTotalTaskEnergyConsumption(task: Task): number {
-    return estimateTotalTaskTicks(task) * calcEnergyDrainPerTick(task);
+    const num_ticks = estimateTotalTaskTicks(task);
+    return num_ticks * calcEnergyDrainPerTick(task, num_ticks == 1);
 }
 
 // MARK: Tooltips

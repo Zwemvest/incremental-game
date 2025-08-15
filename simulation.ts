@@ -181,7 +181,7 @@ function updateActiveTask() {
     if (active_task.progress < cost) {
         const progress = calcTaskProgressPerTick(active_task);
         active_task.progress += progress;
-        modifyEnergy(-calcEnergyDrainPerTick(active_task));
+        modifyEnergy(-calcEnergyDrainPerTick(active_task, progress >= cost));
         for (const skill of active_task.definition.skills) {
             addSkillXp(skill, calcSkillXp(active_task, progress));
         }
@@ -276,7 +276,12 @@ function modifyEnergy(delta: number) {
     GAMESTATE.current_energy += delta;
 }
 
-export function calcEnergyDrainPerTick(task: Task): number {
+export function calcEnergyDrainPerTick(task: Task, is_single_tick: boolean): number {
+    if (is_single_tick && hasPerk(PerkType.MinorTimeCompression))
+    {
+        return 0.2;
+    }
+
     return 1;
 }
 

@@ -103,7 +103,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 44, name: "Build a Fire", cost_multiplier: 4, xp_mult: 3, skills: [SkillType.Survival, SkillType.Crafting] }),
             new TaskDefinition({ id: 45, name: "Forage for Mushrooms", max_reps: 5, xp_mult: 2, cost_multiplier: 0.6, skills: [SkillType.Search], item: ItemType.Mushroom }),
             new TaskDefinition({ id: 46, name: "Befried a Deer", cost_multiplier: 4, xp_mult: 3, skills: [SkillType.Charisma] }),
-            new TaskDefinition({ id: 47, name: "FOREST CREATURE PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 100, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 47, name: "FOREST CREATURE PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 1000, skills: [SkillType.Combat] }),
         ],
     },
     {
@@ -116,7 +116,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 54, name: "Try Casting a Spell", cost_multiplier: 7, max_reps: 6, skills: [SkillType.Magic, SkillType.Study], perk: PerkType.EnergySpell }),
             new TaskDefinition({ id: 55, name: "Inspect Wall Paitings", cost_multiplier: 4, xp_mult: 4, skills: [SkillType.Study] }),
             new TaskDefinition({ id: 56, name: "Scout the Cave", cost_multiplier: 1, max_reps: 3, xp_mult: 3, skills: [SkillType.Search] }),
-            new TaskDefinition({ id: 57, name: "Goblin Chieftain", type: TaskType.Boss, cost_multiplier: 100, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 57, name: "Goblin Chieftain", type: TaskType.Boss, cost_multiplier: 1000, skills: [SkillType.Combat] }),
         ],
     },
     {
@@ -129,7 +129,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 64, name: "Get Used to Traveling", cost_multiplier: 3, max_reps: 3, xp_mult: 3, skills: [SkillType.Travel], perk: PerkType.ExperiencedTraveler }),
             new TaskDefinition({ id: 65, name: "Chat with Travelers", cost_multiplier: 3, max_reps: 4, xp_mult: 3, skills: [SkillType.Charisma] }),
             new TaskDefinition({ id: 66, name: "Practice Traveling Unnoticed", cost_multiplier: 6, max_reps: 1, xp_mult: 4, skills: [SkillType.Subterfuge] }),
-            new TaskDefinition({ id: 67, name: "Bandits", type: TaskType.Boss, cost_multiplier: 100, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 67, name: "Bandits", type: TaskType.Boss, cost_multiplier: 1000, skills: [SkillType.Combat] }),
         ],
     },
     {
@@ -142,20 +142,20 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 74, name: "Negotiate with a Rogue Guard Captain", cost_multiplier: 50, max_reps: 1, xp_mult: 0.3, skills: [SkillType.Charisma, SkillType.Subterfuge], perk: PerkType.UndergroundConnection }),
             new TaskDefinition({ id: 75, name: "Spar with the Guards", cost_multiplier: 3, max_reps: 3, xp_mult: 1.5, skills: [SkillType.Combat] }),
             new TaskDefinition({ id: 76, name: "Fend for Yourself", cost_multiplier: 4, max_reps: 1, xp_mult: 3, skills: [SkillType.Survival] }),
-            new TaskDefinition({ id: 77, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 100, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 77, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 1000, skills: [SkillType.Combat] }),
         ],
     },
     {
         name: "The City",
         tasks: [
-            new TaskDefinition({ id: 80, name: "PLACEHOLDER", type: TaskType.Travel, cost_multiplier: 4, skills: [SkillType.Travel] }),
-            new TaskDefinition({ id: 81, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 2, skills: [SkillType.Charisma] }),
+            new TaskDefinition({ id: 80, name: "Embark on a Quest", type: TaskType.Travel, cost_multiplier: 4, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 81, name: "Investigate Rumors of a Great Magician", type: TaskType.Mandatory, cost_multiplier: 8, max_reps: 4, skills: [SkillType.Charisma, SkillType.Search] }),
             new TaskDefinition({ id: 82, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 4, max_reps: 3, skills: [SkillType.Charisma, SkillType.Subterfuge] }),
             new TaskDefinition({ id: 83, name: "PLACEHOLDER", max_reps: 5, cost_multiplier: 0.75, skills: [SkillType.Subterfuge], item: ItemType.Zone8 }),
-            new TaskDefinition({ id: 84, name: "PLACEHOLDER", cost_multiplier: 5, max_reps: 6, xp_mult: 0.2, skills: [SkillType.Magic, SkillType.Study], perk: PerkType.Zone8 }),
-            new TaskDefinition({ id: 85, name: "PLACEHOLDER", cost_multiplier: 4, xp_mult: 2, skills: [SkillType.Study] }),
+            new TaskDefinition({ id: 84, name: "Cast a Spell", cost_multiplier: 5, max_reps: 6, xp_mult: 0.2, skills: [SkillType.Magic], perk: PerkType.MinorTimeCompression }),
+            new TaskDefinition({ id: 85, name: "Study at the Mage's Guild", cost_multiplier: 10, xp_mult: 1.5, skills: [SkillType.Study, SkillType.Magic] }),
             new TaskDefinition({ id: 86, name: "PLACEHOLDER", cost_multiplier: 1, max_reps: 3, xp_mult: 3, skills: [SkillType.Search] }),
-            new TaskDefinition({ id: 87, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 100, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 87, name: "Corrupt Mayor", type: TaskType.Boss, cost_multiplier: 1000, skills: [SkillType.Combat] }),
         ],
     },
     {
@@ -168,7 +168,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 94, name: "PLACEHOLDER", cost_multiplier: 5, max_reps: 6, xp_mult: 0.2, skills: [SkillType.Magic, SkillType.Study], perk: PerkType.Zone9 }),
             new TaskDefinition({ id: 95, name: "PLACEHOLDER", cost_multiplier: 4, xp_mult: 2, skills: [SkillType.Study] }),
             new TaskDefinition({ id: 96, name: "PLACEHOLDER", cost_multiplier: 1, max_reps: 3, xp_mult: 3, skills: [SkillType.Search] }),
-            new TaskDefinition({ id: 97, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 100, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 97, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 1000, skills: [SkillType.Combat] }),
         ],
     },
     {
@@ -181,7 +181,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 104, name: "PLACEHOLDER", cost_multiplier: 5, max_reps: 6, xp_mult: 0.2, skills: [SkillType.Magic, SkillType.Study], perk: PerkType.Zone10 }),
             new TaskDefinition({ id: 105, name: "PLACEHOLDER", cost_multiplier: 4, xp_mult: 2, skills: [SkillType.Study] }),
             new TaskDefinition({ id: 106, name: "PLACEHOLDER", cost_multiplier: 1, max_reps: 3, xp_mult: 3, skills: [SkillType.Search] }),
-            new TaskDefinition({ id: 107, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 100, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 107, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 1000, skills: [SkillType.Combat] }),
         ],
     },
 ]
