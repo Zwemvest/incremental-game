@@ -742,6 +742,8 @@ export class Rendering {
         setupTooltip(this.energy_element, function () {
             var tooltip = `<h3>Energy - ${GAMESTATE.current_energy}/${GAMESTATE.max_energy}</h3>`;
             tooltip += `Energy goes down over time while you have a Task active`;
+            tooltip += `<br>Tasks with multiple skills scale by the square or cube root of the skill level bonuses`;
+            tooltip += `<br>Bonuses not from levels (E.G., from Items and Perks) are not scaled down this way`;
             return tooltip;
         });
 
