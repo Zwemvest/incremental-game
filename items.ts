@@ -8,9 +8,9 @@ export enum ItemType {
     Food,
     Mushroom,
     GoblinSupplies,
-    Zone6,
-    Zone7,
-    Zone8,
+    TravelEquipment,
+    Book,
+    ScrollOfHaste,
     Zone9,
     Zone10,
 
@@ -28,6 +28,8 @@ export class ItemDefinition {
     get_effect_text: itemEffectTextLambda = () => { return ""; };
     on_consume: itemUseLambda = () => { };
 }
+
+export const HASTE_MULT = 5;
 
 export var ITEMS: ItemDefinition[] = [
     {
@@ -62,19 +64,24 @@ export var ITEMS: ItemDefinition[] = [
         },
     },
     {
-        enum: ItemType.Zone6, name: "Placeholder", tooltip: "???", icon: "?",
-        get_effect_text: (amount) => { return `???`; },
-        on_consume: (amount) => {},
+        enum: ItemType.TravelEquipment, name: "Travel Equipment", tooltip: "Improves Travel speed by 10% and Survival speed by 10%", icon: "🎒",
+        get_effect_text: (amount) => { return `Travel speed increased ${amount * 10}%; Survival speed increased ${amount * 10}%`; },
+        on_consume: (amount) => {
+            getSkill(SkillType.Travel).speed_modifier += 0.1 * amount;
+            getSkill(SkillType.Survival).speed_modifier += 0.1 * amount;
+        },
     },
     {
-        enum: ItemType.Zone7, name: "Placeholder", tooltip: "???", icon: "?",
-        get_effect_text: (amount) => { return `???`; },
-        on_consume: (amount) => {},
+        enum: ItemType.Book, name: "Books", tooltip: "Improves Study speed by 10%", icon: "📚",
+        get_effect_text: (amount) => { return `Study speed increased ${amount * 10}`; },
+        on_consume: (amount) => {
+            getSkill(SkillType.Study).speed_modifier += 0.1 * amount;
+        },
     },
     {
-        enum: ItemType.Zone8, name: "Placeholder", tooltip: "???", icon: "?",
-        get_effect_text: (amount) => { return `???`; },
-        on_consume: (amount) => {},
+        enum: ItemType.ScrollOfHaste, name: "Scroll of Haste", tooltip: `The next Task you start is ${HASTE_MULT}x as fast`, icon: "⚡",
+        get_effect_text: (amount) => { return `Next ${amount} tasks are ${HASTE_MULT}x as fast`; },
+        on_consume: (amount) => { GAMESTATE.queued_scrolls_of_haste += amount; },
     },
     {
         enum: ItemType.Zone9, name: "Placeholder", tooltip: "???", icon: "?",

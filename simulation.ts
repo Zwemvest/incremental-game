@@ -1,6 +1,6 @@
 import { Task, ZONES, SkillType, TaskType, TASK_LOOKUP, TaskDefinition } from "./zones.js";
 import { GAMESTATE } from "./game.js";
-import { ItemDefinition, ITEMS, ItemType } from "./items.js";
+import { HASTE_MULT, ItemDefinition, ITEMS, ItemType } from "./items.js";
 import { PerkType } from "./perks.js";
 import { SkillUpContext, EventType, RenderEvent, GainedPerkContext, UsedItemContext } from "./events.js";
 
@@ -164,6 +164,11 @@ export function calcTaskProgressMultiplier(task: Task): number {
         mult *= calcSkillTaskProgressWithoutLevel(skill_type);
     }
 
+    if (task.hasted)
+    {
+        mult *= HASTE_MULT;
+    }
+
     return mult * progress_mult;
 }
 
@@ -198,6 +203,11 @@ export function clickTask(task: Task) {
     }
     else {
         GAMESTATE.active_task = task;
+        if (!task.hasted && GAMESTATE.queued_scrolls_of_haste > 0)
+        {
+            task.hasted = true;
+            GAMESTATE.queued_scrolls_of_haste--;
+        }
     }
 }
 
@@ -445,8 +455,9 @@ export class Gamestate {
 
     skills_at_start_of_reset: number[] = [];
     skills: Skill[] = [];
-    items: Map<ItemType, number> = new Map();
     perks: Map<PerkType, boolean> = new Map();
+    items: Map<ItemType, number> = new Map();
+    queued_scrolls_of_haste = 0;
 
     is_in_game_over = false;
     is_at_end_of_content = false;

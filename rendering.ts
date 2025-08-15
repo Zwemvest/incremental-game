@@ -1,7 +1,7 @@
 import { Task, TaskDefinition, SkillType, ZONES, TaskType } from "./zones.js";
 import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel, saveGame, SAVE_LOCATION, toggleRepeatTasks } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
-import { ItemType, ItemDefinition, ITEMS } from "./items.js";
+import { ItemType, ItemDefinition, ITEMS, HASTE_MULT } from "./items.js";
 import { PerkDefinition, PerkType, PERKS } from "./perks.js";
 import { EventType, GainedPerkContext, SkillUpContext, UsedItemContext } from "./events.js";
 
@@ -231,7 +231,12 @@ function updateTaskRendering() {
 }
 
 function estimateTotalTaskTicks(task: Task): number {
-    const progress_mult = calcTaskProgressMultiplier(task);
+    var progress_mult = calcTaskProgressMultiplier(task);
+    if (!task.hasted && GAMESTATE.queued_scrolls_of_haste > 0)
+    {
+        progress_mult *= HASTE_MULT;
+    }
+
     const num_ticks = Math.ceil(calcTaskCost(task) / progress_mult);
     return num_ticks;
 }
@@ -249,7 +254,7 @@ function updateEnergyRendering() {
 
     var value = RENDERING.energy_element.querySelector<HTMLDivElement>(".progress-value");
     if (value) {
-        const new_html = `${GAMESTATE.current_energy}`;
+        const new_html = `${GAMESTATE.current_energy.toFixed(0)}`;
         // Avoid flickering in the debugger
         if (new_html != value.innerHTML) {
             value.textContent = new_html;
@@ -751,7 +756,7 @@ export class Rendering {
         }
 
         setupTooltip(this.energy_element, function () {
-            var tooltip = `<h3>Energy - ${GAMESTATE.current_energy}/${GAMESTATE.max_energy}</h3>`;
+            var tooltip = `<h3>Energy - ${GAMESTATE.current_energy.toFixed(0)}/${GAMESTATE.max_energy.toFixed(0)}</h3>`;
             tooltip += `Energy goes down over time while you have a Task active`;
             tooltip += `<br>Tasks with multiple skills scale by the square or cube root of the skill level bonuses`;
             tooltip += `<br>Bonuses not from levels (E.G., from Items and Perks) are not scaled down this way`;
