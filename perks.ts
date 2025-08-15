@@ -9,6 +9,7 @@ export enum PerkType {
     MinorTimeCompression,
     Zone9,
     Zone10,
+    VillageHero,
 
     Count
 }
@@ -50,5 +51,8 @@ export var PERKS: PerkDefinition[] = [
     },
     {
         enum: PerkType.Zone10, name: "Placeholder", tooltip: "???", icon: "?",
+    },
+    {
+        enum: PerkType.VillageHero, name: "Village Hero", tooltip: "Improves Charisma speed by 20% and Combat speed by 20%", icon: "🎖️",
     },
 ]

@@ -11,6 +11,7 @@ export enum ItemType {
     TravelEquipment,
     Book,
     ScrollOfHaste,
+    GoblinWaraxe,
     Zone9,
     Zone10,
 
@@ -82,6 +83,13 @@ export var ITEMS: ItemDefinition[] = [
         enum: ItemType.ScrollOfHaste, name: "Scroll of Haste", tooltip: `The next Task you start is ${HASTE_MULT}x as fast`, icon: "⚡",
         get_effect_text: (amount) => { return `Next ${amount} tasks are ${HASTE_MULT}x as fast`; },
         on_consume: (amount) => { GAMESTATE.queued_scrolls_of_haste += amount; },
+    },
+    {
+        enum: ItemType.GoblinWaraxe, name: "Goblin Waraxe", tooltip: "Improves Combat speed by 100%", icon: "🪓",
+        get_effect_text: (amount) => { return `Combat speed increased ${amount * 100}%`; },
+        on_consume: (amount) => {
+            getSkill(SkillType.Combat).speed_modifier += 1.0 * amount;
+        },
     },
     {
         enum: ItemType.Zone9, name: "Placeholder", tooltip: "???", icon: "?",

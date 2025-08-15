@@ -2,7 +2,7 @@ import { Task, ZONES, SkillType, TaskType, TASK_LOOKUP, TaskDefinition } from ".
 import { GAMESTATE } from "./game.js";
 import { HASTE_MULT, ItemDefinition, ITEMS, ItemType } from "./items.js";
 import { PerkType } from "./perks.js";
-import { SkillUpContext, EventType, RenderEvent, GainedPerkContext, UsedItemContext } from "./events.js";
+import { SkillUpContext, EventType, RenderEvent, GainedPerkContext, UsedItemContext, UnlockedTaskContext } from "./events.js";
 
 // MARK: Skills
 
@@ -90,6 +90,9 @@ function calcSkillTaskProgressWithoutLevel(skill_type: SkillType): number {
             if (hasPerk(PerkType.VillagerGratitude)) {
                 mult *= 1.5;
             }
+            if (hasPerk(PerkType.VillageHero)) {
+                mult *= 1.2;
+            }
             if (hasPerk(PerkType.UndergroundConnection)) {
                 mult *= 1.2;
             }
@@ -102,6 +105,11 @@ function calcSkillTaskProgressWithoutLevel(skill_type: SkillType): number {
         case SkillType.Subterfuge:
             if (hasPerk(PerkType.UndergroundConnection)) {
                 mult *= 1.4;
+            }
+            break;
+        case SkillType.Combat:
+            if (hasPerk(PerkType.VillageHero)) {
+                mult *= 1.2;
             }
             break;
     }
@@ -225,8 +233,14 @@ function finishTask(task: Task) {
         task.progress = 0;
     }
 
-    if (task.reps == task.definition.max_reps && task.definition.perk != PerkType.Count) {
+    const fully_finished = task.reps == task.definition.max_reps;
+    if (fully_finished && task.definition.perk != PerkType.Count) {
         addPerk(task.definition.perk);
+    }
+
+    if (fully_finished && task.definition.unlocks_task >= 0)
+    {
+        unlockTask(task.definition.unlocks_task);
     }
 
     if (!GAMESTATE.repeat_tasks)
@@ -269,6 +283,11 @@ function initializeTasks() {
     const zone = ZONES[GAMESTATE.current_zone];
     if (zone) {
         for (const task of zone.tasks) {
+            if (task.hidden_by_default && !GAMESTATE.unlocked_tasks.includes(task.id))
+            {
+                continue;
+            }
+
             GAMESTATE.tasks.push(new Task(task));
         }
     }
@@ -278,6 +297,21 @@ function initializeTasks() {
 
 export function toggleRepeatTasks() {
     GAMESTATE.repeat_tasks = !GAMESTATE.repeat_tasks;
+}
+
+function unlockTask(task_id: number) {
+    if (GAMESTATE.unlocked_tasks.includes(task_id))
+    {
+        return;
+    }
+
+    const task = TASK_LOOKUP.get(task_id) as TaskDefinition;
+    GAMESTATE.unlocked_tasks.push(task_id);
+    GAMESTATE.tasks.push(new Task(task));
+
+    const context: UnlockedTaskContext = { task: task };
+    const event = new RenderEvent(EventType.UnlockedTask, context);
+    GAMESTATE.queueRenderEvent(event);
 }
 
 // MARK: Energy
@@ -434,8 +468,8 @@ function loadGame(): boolean {
 function loadGameFromData(data: any) {
     Object.keys(data).forEach(key => {
         const value = data[key];
-        // Check if the value is an array of entries and convert it back to a Map
-        if (Array.isArray(value) && value.every(entry => Array.isArray(entry) && entry.length === 2)) {
+        // Convert it back to a Map if that's what we want
+        if ((GAMESTATE as any)[key] instanceof Map) {
             (GAMESTATE as any)[key] = new Map(value);
         } else {
             (GAMESTATE as any)[key] = value;
@@ -450,6 +484,7 @@ export class Gamestate {
 
     tasks: Task[] = [];
     active_task: Task | null = null;
+    unlocked_tasks: number[] = [];
     current_zone: number = 0;
     repeat_tasks = true;
 

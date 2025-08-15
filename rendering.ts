@@ -3,7 +3,7 @@ import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTask
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS, HASTE_MULT } from "./items.js";
 import { PerkDefinition, PerkType, PERKS } from "./perks.js";
-import { EventType, GainedPerkContext, SkillUpContext, UsedItemContext } from "./events.js";
+import { EventType, GainedPerkContext, SkillUpContext, UnlockedTaskContext, UsedItemContext } from "./events.js";
 
 // MARK: Skills
 
@@ -197,10 +197,14 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     rendering.task_elements.set(task.definition, task_div);
 }
 
+function recreateTasks() {
+    RENDERING.createTasks();
+}
+
 function updateTaskRendering() {
     if (GAMESTATE.energy_reset_count != RENDERING.energy_reset_count) {
         RENDERING.energy_reset_count = GAMESTATE.energy_reset_count;
-        RENDERING.createTasks();
+        recreateTasks();
     }
 
     for (const task of GAMESTATE.tasks) {
@@ -653,6 +657,11 @@ function handleEvents() {
                 message_div.innerHTML = `Used ${item_context.count} ${item.icon}${item.name}`;
                 message_div.innerHTML += `<br>${item.get_effect_text(item_context.count)}`;
                 break;
+            case EventType.UnlockedTask:
+                var unlock_context = event.context as UnlockedTaskContext;
+                message_div.innerHTML = `Unlocked task ${unlock_context.task.name}`;
+                recreateTasks();
+                break;
             default:
                 break;
         }
@@ -674,9 +683,10 @@ function handleEvents() {
 // MARK: Controls
 
 function setupControls() {
+    RENDERING.controls_list_element.innerHTML = "";
+
     var rep_control = document.createElement("button");
     rep_control.className = "element";
-    rep_control.innerHTML = "";
 
     function setRepControlName() {
         rep_control.textContent = GAMESTATE.repeat_tasks ? "Repeat Tasks" : "Don't Repeat Tasks";
@@ -818,16 +828,19 @@ export class Rendering {
         }
     }
 
+    public initialize() {
+        setupGameOverRestartListener(this.game_over_element);
+        setupSettings(this.settings_element);
+        setupControls();
+        setupInfoTooltips();
+    }
+
     public start() {
         this.createTasks();
         this.createSkills();
 
         setupZone();
         createPerks();
-        setupGameOverRestartListener(this.game_over_element);
-        setupSettings(this.settings_element);
-        setupControls();
-        setupInfoTooltips();
 
         updateRendering();
 
@@ -842,7 +855,7 @@ function checkZone() {
     }
 
     RENDERING.current_zone = GAMESTATE.current_zone;
-    RENDERING.createTasks();
+    recreateTasks();
     setupZone();
 }
 

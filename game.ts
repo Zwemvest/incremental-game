@@ -11,6 +11,7 @@ export var RENDERING = new Rendering();
 
 document.addEventListener("DOMContentLoaded", () => {
     GAMESTATE.start();
+    RENDERING.initialize();
     RENDERING.start();
 
     setInterval(gameLoop, GAMESTATE.tick_interval_ms);
@@ -27,5 +28,6 @@ document.addEventListener("DOMContentLoaded", () => {
 (window as any).resetZone = () => {
     resetTasks();
     RENDERING = new Rendering();
+    RENDERING.initialize();
     RENDERING.start();
 }

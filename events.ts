@@ -1,11 +1,12 @@
 import { ItemType } from "./items.js";
 import { PerkType } from "./perks.js";
-import { SkillType } from "./zones.js";
+import { SkillType, TaskDefinition } from "./zones.js";
 
 export enum EventType {
     SkillUp,
     GainedPerk,
     UsedItem,
+    UnlockedTask,
 
     Count
 }
@@ -34,4 +35,8 @@ export class GainedPerkContext extends EventContext {
 export class UsedItemContext extends EventContext {
     item: ItemType = ItemType.Count;
     count: number = 0;
+}
+
+export class UnlockedTaskContext extends EventContext {
+    task: TaskDefinition = new TaskDefinition();
 }
