@@ -111,7 +111,7 @@ button:hover:enabled {
     background: linear-gradient(5deg, rgb(214, 60, 60), rgb(236, 107, 107));
 }
 
-.task .task-item-indicator {
+.task .indicator {
     width: 16px;
     height: 16px;
     margin-left: 3px;

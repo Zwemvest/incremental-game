@@ -97,15 +97,17 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     if (task.definition.item != ItemType.Count) {
         var item_indicator = document.createElement("div");
         item_indicator.className = "task-item-indicator";
+        item_indicator.classList.add("indicator");
         item_indicator.textContent = ITEMS[task.definition.item]?.icon as string;
         task_button.appendChild(item_indicator);
     }
 
     if (task.definition.perk != PerkType.Count && !hasPerk(task.definition.perk)) {
-        var item_indicator = document.createElement("div");
-        item_indicator.className = "task-perk-indicator";
-        item_indicator.textContent = PERKS[task.definition.perk]?.icon as string;
-        task_button.appendChild(item_indicator);
+        var perk_indicator = document.createElement("div");
+        perk_indicator.className = "task-perk-indicator";
+        perk_indicator.classList.add("indicator");
+        perk_indicator.textContent = PERKS[task.definition.perk]?.icon as string;
+        task_button.appendChild(perk_indicator);
     }
 
     const task_reps_div = document.createElement("div");

@@ -327,7 +327,12 @@ function halveItemCounts() {
 
 // MARK: Perks
 function addPerk(perk: PerkType) {
-    if (perk == PerkType.EnergySpell && !hasPerk(perk)) {
+    if(hasPerk(perk))
+    {
+        return;
+    }
+
+    if (perk == PerkType.EnergySpell) {
         GAMESTATE.max_energy += 50;
     }
 

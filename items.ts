@@ -8,6 +8,11 @@ export enum ItemType {
     Food,
     Mushroom,
     GoblinSupplies,
+    Zone6,
+    Zone7,
+    Zone8,
+    Zone9,
+    Zone10,
 
     Count
 }
@@ -55,5 +60,30 @@ export var ITEMS: ItemDefinition[] = [
             getSkill(SkillType.Subterfuge).speed_modifier += 0.15 * amount;
             getSkill(SkillType.Combat).speed_modifier += 0.1 * amount;
         },
+    },
+    {
+        enum: ItemType.Zone6, name: "Placeholder", tooltip: "???", icon: "?",
+        get_effect_text: (amount) => { return `???`; },
+        on_consume: (amount) => {},
+    },
+    {
+        enum: ItemType.Zone7, name: "Placeholder", tooltip: "???", icon: "?",
+        get_effect_text: (amount) => { return `???`; },
+        on_consume: (amount) => {},
+    },
+    {
+        enum: ItemType.Zone8, name: "Placeholder", tooltip: "???", icon: "?",
+        get_effect_text: (amount) => { return `???`; },
+        on_consume: (amount) => {},
+    },
+    {
+        enum: ItemType.Zone9, name: "Placeholder", tooltip: "???", icon: "?",
+        get_effect_text: (amount) => { return `???`; },
+        on_consume: (amount) => {},
+    },
+    {
+        enum: ItemType.Zone10, name: "Placeholder", tooltip: "???", icon: "?",
+        get_effect_text: (amount) => { return `???`; },
+        on_consume: (amount) => {},
     },
 ]

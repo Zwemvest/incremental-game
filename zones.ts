@@ -119,6 +119,71 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 57, name: "Goblin Chieftain", type: TaskType.Boss, cost_multiplier: 100, skills: [SkillType.Combat] }),
         ],
     },
+    {
+        name: "The Road to the City",
+        tasks: [
+            new TaskDefinition({ id: 60, name: "PLACEHOLDER", type: TaskType.Travel, cost_multiplier: 4, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 61, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 2, skills: [SkillType.Charisma] }),
+            new TaskDefinition({ id: 62, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 4, max_reps: 3, skills: [SkillType.Charisma, SkillType.Subterfuge] }),
+            new TaskDefinition({ id: 63, name: "PLACEHOLDER", max_reps: 5, cost_multiplier: 0.75, skills: [SkillType.Subterfuge], item: ItemType.Zone6 }),
+            new TaskDefinition({ id: 64, name: "PLACEHOLDER", cost_multiplier: 5, max_reps: 6, skills: [SkillType.Magic, SkillType.Study], perk: PerkType.Zone6 }),
+            new TaskDefinition({ id: 65, name: "PLACEHOLDER", cost_multiplier: 4, xp_mult: 2, skills: [SkillType.Study] }),
+            new TaskDefinition({ id: 66, name: "PLACEHOLDER", cost_multiplier: 1, max_reps: 3, xp_mult: 3, skills: [SkillType.Search] }),
+            new TaskDefinition({ id: 67, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 100, skills: [SkillType.Combat] }),
+        ],
+    },
+    {
+        name: "The City Outskirts",
+        tasks: [
+            new TaskDefinition({ id: 70, name: "PLACEHOLDER", type: TaskType.Travel, cost_multiplier: 4, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 71, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 2, skills: [SkillType.Charisma] }),
+            new TaskDefinition({ id: 72, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 4, max_reps: 3, skills: [SkillType.Charisma, SkillType.Subterfuge] }),
+            new TaskDefinition({ id: 73, name: "PLACEHOLDER", max_reps: 5, cost_multiplier: 0.75, skills: [SkillType.Subterfuge], item: ItemType.Zone7 }),
+            new TaskDefinition({ id: 74, name: "PLACEHOLDER", cost_multiplier: 5, max_reps: 6, skills: [SkillType.Magic, SkillType.Study], perk: PerkType.Zone7 }),
+            new TaskDefinition({ id: 75, name: "PLACEHOLDER", cost_multiplier: 4, xp_mult: 2, skills: [SkillType.Study] }),
+            new TaskDefinition({ id: 76, name: "PLACEHOLDER", cost_multiplier: 1, max_reps: 3, xp_mult: 3, skills: [SkillType.Search] }),
+            new TaskDefinition({ id: 77, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 100, skills: [SkillType.Combat] }),
+        ],
+    },
+    {
+        name: "The City",
+        tasks: [
+            new TaskDefinition({ id: 80, name: "PLACEHOLDER", type: TaskType.Travel, cost_multiplier: 4, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 81, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 2, skills: [SkillType.Charisma] }),
+            new TaskDefinition({ id: 82, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 4, max_reps: 3, skills: [SkillType.Charisma, SkillType.Subterfuge] }),
+            new TaskDefinition({ id: 83, name: "PLACEHOLDER", max_reps: 5, cost_multiplier: 0.75, skills: [SkillType.Subterfuge], item: ItemType.Zone8 }),
+            new TaskDefinition({ id: 84, name: "PLACEHOLDER", cost_multiplier: 5, max_reps: 6, skills: [SkillType.Magic, SkillType.Study], perk: PerkType.Zone8 }),
+            new TaskDefinition({ id: 85, name: "PLACEHOLDER", cost_multiplier: 4, xp_mult: 2, skills: [SkillType.Study] }),
+            new TaskDefinition({ id: 86, name: "PLACEHOLDER", cost_multiplier: 1, max_reps: 3, xp_mult: 3, skills: [SkillType.Search] }),
+            new TaskDefinition({ id: 87, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 100, skills: [SkillType.Combat] }),
+        ],
+    },
+    {
+        name: "The Forest",
+        tasks: [
+            new TaskDefinition({ id: 90, name: "PLACEHOLDER", type: TaskType.Travel, cost_multiplier: 4, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 91, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 2, skills: [SkillType.Charisma] }),
+            new TaskDefinition({ id: 92, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 4, max_reps: 3, skills: [SkillType.Charisma, SkillType.Subterfuge] }),
+            new TaskDefinition({ id: 93, name: "PLACEHOLDER", max_reps: 5, cost_multiplier: 0.75, skills: [SkillType.Subterfuge], item: ItemType.Zone9 }),
+            new TaskDefinition({ id: 94, name: "PLACEHOLDER", cost_multiplier: 5, max_reps: 6, skills: [SkillType.Magic, SkillType.Study], perk: PerkType.Zone9 }),
+            new TaskDefinition({ id: 95, name: "PLACEHOLDER", cost_multiplier: 4, xp_mult: 2, skills: [SkillType.Study] }),
+            new TaskDefinition({ id: 96, name: "PLACEHOLDER", cost_multiplier: 1, max_reps: 3, xp_mult: 3, skills: [SkillType.Search] }),
+            new TaskDefinition({ id: 97, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 100, skills: [SkillType.Combat] }),
+        ],
+    },
+    {
+        name: "The Magician's Mountain",
+        tasks: [
+            new TaskDefinition({ id: 100, name: "PLACEHOLDER", type: TaskType.Travel, cost_multiplier: 4, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 101, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 2, skills: [SkillType.Charisma] }),
+            new TaskDefinition({ id: 102, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 4, max_reps: 3, skills: [SkillType.Charisma, SkillType.Subterfuge] }),
+            new TaskDefinition({ id: 103, name: "PLACEHOLDER", max_reps: 5, cost_multiplier: 0.75, skills: [SkillType.Subterfuge], item: ItemType.Zone10 }),
+            new TaskDefinition({ id: 104, name: "PLACEHOLDER", cost_multiplier: 5, max_reps: 6, skills: [SkillType.Magic, SkillType.Study], perk: PerkType.Zone10 }),
+            new TaskDefinition({ id: 105, name: "PLACEHOLDER", cost_multiplier: 4, xp_mult: 2, skills: [SkillType.Study] }),
+            new TaskDefinition({ id: 106, name: "PLACEHOLDER", cost_multiplier: 1, max_reps: 3, xp_mult: 3, skills: [SkillType.Search] }),
+            new TaskDefinition({ id: 107, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 100, skills: [SkillType.Combat] }),
+        ],
+    },
 ]
 
 ZONES.forEach((zone, index) => {
