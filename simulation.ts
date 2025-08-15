@@ -90,10 +90,18 @@ function calcSkillTaskProgressWithoutLevel(skill_type: SkillType): number {
             if (hasPerk(PerkType.VillagerGratitude)) {
                 mult *= 1.5;
             }
+            if (hasPerk(PerkType.UndergroundConnection)) {
+                mult *= 1.2;
+            }
             break;
         case SkillType.Magic:
             if (hasPerk(PerkType.Amulet)) {
                 mult *= 1.5;
+            }
+            break;
+        case SkillType.Subterfuge:
+            if (hasPerk(PerkType.UndergroundConnection)) {
+                mult *= 1.4;
             }
             break;
     }
@@ -135,7 +143,7 @@ function storeSkillLevelsForNextGameOver() {
 
 export function calcTaskCost(task: Task): number {
     const base_cost = 10;
-    const zone_exponent = 1.7;
+    const zone_exponent = 1.75;
     const zone_mult = Math.pow(zone_exponent, task.definition.zone_id);
 
     return base_cost * task.definition.cost_multiplier * zone_mult;

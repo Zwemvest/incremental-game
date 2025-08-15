@@ -281,6 +281,7 @@ function setupInfoTooltips() {
     setupTooltip(item_info, function () {
         var tooltip = `<h3>Items</h3>`;
         tooltip += `Items can be used to get bonuses that last until the next Energy Reset`;
+        tooltip += `<br>The bonuses stack additively; 2 +100% results in 3x speed, not 4x`;
         tooltip += `<br>Right-click to use all rather than just one`;
         return tooltip;
     });
@@ -296,6 +297,7 @@ function setupInfoTooltips() {
     setupTooltip(perk_info, function () {
         var tooltip = `<h3>Perks</h3>`;
         tooltip += `Perks are permanent bonuses with a variety of effects`;
+        tooltip += `<br>The bonuses stack multiplicatively; 2 +100% results in 4x speed, not 3x`;
         return tooltip;
     });
 }

@@ -5,7 +5,7 @@ export enum PerkType {
     Amulet,
     EnergySpell,
     ExperiencedTraveler,
-    Zone7,
+    UndergroundConnection,
     Zone8,
     Zone9,
     Zone10,
@@ -40,7 +40,7 @@ export var PERKS: PerkDefinition[] = [
         enum: PerkType.ExperiencedTraveler, name: "Experienced Traveler", tooltip: "Improves Travel speed by 50%", icon: "🦶",
     },
     {
-        enum: PerkType.Zone7, name: "Placeholder", tooltip: "???", icon: "?",
+        enum: PerkType.UndergroundConnection, name: "Underground Connection", tooltip: "Improves Subterfuge speed by 40% and Charisma speed by 20%", icon: "🗡️",
     },
     {
         enum: PerkType.Zone8, name: "Placeholder", tooltip: "???", icon: "?",
