@@ -27,7 +27,7 @@ export function calcSkillXp(task: Task, task_progress: number): number {
         xp *= 1.5;
     }
 
-    xp *= Math.pow(1.1, task.definition.zone_id);
+    xp *= Math.pow(1.25, task.definition.zone_id);
 
     return xp;
 }
