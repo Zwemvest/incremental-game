@@ -310,7 +310,7 @@ function createItemDiv(item: ItemType, items_div: HTMLElement) {
     var item_definition = ITEMS[item] as ItemDefinition;
 
     button.addEventListener("click", () => { clickItem(item, false); });
-    button.addEventListener("contextmenu", () => { clickItem(item, true); });
+    button.addEventListener("contextmenu", (e) => { e.preventDefault(); clickItem(item, true); });
 
     setupTooltip(button, function () {
         var tooltip = `<h3>${item_definition.name}</h3>`;
@@ -660,6 +660,7 @@ function handleEvents() {
 function setupControls() {
     var rep_control = document.createElement("button");
     rep_control.className = "element";
+    rep_control.innerHTML = "";
 
     function setRepControlName() {
         rep_control.textContent = GAMESTATE.repeat_tasks ? "Repeat Tasks" : "Don't Repeat Tasks";
