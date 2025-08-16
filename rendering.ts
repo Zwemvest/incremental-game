@@ -143,12 +143,10 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
 
         tooltip += `Estimated energy used: ${estimateTotalTaskEnergyConsumption(task)}`;
         const task_ticks = estimateTotalTaskTicks(task);
-        if (task_ticks == 1)
-        {
+        if (task_ticks == 1) {
             tooltip += `<br>Estimated time: one tick`;
         }
-        else
-        {
+        else {
             tooltip += `<br>Estimated time: ${estimateTaskTimeInSeconds(task)}s`;
         }
         tooltip += "<br>Estimated levels up:";
@@ -170,8 +168,13 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
                 xp_needed = calcSkillXpNeededAtLevel(resulting_level);
             }
 
-            tooltip += `<br>${name}: ${resulting_level - skill_progress.level}`;
-
+            const levels_diff = resulting_level - skill_progress.level;
+            if (levels_diff > 0) {
+                tooltip += `<br>${name}: ${resulting_level - skill_progress.level}`;
+            } else {
+                const level_percentage = xp_gained / calcSkillXpNeeded(skill_progress) * 100;
+                tooltip += `<br>${name}: ${level_percentage.toFixed(1)}% of a level`;
+            }
         }
 
         if (task.definition.xp_mult != 1) {
@@ -236,8 +239,7 @@ function updateTaskRendering() {
 
 function estimateTotalTaskTicks(task: Task): number {
     var progress_mult = calcTaskProgressMultiplier(task);
-    if (!task.hasted && GAMESTATE.queued_scrolls_of_haste > 0)
-    {
+    if (!task.hasted && GAMESTATE.queued_scrolls_of_haste > 0) {
         progress_mult *= HASTE_MULT;
     }
 
@@ -290,12 +292,11 @@ function setupTooltip(element: ElementWithTooltip, callback: tooltipLambda) {
 function setupInfoTooltips() {
     const item_info = document.querySelector<HTMLElement>("#items .section-info");
 
-    if (!item_info)
-    {
+    if (!item_info) {
         console.error("No item info element");
         return;
     }
-    
+
     setupTooltip(item_info, function () {
         var tooltip = `<h3>Items</h3>`;
         tooltip += `Items can be used to get bonuses that last until the next Energy Reset`;
@@ -303,15 +304,14 @@ function setupInfoTooltips() {
         tooltip += `<br>Right-click to use all rather than just one`;
         return tooltip;
     });
-    
+
     const perk_info = document.querySelector<HTMLElement>("#perks .section-info");
 
-    if (!perk_info)
-    {
+    if (!perk_info) {
         console.error("No perk info element");
         return;
     }
-    
+
     setupTooltip(perk_info, function () {
         var tooltip = `<h3>Perks</h3>`;
         tooltip += `Perks are permanent bonuses with a variety of effects`;
@@ -546,7 +546,7 @@ function setupSettings(settings_div: HTMLElement) {
         console.error("No close settings button");
         return;
     }
-    
+
 
     close_button.addEventListener("click", () => {
         settings_div.style.display = "none";
@@ -700,7 +700,7 @@ function setupControls() {
 
     setupTooltip(rep_control, function () {
         var tooltip = `<h3>${rep_control.textContent}</h3>`;
-        
+
         tooltip += "Toggle between repeating Tasks if they have multiple reps, or only doing a single rep";
 
         return tooltip;
