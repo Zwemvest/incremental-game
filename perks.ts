@@ -7,7 +7,7 @@ export enum PerkType {
     ExperiencedTraveler,
     UndergroundConnection,
     MinorTimeCompression,
-    Zone9,
+    HighAltitudeClimbing,
     Zone10,
     VillageHero,
 
@@ -47,7 +47,7 @@ export var PERKS: PerkDefinition[] = [
         enum: PerkType.MinorTimeCompression, name: "Minor Time Compression", tooltip: "Tasks that are completed instantly (in a single tick) now cost 80% less energy", icon: "⌚",
     },
     {
-        enum: PerkType.Zone9, name: "Placeholder", tooltip: "???", icon: "?",
+        enum: PerkType.HighAltitudeClimbing, name: "High Altitude Climbing", tooltip: "Reduces all Energy consumption 20%", icon: "🗻",
     },
     {
         enum: PerkType.Zone10, name: "Placeholder", tooltip: "???", icon: "?",

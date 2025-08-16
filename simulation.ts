@@ -321,12 +321,19 @@ function modifyEnergy(delta: number) {
 }
 
 export function calcEnergyDrainPerTick(task: Task, is_single_tick: boolean): number {
+    var drain = 1;
+    
     if (is_single_tick && hasPerk(PerkType.MinorTimeCompression))
     {
-        return 0.2;
+        drain *= 0.2;
     }
 
-    return 1;
+    if (hasPerk(PerkType.HighAltitudeClimbing))
+    {
+        drain *= 0.8;
+    }
+
+    return drain;
 }
 
 function checkEnergyReset() {

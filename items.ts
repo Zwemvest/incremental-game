@@ -12,7 +12,7 @@ export enum ItemType {
     Book,
     ScrollOfHaste,
     GoblinWaraxe,
-    Zone9,
+    FiremakingKit,
     Zone10,
 
     Count
@@ -92,9 +92,11 @@ export var ITEMS: ItemDefinition[] = [
         },
     },
     {
-        enum: ItemType.Zone9, name: "Placeholder", tooltip: "???", icon: "?",
-        get_effect_text: (amount) => { return `???`; },
-        on_consume: (amount) => {},
+        enum: ItemType.FiremakingKit, name: "Firemaking Kit", tooltip: "Improves Survival speed by 15%", icon: "🔥",
+        get_effect_text: (amount) => { return `Survival speed increased ${amount * 15}%`; },
+        on_consume: (amount) => {
+            getSkill(SkillType.Survival).speed_modifier += 0.15 * amount;
+        },
     },
     {
         enum: ItemType.Zone10, name: "Placeholder", tooltip: "???", icon: "?",
