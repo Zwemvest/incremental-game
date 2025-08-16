@@ -8,7 +8,7 @@ export enum PerkType {
     UndergroundConnection,
     MinorTimeCompression,
     HighAltitudeClimbing,
-    Zone10,
+    DeepTrance,
     VillageHero,
 
     Count
@@ -50,7 +50,7 @@ export var PERKS: PerkDefinition[] = [
         enum: PerkType.HighAltitudeClimbing, name: "High Altitude Climbing", tooltip: "Reduces all Energy consumption 20%", icon: "🗻",
     },
     {
-        enum: PerkType.Zone10, name: "Placeholder", tooltip: "???", icon: "?",
+        enum: PerkType.DeepTrance, name: "Deep Trance", tooltip: "Unlocks Zone Automation. Unlocks automatic Item use", icon: "💫",
     },
     {
         enum: PerkType.VillageHero, name: "Village Hero", tooltip: "Improves Charisma speed by 20% and Combat speed by 20%", icon: "🎖️",

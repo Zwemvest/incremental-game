@@ -13,7 +13,7 @@ export enum ItemType {
     ScrollOfHaste,
     GoblinWaraxe,
     FiremakingKit,
-    Zone10,
+    Reagenets,
 
     Count
 }
@@ -99,8 +99,11 @@ export var ITEMS: ItemDefinition[] = [
         },
     },
     {
-        enum: ItemType.Zone10, name: "Placeholder", tooltip: "???", icon: "?",
-        get_effect_text: (amount) => { return `???`; },
-        on_consume: (amount) => {},
+        enum: ItemType.Reagenets, name: "Reagents", tooltip: "Improves Magic speed by 20% and Crafting speed by 10%", icon: "🌿",
+        get_effect_text: (amount) => { return `Magic speed increased ${amount * 20}%; Crafting speed increased ${amount * 10}%`; },
+        on_consume: (amount) => {
+            getSkill(SkillType.Magic).speed_modifier += 0.2 * amount;
+            getSkill(SkillType.Crafting).speed_modifier += 0.1 * amount;
+        },
     },
 ]

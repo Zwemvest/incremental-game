@@ -38,5 +38,5 @@ export class UsedItemContext extends EventContext {
 }
 
 export class UnlockedTaskContext extends EventContext {
-    task: TaskDefinition = new TaskDefinition();
+    task_definition: TaskDefinition = new TaskDefinition();
 }

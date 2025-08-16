@@ -42,14 +42,14 @@ export class TaskDefinition {
 }
 
 export class Task {
-    definition: TaskDefinition;
+    task_definition: TaskDefinition;
     progress: number = 0;
     reps: number = 0;
     enabled: boolean = true;
     hasted: boolean = false;
 
     constructor(definition: TaskDefinition) {
-        this.definition = definition;
+        this.task_definition = definition;
     }
 }
 
@@ -107,7 +107,8 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 44, name: "Build a Fire", cost_multiplier: 4, xp_mult: 3, skills: [SkillType.Survival, SkillType.Crafting] }),
             new TaskDefinition({ id: 45, name: "Forage for Mushrooms", max_reps: 5, xp_mult: 2, cost_multiplier: 0.6, skills: [SkillType.Search], item: ItemType.Mushroom }),
             new TaskDefinition({ id: 46, name: "Befried a Deer", cost_multiplier: 4, xp_mult: 3, skills: [SkillType.Charisma] }),
-            new TaskDefinition({ id: 47, name: "FOREST CREATURE PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 6000, skills: [SkillType.Combat], xp_mult: 0.3 }),
+            new TaskDefinition({ id: 47, name: "FOREST CREATURE PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 8000, skills: [SkillType.Combat], xp_mult: 0.3, unlocks_task: 48 }),
+            new TaskDefinition({ id: 48, name: "ITEM PLACEHOLDER", cost_multiplier: 50, skills: [SkillType.Combat] }),
         ],
     },
     {
@@ -120,7 +121,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 54, name: "Try Casting a Spell", cost_multiplier: 7, max_reps: 6, skills: [SkillType.Magic, SkillType.Study], perk: PerkType.EnergySpell }),
             new TaskDefinition({ id: 55, name: "Inspect Wall Paitings", cost_multiplier: 4, xp_mult: 4, skills: [SkillType.Study] }),
             new TaskDefinition({ id: 56, name: "Scout the Cave", cost_multiplier: 1, max_reps: 3, xp_mult: 3, skills: [SkillType.Search] }),
-            new TaskDefinition({ id: 57, name: "Goblin Chieftain", type: TaskType.Boss, cost_multiplier: 6000, skills: [SkillType.Combat], xp_mult: 0.3 }),
+            new TaskDefinition({ id: 57, name: "Goblin Chieftain", type: TaskType.Boss, cost_multiplier: 8000, skills: [SkillType.Combat], xp_mult: 0.3 }),
         ],
     },
     {
@@ -133,7 +134,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 64, name: "Get Used to Traveling", cost_multiplier: 3, max_reps: 3, xp_mult: 3, skills: [SkillType.Travel], perk: PerkType.ExperiencedTraveler }),
             new TaskDefinition({ id: 65, name: "Chat with Travelers", cost_multiplier: 3, max_reps: 4, xp_mult: 3, skills: [SkillType.Charisma] }),
             new TaskDefinition({ id: 66, name: "Practice Traveling Unnoticed", cost_multiplier: 6, max_reps: 1, xp_mult: 4, skills: [SkillType.Subterfuge, SkillType.Survival] }),
-            new TaskDefinition({ id: 67, name: "Bandits", type: TaskType.Boss, cost_multiplier: 6000, skills: [SkillType.Combat], xp_mult: 0.3 }),
+            new TaskDefinition({ id: 67, name: "Bandits", type: TaskType.Boss, cost_multiplier: 8000, skills: [SkillType.Combat], xp_mult: 0.3 }),
         ],
     },
     {
@@ -178,14 +179,13 @@ export const ZONES: Zone[] = [
     {
         name: "The Magician's Mountain",
         tasks: [
-            new TaskDefinition({ id: 100, name: "PLACEHOLDER", type: TaskType.Travel, cost_multiplier: 4, skills: [SkillType.Travel] }),
-            new TaskDefinition({ id: 101, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 2, skills: [SkillType.Charisma] }),
-            new TaskDefinition({ id: 102, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 4, max_reps: 3, skills: [SkillType.Charisma, SkillType.Subterfuge] }),
-            new TaskDefinition({ id: 103, name: "PLACEHOLDER", max_reps: 5, cost_multiplier: 0.75, skills: [SkillType.Subterfuge], item: ItemType.Zone10 }),
-            new TaskDefinition({ id: 104, name: "PLACEHOLDER", cost_multiplier: 5, max_reps: 6, xp_mult: 0.2, skills: [SkillType.Magic, SkillType.Study], perk: PerkType.Zone10 }),
-            new TaskDefinition({ id: 105, name: "PLACEHOLDER", cost_multiplier: 4, xp_mult: 2, skills: [SkillType.Study] }),
+            new TaskDefinition({ id: 100, name: "PLACEHOLDER", type: TaskType.Travel, cost_multiplier: 5, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 101, name: "Convince the Magician", type: TaskType.Mandatory, cost_multiplier: 50, skills: [SkillType.Charisma] }),
+            new TaskDefinition({ id: 102, name: "Do a Favor", type: TaskType.Mandatory, cost_multiplier: 8, max_reps: 1, skills: [SkillType.Crafting, SkillType.Subterfuge] }),
+            new TaskDefinition({ id: 103, name: "Steal Some Reagents", max_reps: 4, cost_multiplier: 1, skills: [SkillType.Subterfuge], item: ItemType.Reagenets }),
+            new TaskDefinition({ id: 104, name: "Learn Magical Trance", cost_multiplier: 20, max_reps: 6, xp_mult: 0.2, skills: [SkillType.Magic, SkillType.Study], perk: PerkType.DeepTrance }),
+            new TaskDefinition({ id: 105, name: "Give Yourself a Pep Talk", cost_multiplier: 10, xp_mult: 4, skills: [SkillType.Charisma] }),
             new TaskDefinition({ id: 106, name: "PLACEHOLDER", cost_multiplier: 1, max_reps: 3, xp_mult: 3, skills: [SkillType.Search] }),
-            new TaskDefinition({ id: 107, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 6000, skills: [SkillType.Combat], xp_mult: 0.3 }),
         ],
     },
 ]

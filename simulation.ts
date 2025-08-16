@@ -21,13 +21,13 @@ export class Skill {
 
 export function calcSkillXp(task: Task, task_progress: number): number {
     const xp_mult = 8;
-    var xp = task_progress * xp_mult * task.definition.xp_mult;
+    var xp = task_progress * xp_mult * task.task_definition.xp_mult;
 
     if (hasPerk(PerkType.Writing)) {
         xp *= 1.5;
     }
 
-    xp *= Math.pow(1.25, task.definition.zone_id);
+    xp *= Math.pow(1.25, task.task_definition.zone_id);
 
     return xp;
 }
@@ -152,23 +152,23 @@ function storeSkillLevelsForNextGameOver() {
 export function calcTaskCost(task: Task): number {
     const base_cost = 10;
     const zone_exponent = 1.75;
-    const zone_mult = Math.pow(zone_exponent, task.definition.zone_id);
+    const zone_mult = Math.pow(zone_exponent, task.task_definition.zone_id);
 
-    return base_cost * task.definition.cost_multiplier * zone_mult;
+    return base_cost * task.task_definition.cost_multiplier * zone_mult;
 }
 
 export function calcTaskProgressMultiplier(task: Task): number {
     var mult = 1;
 
     var skill_level_mult = 1;
-    for (const skill_type of task.definition.skills) {
+    for (const skill_type of task.task_definition.skills) {
         skill_level_mult *= calcSkillTaskProgressMultiplierFromLevel(getSkill(skill_type).level);
     }
 
     // Avoid multi-skill tasks scaling much faster than all other tasks
-    mult *= Math.pow(skill_level_mult, 1 / task.definition.skills.length);
+    mult *= Math.pow(skill_level_mult, 1 / task.task_definition.skills.length);
 
-    for (const skill_type of task.definition.skills) {
+    for (const skill_type of task.task_definition.skills) {
         mult *= calcSkillTaskProgressWithoutLevel(skill_type);
     }
 
@@ -195,7 +195,7 @@ function updateActiveTask() {
         const progress = calcTaskProgressPerTick(active_task);
         active_task.progress += progress;
         modifyEnergy(-calcEnergyDrainPerTick(active_task, progress >= cost));
-        for (const skill of active_task.definition.skills) {
+        for (const skill of active_task.task_definition.skills) {
             addSkillXp(skill, calcSkillXp(active_task, progress));
         }
 
@@ -220,27 +220,29 @@ export function clickTask(task: Task) {
 }
 
 function finishTask(task: Task) {
-    if (task.definition.type == TaskType.Travel) {
+    if (task.task_definition.type == TaskType.Travel) {
         advanceZone();
     }
 
-    if (task.definition.item != ItemType.Count) {
-        addItem(task.definition.item, 1);
+    if (task.task_definition.item != ItemType.Count) {
+        addItem(task.task_definition.item, 1);
     }
 
     task.reps += 1;
-    if (task.reps < task.definition.max_reps) {
+    if (task.reps < task.task_definition.max_reps) {
         task.progress = 0;
     }
 
-    const fully_finished = task.reps == task.definition.max_reps;
-    if (fully_finished && task.definition.perk != PerkType.Count) {
-        addPerk(task.definition.perk);
+    task.hasted = false;
+
+    const fully_finished = task.reps == task.task_definition.max_reps;
+    if (fully_finished && task.task_definition.perk != PerkType.Count) {
+        addPerk(task.task_definition.perk);
     }
 
-    if (fully_finished && task.definition.unlocks_task >= 0)
+    if (fully_finished && task.task_definition.unlocks_task >= 0)
     {
-        unlockTask(task.definition.unlocks_task);
+        unlockTask(task.task_definition.unlocks_task);
     }
 
     if (!GAMESTATE.repeat_tasks)
@@ -256,14 +258,14 @@ function updateEnabledTasks() {
     var has_unfinished_mandatory_task = false;
 
     for (var task of GAMESTATE.tasks) {
-        const finished = task.reps >= task.definition.max_reps;
+        const finished = task.reps >= task.task_definition.max_reps;
         task.enabled = !finished;
-        has_unfinished_mandatory_task = has_unfinished_mandatory_task || (task.definition.type == TaskType.Mandatory && !finished);
+        has_unfinished_mandatory_task = has_unfinished_mandatory_task || (task.task_definition.type == TaskType.Mandatory && !finished);
     }
 
     if (has_unfinished_mandatory_task) {
         for (var task of GAMESTATE.tasks) {
-            if (task.definition.type == TaskType.Travel) {
+            if (task.task_definition.type == TaskType.Travel) {
                 task.enabled = false;
             }
         }
@@ -309,7 +311,7 @@ function unlockTask(task_id: number) {
     GAMESTATE.unlocked_tasks.push(task_id);
     GAMESTATE.tasks.push(new Task(task));
 
-    const context: UnlockedTaskContext = { task: task };
+    const context: UnlockedTaskContext = { task_definition: task };
     const event = new RenderEvent(EventType.UnlockedTask, context);
     GAMESTATE.queueRenderEvent(event);
 }
@@ -438,6 +440,7 @@ export function saveGame() {
     // Save to localStorage
     const json = JSON.stringify(saveData, (key, value) => {
         if (typeof value === 'object' && value !== null && 'id' in value) {
+            console.log(value);
             return value.id; // Replace object with its ID
         }
         return value;
@@ -448,7 +451,7 @@ export function saveGame() {
 
 function parseSave(save: string): any {
     const data = JSON.parse(save, function (key, value) {
-        if (key == "definition") {
+        if (key == "task_definition") {
             return TASK_LOOKUP.get(value); // Replace ID with the actual object
         }
         return value;
@@ -475,7 +478,8 @@ function loadGame(): boolean {
 
 function loadGameFromData(data: any) {
     Object.keys(data).forEach(key => {
-        const value = data[key];
+        var value = data[key];
+
         // Convert it back to a Map if that's what we want
         if ((GAMESTATE as any)[key] instanceof Map) {
             (GAMESTATE as any)[key] = new Map(value);
