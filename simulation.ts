@@ -335,6 +335,7 @@ function checkEnergyReset() {
     }
 
     GAMESTATE.is_in_game_over = true;
+    GAMESTATE.current_energy = 0;
 }
 
 export function doEnergyReset() {
