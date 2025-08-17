@@ -7,7 +7,7 @@ import { EventType, GainedPerkContext, SkillUpContext, UnlockedTaskContext, Used
 
 // MARK: Skills
 
-let SKILL_NAMES = ["Charisma", "Study", "Combat", "Search", "Subterfuge", "Crafting", "Survival", "Travel", "Magic"];
+let SKILL_NAMES = ["Charisma", "Study", "Combat", "Search", "Subterfuge", "Crafting", "Survival", "Travel", "Magic", "Fortitude", "Druid", "Ascension"];
 
 function createSkillDiv(skill: Skill, skills_div: HTMLElement, rendering: Rendering) {
     const skill_div = document.createElement("div");

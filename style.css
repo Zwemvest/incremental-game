@@ -157,7 +157,7 @@ button:hover:enabled {
 }
 
 .skill {
-    width: 70px;
+    width: 100px;
     text-align: center;
     background: var(--element-background-color);
     border-radius: 8px;
@@ -165,7 +165,7 @@ button:hover:enabled {
 }
 
 .skill .progress-bar {
-    width: 70px;
+    width: 100%;
     text-align: center;
     margin-top: 5px;
 }
