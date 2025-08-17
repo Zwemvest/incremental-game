@@ -47,12 +47,16 @@ body {
 
 #energy {
     margin-bottom: 8px;
-    width: 840px;
+    width: 100%;
 }
 
 #top-area {
     display: flex;
     gap: 10px;
+}
+
+#top-bar {
+    width: 750px;
 }
 
 button {
@@ -351,4 +355,16 @@ footer {
     margin: 3px 0;
     padding: 5px 10px;
     border-radius: 8px;
+}
+
+/* MARK: Attunement
+*/
+
+#attunement {
+    width: 100%;
+    text-align: center;
+    background: var(--element-background-color);
+    border-radius: 8px;
+    padding: 5px;
+    margin-top: 5px;
 }
