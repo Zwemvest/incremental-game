@@ -2,7 +2,7 @@ import { Task, ZONES, SkillType, TaskType, TASK_LOOKUP, TaskDefinition, SKILL_DE
 import { GAMESTATE } from "./game.js";
 import { HASTE_MULT, ItemDefinition, ITEMS, ItemType } from "./items.js";
 import { PerkType } from "./perks.js";
-import { SkillUpContext, EventType, RenderEvent, GainedPerkContext, UsedItemContext, UnlockedTaskContext, UnlockedSkillContext } from "./events.js";
+import { SkillUpContext, EventType, RenderEvent, GainedPerkContext, UsedItemContext, UnlockedTaskContext, UnlockedSkillContext, EventContext } from "./events.js";
 
 // MARK: Skills
 
@@ -437,7 +437,12 @@ export function hasPerk(perk: PerkType): boolean {
 // MARK: Extra stats
 
 function addPower(amount: number) {
-    GAMESTATE.has_unlocked_power = true;
+    if (!GAMESTATE.has_unlocked_power)
+    {
+        const event = new RenderEvent(EventType.UnlockedPower, new EventContext());
+        GAMESTATE.queueRenderEvent(event);
+        GAMESTATE.has_unlocked_power = true;
+    }
     GAMESTATE.power += amount;
 }
 

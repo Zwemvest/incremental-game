@@ -706,6 +706,13 @@ function handleEvents() {
                     recreateSkills();
                     break;
                 }
+            case EventType.UnlockedPower:
+                {
+                    message_div.innerHTML = `Unlocked Power mechanic`;
+                    message_div.innerHTML += `<br>Boosts Combat and Fortitude`;
+                    recreateTasks();
+                    break;
+                }
             default:
                 break;
         }
