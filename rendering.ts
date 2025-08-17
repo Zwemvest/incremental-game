@@ -208,14 +208,12 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
         }
 
         const attunement_gain = calcAttunementGain(task);
-        if (attunement_gain > 0)
-        {
+        if (attunement_gain > 0) {
             tooltip += `<br><br>Gives ${attunement_gain} Attunement`;
         }
 
         const power_gain = calcPowerGain(task);
-        if (power_gain > 0 && GAMESTATE.has_unlocked_power)
-        {
+        if (power_gain > 0 && GAMESTATE.has_unlocked_power) {
             tooltip += `<br><br>Gives ${power_gain} Power`;
         }
 
@@ -440,8 +438,7 @@ function updateItems() {
 }
 
 function setupAutoUseItemsControl() {
-    if (!hasPerk(PerkType.DeepTrance))
-    {
+    if (!hasPerk(PerkType.DeepTrance)) {
         return;
     }
 
@@ -526,8 +523,9 @@ function populateGameOver(game_over_div: HTMLElement) {
         return;
     }
 
-    var has_gained_some_skill = false;
     skill_gain.innerHTML = "";
+
+    var skill_gains: [SkillType, number][] = [];
 
     for (let i = 0; i < SkillType.Count; i++) {
         const current_level = getSkill(i).level;
@@ -535,16 +533,23 @@ function populateGameOver(game_over_div: HTMLElement) {
         const skill_diff = current_level - starting_level;
 
         if (skill_diff > 0) {
-            has_gained_some_skill = true;
-            var skill_gain_text = document.createElement("p");
-            const skill_definition = SKILL_DEFINITIONS[i] as SkillDefinition;
-            skill_gain_text.textContent = `${skill_definition.name}: +${skill_diff} (x${calcSkillTaskProgressMultiplierFromLevel(skill_diff).toFixed(2)} speed)`;
+            skill_gains.push([i, skill_diff]);
 
-            skill_gain.appendChild(skill_gain_text);
         }
     }
 
-    if (!has_gained_some_skill) {
+    // Biggest gain first
+    skill_gains.sort((a, b) => b[1] - a[1]);
+
+    for (const [skill, skill_diff] of skill_gains) {
+        var skill_gain_text = document.createElement("p");
+        const skill_definition = SKILL_DEFINITIONS[skill] as SkillDefinition;
+        skill_gain_text.textContent = `${skill_definition.name}: +${skill_diff} (x${calcSkillTaskProgressMultiplierFromLevel(skill_diff).toFixed(2)} speed)`;
+
+        skill_gain.appendChild(skill_gain_text);
+    };
+
+    if (skill_gains.length == 0) {
         var skill_gain_text = document.createElement("p");
         skill_gain_text.textContent = `None`;
 
@@ -833,8 +838,7 @@ function setupRepeatTasksControl() {
 // MARK: Controls - Automation
 
 function setupAutomationControls() {
-    if (!hasPerk(PerkType.DeepTrance))
-    {
+    if (!hasPerk(PerkType.DeepTrance)) {
         return;
     }
 
@@ -876,17 +880,17 @@ function setupAutomationControls() {
 
         return tooltip;
     });
-    
+
     setupTooltip(zone_control, function () {
         var tooltip = `<h3> Automate${zone_control.textContent}</h3>`;
-        
+
         tooltip += "Toggle between automating tasks in the current zone, and not automating";
         tooltip += "<br>Right-click tasks to designate them as automated";
         tooltip += "<br>They'll be executed in the order you right-clicked them, as indicated by the number in their corner";
-        
+
         return tooltip;
     });
-    
+
     automation.appendChild(automation_text);
     automation.appendChild(all_control);
     automation.appendChild(zone_control);
@@ -908,8 +912,7 @@ function updateExtraStats() {
     }
 
     const power_text = `💪Power: ${GAMESTATE.power.toFixed(0)}`;
-    if (RENDERING.power_element.textContent != power_text)
-    {
+    if (RENDERING.power_element.textContent != power_text) {
         RENDERING.power_element.textContent = power_text;
     }
 
@@ -925,8 +928,7 @@ function updateExtraStats() {
     }
 
     const attunement_text = `🌀Attunement: ${GAMESTATE.attunement.toFixed(0)}`;
-    if (RENDERING.attunement_element.textContent != attunement_text)
-    {
+    if (RENDERING.attunement_element.textContent != attunement_text) {
         RENDERING.attunement_element.textContent = attunement_text;
     }
 }
