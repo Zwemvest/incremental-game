@@ -754,6 +754,27 @@ function setupControls() {
     RENDERING.control_elements.set("rep_control", rep_control);
 }
 
+// MARK: Extra stats
+
+function updateExtraStats() {
+    if (GAMESTATE.has_unlocked_power && RENDERING.power_element.style.display == "none") {
+        RENDERING.power_element.style.display = "block";
+        setupTooltip(RENDERING.power_element, function () {
+            var tooltip = `<h3>Power: ${GAMESTATE.power.toFixed(0)}</h3>`;
+
+            tooltip += `Increases Combat and Fortitude speed by ${GAMESTATE.power}%`;
+
+            return tooltip;
+        });
+    }
+
+    const power_text = `Power: ${GAMESTATE.power.toFixed(0)}`;
+    if (RENDERING.power_element.textContent != power_text)
+    {
+        RENDERING.power_element.textContent = power_text;
+    }
+}
+
 // MARK: Rendering
 
 export class Rendering {
@@ -763,6 +784,7 @@ export class Rendering {
     settings_element: HTMLElement;
     energy_element: HTMLElement;
     messages_element: HTMLElement;
+    power_element: HTMLElement;
     task_elements: Map<TaskDefinition, ElementWithTooltip> = new Map();
     skill_elements: Map<SkillType, HTMLElement> = new Map();
     item_elements: Map<ItemType, HTMLElement> = new Map();
@@ -787,14 +809,18 @@ export class Rendering {
     }
 
     constructor() {
-        var energy_div = document.getElementById("energy");
-        if (energy_div) {
-            this.energy_element = energy_div;
+        function getElement(name: string): HTMLElement {
+            var energy_div = document.getElementById(name);
+            if (energy_div) {
+                return energy_div;
+            }
+            else {
+                console.error(`The element with ID '${name}' was not found.`);
+                return new HTMLElement();
+            }
         }
-        else {
-            console.error("The element with ID 'energy' was not found.");
-            this.energy_element = new HTMLElement();
-        }
+
+        this.energy_element = getElement("energy");
 
         setupTooltip(this.energy_element, function () {
             var tooltip = `<h3>Energy - ${GAMESTATE.current_energy.toFixed(0)}/${GAMESTATE.max_energy.toFixed(0)}</h3>`;
@@ -804,59 +830,15 @@ export class Rendering {
             return tooltip;
         });
 
-        var tooltip_div = document.getElementById("tooltip");
-        if (tooltip_div) {
-            this.tooltip_element = tooltip_div;
-        }
-        else {
-            console.error("The element with ID 'tooltip' was not found.");
-            this.tooltip_element = new HTMLElement();
-        }
-
-        var game_over_div = document.getElementById("game-over-overlay");
-        if (game_over_div) {
-            this.game_over_element = game_over_div;
-        }
-        else {
-            console.error("The element with ID 'game-over-overlay' was not found.");
-            this.game_over_element = new HTMLElement();
-        }
-
-        var end_of_content_div = document.getElementById("end-of-content-overlay");
-        if (end_of_content_div) {
-            this.end_of_content_element = end_of_content_div;
-        }
-        else {
-            console.error("The element with ID 'end-of-content-overlay' was not found.");
-            this.end_of_content_element = new HTMLElement();
-        }
-
-        var settings_div = document.getElementById("settings-overlay");
-        if (settings_div) {
-            this.settings_element = settings_div;
-        }
-        else {
-            console.error("The element with ID 'settings-overlay' was not found.");
-            this.settings_element = new HTMLElement();
-        }
-
-        var messages_div = document.getElementById("messages");
-        if (messages_div) {
-            this.messages_element = messages_div;
-        }
-        else {
-            console.error("The element with ID 'messages' was not found.");
-            this.messages_element = new HTMLElement();
-        }
-
-        var controls_div = document.getElementById("controls-list");
-        if (controls_div) {
-            this.controls_list_element = controls_div;
-        }
-        else {
-            console.error("The element with ID 'controls-list' was not found.");
-            this.controls_list_element = new HTMLElement();
-        }
+        this.tooltip_element = getElement("tooltip");
+        this.game_over_element = getElement("game-over-overlay");
+        this.end_of_content_element = getElement("game-over-overlay");
+        this.game_over_element = getElement("end-of-content-overlay");
+        this.settings_element = getElement("settings-overlay");
+        this.game_over_element = getElement("game-over-overlay");
+        this.messages_element = getElement("messages");
+        this.controls_list_element = getElement("controls-list");
+        this.power_element = getElement("power");
     }
 
     public initialize() {
@@ -929,5 +911,6 @@ export function updateRendering() {
     updateEnergyRendering();
     updateItems();
     updatePerks();
+    updateExtraStats();
     updateGameOver();
 }

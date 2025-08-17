@@ -59,6 +59,10 @@ body {
     width: 750px;
 }
 
+#right-top-area {
+    width: 135px;
+}
+
 button {
     border-radius: 8px;
     background: var(--element-foreground-color);
@@ -357,11 +361,11 @@ footer {
     border-radius: 8px;
 }
 
-/* MARK: Attunement
+/* MARK: Extra stats
 */
 
-#attunement {
-    width: 100%;
+.extra-stat {
+    width: 100% - 10px;
     text-align: center;
     background: var(--element-background-color);
     border-radius: 8px;

@@ -112,6 +112,10 @@ function calcSkillTaskProgressWithoutLevel(skill_type: SkillType): number {
             if (hasPerk(PerkType.VillageHero)) {
                 mult *= 1.2;
             }
+            mult *= 1 + GAMESTATE.power / 100;
+            break;
+        case SkillType.Fortitude:
+            mult *= 1 + GAMESTATE.power / 100;
             break;
     }
 
@@ -244,6 +248,13 @@ function finishTask(task: Task) {
     if (fully_finished && task.task_definition.unlocks_task >= 0)
     {
         unlockTask(task.task_definition.unlocks_task);
+    }
+
+    if (task.task_definition.type == TaskType.Boss)
+    {
+        const mult = task.task_definition.zone_id - 1; // First boss is zone 3, which is internally 2
+        const powerAmount = 5 * mult;
+        addPower(powerAmount);
     }
 
     if (!GAMESTATE.repeat_tasks)
@@ -423,6 +434,13 @@ export function hasPerk(perk: PerkType): boolean {
     return GAMESTATE.perks.get(perk) == true;
 }
 
+// MARK: Extra stats
+
+function addPower(amount: number) {
+    GAMESTATE.has_unlocked_power = true;
+    GAMESTATE.power += amount;
+}
+
 // MARK: Persistence
 
 export const SAVE_LOCATION = "incrementalGameSave";
@@ -517,9 +535,15 @@ export class Gamestate {
 
     is_in_game_over = false;
     is_at_end_of_content = false;
+    
     current_energy = 100;
     max_energy = 100;
     energy_reset_count = 0;
+
+    power = 0;
+    has_unlocked_power = false;
+
+    attunement = 0;
 
     pending_render_events: RenderEvent[] = [];
 
