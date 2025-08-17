@@ -116,3 +116,5 @@ export var ITEMS: ItemDefinition[] = [
         },
     },
 ]
+
+export var ITEMS_TO_NOT_AUTO_USE = [ItemType.ScrollOfHaste];

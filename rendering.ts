@@ -439,6 +439,37 @@ function updateItems() {
     }
 }
 
+function setupAutoUseItemsControl() {
+    if (!hasPerk(PerkType.DeepTrance))
+    {
+        return;
+    }
+
+    var item_control = document.createElement("button");
+    item_control.className = "element";
+
+    function setItemControlName() {
+        item_control.textContent = GAMESTATE.auto_use_items ? "Auto Use Items" : "Manual Use Items";
+    }
+    setItemControlName();
+
+    item_control.addEventListener("click", () => {
+        GAMESTATE.auto_use_items = !GAMESTATE.auto_use_items;
+        setItemControlName();
+    });
+
+    setupTooltip(item_control, function () {
+        var tooltip = `<h3>${item_control.textContent}</h3>`;
+
+        tooltip += "Toggle between items being used automatically, and only being used manually";
+        tooltip += "<br>Won't use the Scroll of Haste";
+
+        return tooltip;
+    });
+
+    RENDERING.controls_list_element.appendChild(item_control);
+}
+
 // MARK: Perks
 
 function createPerkDiv(perk: PerkType, perks_div: HTMLElement) {
@@ -713,6 +744,7 @@ function handleEvents() {
                     const perk = PERKS[perk_context.perk] as PerkDefinition;
                     message_div.innerHTML = `Unlocked ${perk.icon}${perk.name}`;
                     message_div.innerHTML += `<br>${perk.tooltip}`;
+                    setupControls(); // Show the automation controls
                     break;
                 }
             case EventType.UsedItem:
@@ -770,6 +802,7 @@ function setupControls() {
 
     setupRepeatTasksControl();
     setupAutomationControls();
+    setupAutoUseItemsControl();
 }
 
 function setupRepeatTasksControl() {

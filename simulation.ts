@@ -1,6 +1,6 @@
 import { Task, ZONES, SkillType, TaskType, TASK_LOOKUP, TaskDefinition, SKILL_DEFINITIONS, SkillDefinition } from "./zones.js";
 import { GAMESTATE } from "./game.js";
-import { HASTE_MULT, ItemDefinition, ITEMS, ItemType } from "./items.js";
+import { HASTE_MULT, ItemDefinition, ITEMS, ITEMS_TO_NOT_AUTO_USE, ItemType } from "./items.js";
 import { PerkType } from "./perks.js";
 import { SkillUpContext, EventType, RenderEvent, GainedPerkContext, UsedItemContext, UnlockedTaskContext, UnlockedSkillContext, EventContext } from "./events.js";
 
@@ -426,6 +426,23 @@ function halveItemCounts() {
     }
 }
 
+function autoUseItems() {
+    if (!GAMESTATE.auto_use_items) {
+        return;
+    }
+
+    for (var [key, value] of GAMESTATE.items) {
+        if (ITEMS_TO_NOT_AUTO_USE.includes(key))
+        {
+            continue;
+        }
+
+        if (value > 0) {
+            clickItem(key, true);
+        }
+    }
+}
+
 // MARK: Perks
 function addPerk(perk: PerkType) {
     if(hasPerk(perk))
@@ -655,6 +672,7 @@ export class Gamestate {
     repeat_tasks = true;
     automation_mode = AutomationMode.Off;
     automation_prios: Map<number, number[]> = new Map();
+    auto_use_items = false;
 
     skills_at_start_of_reset: number[] = [];
     skills: Skill[] = [];
@@ -719,6 +737,7 @@ export function updateGamestate() {
         return;
     }
 
+    autoUseItems();
     updateActiveTask();
     checkEnergyReset();
 }
