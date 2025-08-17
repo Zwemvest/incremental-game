@@ -10,6 +10,7 @@ export enum PerkType {
     HighAltitudeClimbing,
     DeepTrance,
     VillageHero,
+    Attunement,
 
     Count
 }
@@ -54,5 +55,8 @@ export var PERKS: PerkDefinition[] = [
     },
     {
         enum: PerkType.VillageHero, name: "Village Hero", tooltip: "Improves Charisma speed by 20% and Combat speed by 20%", icon: "🎖️",
+    },
+    {
+        enum: PerkType.Attunement, name: "Attunement", tooltip: "Unlocks the Attunement mechanic", icon: "🌀",
     },
 ]
