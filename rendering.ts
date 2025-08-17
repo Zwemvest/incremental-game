@@ -1,5 +1,5 @@
 import { Task, TaskDefinition, SkillType, ZONES, TaskType, SKILL_DEFINITIONS, SkillDefinition } from "./zones.js";
-import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel, saveGame, SAVE_LOCATION, toggleRepeatTasks, calcAttunementGain, calcPowerGain, toggleAutomation, AutomationMode } from "./simulation.js";
+import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel, saveGame, SAVE_LOCATION, toggleRepeatTasks, calcAttunementGain, calcPowerGain, toggleAutomation, AutomationMode, calcPowerSpeedBonusAtLevel, calcAttunementSpeedBonusAtLevel } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS, HASTE_MULT } from "./items.js";
 import { PerkDefinition, PerkType, PERKS } from "./perks.js";
@@ -549,13 +549,31 @@ function populateGameOver(game_over_div: HTMLElement) {
         skill_gain.appendChild(skill_gain_text);
     };
 
-    if (skill_gains.length == 0) {
+    const power_gain = GAMESTATE.power - GAMESTATE.power_at_start_of_reset;
+    if (power_gain > 0) {
+        var power_gain_text = document.createElement("p");
+        const speed_bonus = calcPowerSpeedBonusAtLevel(GAMESTATE.power) / calcPowerSpeedBonusAtLevel(GAMESTATE.power_at_start_of_reset);
+        power_gain_text.textContent = `Power: +${power_gain} (x${speed_bonus.toFixed(2)} speed)`;
+
+        skill_gain.appendChild(power_gain_text);
+    }
+
+    const attunement_gain = GAMESTATE.attunement - GAMESTATE.attunement_at_start_of_reset;
+    if (attunement_gain > 0) {
+        var attunement_gain_text = document.createElement("p");
+        const speed_bonus = calcAttunementSpeedBonusAtLevel(GAMESTATE.attunement) / calcAttunementSpeedBonusAtLevel(GAMESTATE.attunement_at_start_of_reset);
+        attunement_gain_text.textContent = `Attunement: +${attunement_gain} (x${speed_bonus.toFixed(2)} speed)`;
+
+        skill_gain.appendChild(attunement_gain_text);
+    }
+
+    if (skill_gain.childNodes.length == 0) {
         var skill_gain_text = document.createElement("p");
         skill_gain_text.textContent = `None`;
 
         skill_gain.appendChild(skill_gain_text);
     }
-
+    
     var reset_count = game_over_div.querySelector("#game-over-reset-count");
     if (!reset_count) {
         console.error("No reset count text");

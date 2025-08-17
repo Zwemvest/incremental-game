@@ -112,23 +112,19 @@ function calcSkillTaskProgressWithoutLevel(skill_type: SkillType): number {
             if (hasPerk(PerkType.VillageHero)) {
                 mult *= 1.2;
             }
-            mult *= 1 + GAMESTATE.power / 100;
-            break;
-        case SkillType.Fortitude:
-            mult *= 1 + GAMESTATE.power / 100;
             break;
     }
 
     switch (skill_type) {
         case SkillType.Combat:
         case SkillType.Fortitude:
-            mult *= 1 + GAMESTATE.power / 100;
+            mult *= calcPowerSpeedBonusAtLevel(GAMESTATE.power);
             break;
 
         case SkillType.Study:
         case SkillType.Magic:
         case SkillType.Druid:
-            mult *= 1 + GAMESTATE.attunement / 1000;
+            mult *= calcAttunementSpeedBonusAtLevel(GAMESTATE.attunement);
             break;
     }
 
@@ -158,10 +154,13 @@ function initializeSkills() {
     }
 }
 
-function storeSkillLevelsForNextGameOver() {
+function storeLoopStartNumbersForNextGameOver() {
     for (let i = 0; i < SkillType.Count; i++) {
         GAMESTATE.skills_at_start_of_reset[i] = getSkill(i).level;
     }
+
+    GAMESTATE.attunement_at_start_of_reset = GAMESTATE.attunement;
+    GAMESTATE.power_at_start_of_reset = GAMESTATE.power;
 }
 
 
@@ -190,8 +189,7 @@ export function calcTaskProgressMultiplier(task: Task): number {
         mult *= calcSkillTaskProgressWithoutLevel(skill_type);
     }
 
-    if (task.hasted)
-    {
+    if (task.hasted) {
         mult *= HASTE_MULT;
     }
 
@@ -207,8 +205,7 @@ function updateActiveTask() {
     if (!active_task) {
         active_task = pickNextTaskInAutomationQueue();
     }
-    if (!active_task)
-    {
+    if (!active_task) {
         return;
     }
 
@@ -233,8 +230,7 @@ export function clickTask(task: Task) {
     }
     else {
         GAMESTATE.active_task = task;
-        if (!task.hasted && GAMESTATE.queued_scrolls_of_haste > 0)
-        {
+        if (!task.hasted && GAMESTATE.queued_scrolls_of_haste > 0) {
             task.hasted = true;
             GAMESTATE.queued_scrolls_of_haste--;
         }
@@ -262,16 +258,14 @@ function finishTask(task: Task) {
         addPerk(task.task_definition.perk);
     }
 
-    if (fully_finished && task.task_definition.unlocks_task >= 0)
-    {
+    if (fully_finished && task.task_definition.unlocks_task >= 0) {
         unlockTask(task.task_definition.unlocks_task);
     }
 
     addPower(calcPowerGain(task));
     addAttunement(calcAttunementGain(task));
 
-    if (!GAMESTATE.repeat_tasks)
-    {
+    if (!GAMESTATE.repeat_tasks) {
         GAMESTATE.active_task = null;
     }
 
@@ -310,14 +304,13 @@ function initializeTasks() {
     const zone = ZONES[GAMESTATE.current_zone];
     if (zone) {
         for (const task of zone.tasks) {
-            if (task.hidden_by_default && !GAMESTATE.unlocked_tasks.includes(task.id))
-            {
+            if (task.hidden_by_default && !GAMESTATE.unlocked_tasks.includes(task.id)) {
                 continue;
             }
 
             GAMESTATE.tasks.push(new Task(task));
             for (const skill of task.skills) {
-                if (!GAMESTATE.unlocked_skills.includes(skill)) {   
+                if (!GAMESTATE.unlocked_skills.includes(skill)) {
                     GAMESTATE.unlocked_skills.push(skill);
                     const context: UnlockedSkillContext = { skill: skill };
                     const event = new RenderEvent(EventType.UnlockedSkill, context);
@@ -335,8 +328,7 @@ export function toggleRepeatTasks() {
 }
 
 function unlockTask(task_id: number) {
-    if (GAMESTATE.unlocked_tasks.includes(task_id))
-    {
+    if (GAMESTATE.unlocked_tasks.includes(task_id)) {
         return;
     }
 
@@ -357,14 +349,12 @@ function modifyEnergy(delta: number) {
 
 export function calcEnergyDrainPerTick(task: Task, is_single_tick: boolean): number {
     var drain = 1;
-    
-    if (is_single_tick && hasPerk(PerkType.MinorTimeCompression))
-    {
+
+    if (is_single_tick && hasPerk(PerkType.MinorTimeCompression)) {
         drain *= 0.2;
     }
 
-    if (hasPerk(PerkType.HighAltitudeClimbing))
-    {
+    if (hasPerk(PerkType.HighAltitudeClimbing)) {
         drain *= 0.8;
     }
 
@@ -391,7 +381,7 @@ export function doEnergyReset() {
 
     removeTemporarySkillBonuses();
     halveItemCounts();
-    storeSkillLevelsForNextGameOver();
+    storeLoopStartNumbersForNextGameOver();
     saveGame();
 }
 
@@ -432,8 +422,7 @@ function autoUseItems() {
     }
 
     for (var [key, value] of GAMESTATE.items) {
-        if (ITEMS_TO_NOT_AUTO_USE.includes(key))
-        {
+        if (ITEMS_TO_NOT_AUTO_USE.includes(key)) {
             continue;
         }
 
@@ -445,8 +434,7 @@ function autoUseItems() {
 
 // MARK: Perks
 function addPerk(perk: PerkType) {
-    if(hasPerk(perk))
-    {
+    if (hasPerk(perk)) {
         return;
     }
 
@@ -455,7 +443,7 @@ function addPerk(perk: PerkType) {
     }
 
     GAMESTATE.perks.set(perk, true);
-    
+
     const context: GainedPerkContext = { perk: perk };
     const event = new RenderEvent(EventType.GainedPerk, context);
     GAMESTATE.queueRenderEvent(event);
@@ -468,13 +456,11 @@ export function hasPerk(perk: PerkType): boolean {
 // MARK: Extra stats
 
 function addPower(amount: number) {
-    if (amount <= 0)
-    {
+    if (amount <= 0) {
         return;
     }
 
-    if (!GAMESTATE.has_unlocked_power)
-    {
+    if (!GAMESTATE.has_unlocked_power) {
         const event = new RenderEvent(EventType.UnlockedPower, new EventContext());
         GAMESTATE.queueRenderEvent(event);
         GAMESTATE.has_unlocked_power = true;
@@ -483,8 +469,7 @@ function addPower(amount: number) {
 }
 
 export function calcPowerGain(task: Task) {
-    if (task.task_definition.type != TaskType.Boss)
-    {
+    if (task.task_definition.type != TaskType.Boss) {
         return 0;
     }
 
@@ -493,19 +478,25 @@ export function calcPowerGain(task: Task) {
     return powerAmount;
 }
 
+export function calcPowerSpeedBonusAtLevel(level: number): number {
+    return 1 + level / 100;
+}
+
+export function calcAttunementSpeedBonusAtLevel(level: number): number {
+    return 1 + level / 1000;
+}
+
 function addAttunement(amount: number) {
     GAMESTATE.attunement += amount;
 }
 
 export function calcAttunementGain(task: Task): number {
-    if (!hasPerk(PerkType.Attunement))
-    {
+    if (!hasPerk(PerkType.Attunement)) {
         return 0;
     }
 
     const attunement_skills = [SkillType.Druid, SkillType.Magic, SkillType.Study];
-    if (!attunement_skills.some(skill => task.task_definition.skills.includes(skill)))
-    {
+    if (!attunement_skills.some(skill => task.task_definition.skills.includes(skill))) {
         return 0;
     }
 
@@ -522,19 +513,16 @@ export enum AutomationMode {
 }
 
 export function toggleAutomation(task: Task) {
-    if (!hasPerk(PerkType.DeepTrance))
-    {
+    if (!hasPerk(PerkType.DeepTrance)) {
         return;
     }
 
-    if (!GAMESTATE.automation_prios.has(task.task_definition.zone_id))
-    {
+    if (!GAMESTATE.automation_prios.has(task.task_definition.zone_id)) {
         GAMESTATE.automation_prios.set(task.task_definition.zone_id, []);
     }
 
     var prios = GAMESTATE.automation_prios.get(task.task_definition.zone_id) as number[];
-    if (prios.includes(task.task_definition.id))
-    {
+    if (prios.includes(task.task_definition.id)) {
         prios.splice(prios.indexOf(task.task_definition.id), 1);
     }
     else {
@@ -552,26 +540,22 @@ export function toggleAutomation(task: Task) {
 }
 
 function pickNextTaskInAutomationQueue(): Task | null {
-    if (GAMESTATE.automation_mode == AutomationMode.Off)
-    {
+    if (GAMESTATE.automation_mode == AutomationMode.Off) {
         return null;
     }
 
     var prios = GAMESTATE.automation_prios.get(GAMESTATE.current_zone);
-    if (!prios)
-    {
+    if (!prios) {
         return null;
     }
 
     for (const task_id of prios) {
         for (const task of GAMESTATE.tasks) {
-            if (task.task_definition.id != task_id)
-            {
+            if (task.task_definition.id != task_id) {
                 continue;
             }
 
-            if (!task.enabled)
-            {
+            if (!task.enabled) {
                 break
             }
 
@@ -675,6 +659,9 @@ export class Gamestate {
     auto_use_items = false;
 
     skills_at_start_of_reset: number[] = [];
+    power_at_start_of_reset = 0;
+    attunement_at_start_of_reset = 0;
+
     skills: Skill[] = [];
     unlocked_skills: SkillType[] = [];
     perks: Map<PerkType, boolean> = new Map();
@@ -683,7 +670,7 @@ export class Gamestate {
 
     is_in_game_over = false;
     is_at_end_of_content = false;
-    
+
     current_energy = 100;
     max_energy = 100;
     energy_reset_count = 0;
@@ -724,8 +711,7 @@ function advanceZone() {
     }
 
     GAMESTATE.current_zone += 1;
-    if (GAMESTATE.automation_mode == AutomationMode.Zone)
-    {
+    if (GAMESTATE.automation_mode == AutomationMode.Zone) {
         GAMESTATE.automation_mode = AutomationMode.Off;
     }
 
