@@ -136,7 +136,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 45, name: "Forage for Mushrooms", max_reps: 5, xp_mult: 2, cost_multiplier: 0.6, skills: [SkillType.Search], item: ItemType.Mushroom }),
             new TaskDefinition({ id: 46, name: "Befried a Deer", cost_multiplier: 4, xp_mult: 3, skills: [SkillType.Charisma] }),
             new TaskDefinition({ id: 47, name: "Angry Ent", type: TaskType.Boss, cost_multiplier: 8000, skills: [SkillType.Combat], xp_mult: 0.3, unlocks_task: 48, item: ItemType.MagicalRoots }),
-            new TaskDefinition({ id: 48, name: "Gather Magical Roots", cost_multiplier: 40, max_reps: 3, skills: [SkillType.Search], item: ItemType.MagicalRoots, hidden_by_default: true }),
+            new TaskDefinition({ id: 48, name: "Gather Magical Roots", cost_multiplier: 30, max_reps: 3, skills: [SkillType.Search], item: ItemType.MagicalRoots, hidden_by_default: true }),
         ],
     },
     {
@@ -187,7 +187,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 83, name: "Scribe Scroll of Haste", max_reps: 1, cost_multiplier: 10, skills: [SkillType.Crafting, SkillType.Magic], item: ItemType.ScrollOfHaste }),
             new TaskDefinition({ id: 84, name: "Cast a Spell", cost_multiplier: 5, max_reps: 6, xp_mult: 0.2, skills: [SkillType.Magic], perk: PerkType.MinorTimeCompression }),
             new TaskDefinition({ id: 85, name: "Study at the Mage's Guild", cost_multiplier: 10, xp_mult: 2, skills: [SkillType.Study, SkillType.Magic] }),
-            new TaskDefinition({ id: 88, name: "Figure Out How to Attune", cost_multiplier: 750, xp_mult: 0.1, skills: [SkillType.Study, SkillType.Magic], perk: PerkType.Attunement }),
+            new TaskDefinition({ id: 88, name: "Figure Out How to Attune", cost_multiplier: 1500, xp_mult: 0.1, skills: [SkillType.Study, SkillType.Magic], perk: PerkType.Attunement }),
             new TaskDefinition({ id: 86, name: "Train for Your Quest", cost_multiplier: 6, max_reps: 3, xp_mult: 3, skills: [SkillType.Search, SkillType.Survival, SkillType.Fortitude] }),
             new TaskDefinition({ id: 87, name: "Corrupt Mayor", type: TaskType.Boss, cost_multiplier: 6000, skills: [SkillType.Combat], xp_mult: 0.3 }),
         ],
