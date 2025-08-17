@@ -7,6 +7,7 @@ export enum EventType {
     GainedPerk,
     UsedItem,
     UnlockedTask,
+    UnlockedSkill,
 
     Count
 }
@@ -39,4 +40,8 @@ export class UsedItemContext extends EventContext {
 
 export class UnlockedTaskContext extends EventContext {
     task_definition: TaskDefinition = new TaskDefinition();
+}
+
+export class UnlockedSkillContext extends EventContext {
+    skill: SkillType = SkillType.Count;
 }

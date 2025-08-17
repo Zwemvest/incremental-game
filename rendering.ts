@@ -3,13 +3,13 @@ import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTask
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS, HASTE_MULT } from "./items.js";
 import { PerkDefinition, PerkType, PERKS } from "./perks.js";
-import { EventType, GainedPerkContext, SkillUpContext, UnlockedTaskContext, UsedItemContext } from "./events.js";
+import { EventType, GainedPerkContext, SkillUpContext, UnlockedSkillContext, UnlockedTaskContext, UsedItemContext } from "./events.js";
 
 // MARK: Skills
 
 let SKILL_NAMES = ["Charisma", "Study", "Combat", "Search", "Subterfuge", "Crafting", "Survival", "Travel", "Magic", "Fortitude", "Druid", "Ascension"];
 
-function createSkillDiv(skill: Skill, skills_div: HTMLElement, rendering: Rendering) {
+function createSkillDiv(skill: Skill, skills_div: HTMLElement) {
     const skill_div = document.createElement("div");
     skill_div.className = "skill";
 
@@ -35,11 +35,31 @@ function createSkillDiv(skill: Skill, skills_div: HTMLElement, rendering: Render
     });
 
     skills_div.appendChild(skill_div);
-    rendering.skill_elements.set(skill.type, skill_div);
+    RENDERING.skill_elements.set(skill.type, skill_div);
+}
+
+function recreateSkills() {
+    var skills_div = document.getElementById("skills");
+    if (!skills_div) {
+        console.error("The element with ID 'skills' was not found.");
+        return;
+    }
+    skills_div.innerHTML = "";
+
+    for (const skill of GAMESTATE.skills) {
+        if (GAMESTATE.unlocked_skills.includes(skill.type)) {
+            createSkillDiv(skill, skills_div);
+        }
+    }
 }
 
 function updateSkillRendering() {
     for (const skill of GAMESTATE.skills) {
+        if (!GAMESTATE.unlocked_skills.includes(skill.type))
+        {
+            continue;
+        }
+
         var element = RENDERING.skill_elements.get(skill.type) as HTMLElement;
         var fill = element.querySelector<HTMLDivElement>(".progress-fill");
         if (fill) {
@@ -667,6 +687,11 @@ function handleEvents() {
                 message_div.innerHTML = `Unlocked task ${unlock_context.task_definition.name}`;
                 recreateTasks();
                 break;
+            case EventType.UnlockedSkill:
+                var unlock_skill_context = event.context as UnlockedSkillContext;
+                message_div.innerHTML = `Unlocked skill ${SKILL_NAMES[unlock_skill_context.skill]}`;
+                recreateSkills();
+                break;
             default:
                 break;
         }
@@ -744,19 +769,6 @@ export class Rendering {
 
         for (const task of GAMESTATE.tasks) {
             createTaskDiv(task, tasks_div, this);
-        }
-    }
-
-    private createSkills() {
-        var skills_div = document.getElementById("skills");
-        if (!skills_div) {
-            console.error("The element with ID 'skills' was not found.");
-            return;
-        }
-        skills_div.innerHTML = "";
-
-        for (const skill of GAMESTATE.skills) {
-            createSkillDiv(skill, skills_div, this);
         }
     }
 
@@ -842,7 +854,7 @@ export class Rendering {
 
     public start() {
         this.createTasks();
-        this.createSkills();
+        recreateSkills();
 
         setupZone();
         createPerks();

@@ -2,7 +2,7 @@ import { Task, ZONES, SkillType, TaskType, TASK_LOOKUP, TaskDefinition } from ".
 import { GAMESTATE } from "./game.js";
 import { HASTE_MULT, ItemDefinition, ITEMS, ItemType } from "./items.js";
 import { PerkType } from "./perks.js";
-import { SkillUpContext, EventType, RenderEvent, GainedPerkContext, UsedItemContext, UnlockedTaskContext } from "./events.js";
+import { SkillUpContext, EventType, RenderEvent, GainedPerkContext, UsedItemContext, UnlockedTaskContext, UnlockedSkillContext } from "./events.js";
 
 // MARK: Skills
 
@@ -291,6 +291,14 @@ function initializeTasks() {
             }
 
             GAMESTATE.tasks.push(new Task(task));
+            for (const skill of task.skills) {
+                if (!GAMESTATE.unlocked_skills.includes(skill)) {   
+                    GAMESTATE.unlocked_skills.push(skill);
+                    const context: UnlockedSkillContext = { skill: skill };
+                    const event = new RenderEvent(EventType.UnlockedSkill, context);
+                    GAMESTATE.queueRenderEvent(event);
+                }
+            }
         }
     }
 
@@ -502,6 +510,7 @@ export class Gamestate {
 
     skills_at_start_of_reset: number[] = [];
     skills: Skill[] = [];
+    unlocked_skills: SkillType[] = [];
     perks: Map<PerkType, boolean> = new Map();
     items: Map<ItemType, number> = new Map();
     queued_scrolls_of_haste = 0;
