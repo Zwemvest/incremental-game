@@ -838,46 +838,59 @@ function setupAutomationControls() {
         return;
     }
 
+    var automation = document.createElement("div");
+    automation.className = "automation";
+
+    var automation_text = document.createElement("div");
+    automation_text.className = "automation-text";
+    automation.textContent = "Automation";
+
     var all_control = document.createElement("button");
     var zone_control = document.createElement("button");
-    
-    all_control.className = "element";
-    zone_control.className = "element";
 
-    function setAutomationControlNames() {
-        all_control.textContent = GAMESTATE.automation_mode == AutomationMode.All ? "Stop Auto" : "Auto (All)";
-        zone_control.textContent = GAMESTATE.automation_mode == AutomationMode.Zone ? "Stop Auto" : "Auto (Zone)";
+    all_control.textContent = "All";
+    zone_control.textContent = "Zone";
+
+    function setAutomationClasses() {
+        all_control.className = GAMESTATE.automation_mode == AutomationMode.All ? "on" : "off";
+        zone_control.className = GAMESTATE.automation_mode == AutomationMode.Zone ? "on" : "off";
     }
 
-    setAutomationControlNames();
+    setAutomationClasses();
 
     all_control.addEventListener("click", () => {
         GAMESTATE.automation_mode = GAMESTATE.automation_mode == AutomationMode.All ? AutomationMode.Off : AutomationMode.All;
-        setAutomationControlNames();
+        setAutomationClasses();
     });
     zone_control.addEventListener("click", () => {
         GAMESTATE.automation_mode = GAMESTATE.automation_mode == AutomationMode.Zone ? AutomationMode.Off : AutomationMode.Zone;
-        setAutomationControlNames();
+        setAutomationClasses();
     });
 
     setupTooltip(all_control, function () {
-        var tooltip = `<h3>${all_control.textContent}</h3>`;
+        var tooltip = `<h3>Automate ${all_control.textContent}</h3>`;
 
         tooltip += "Toggle between automating tasks in all zones, and not automating";
+        tooltip += "<br>Right-click tasks to designate them as automated";
+        tooltip += "<br>They'll be executed in the order you right-clicked them, as indicated by the number in their corner";
 
         return tooltip;
     });
     
     setupTooltip(zone_control, function () {
-        var tooltip = `<h3>${zone_control.textContent}</h3>`;
+        var tooltip = `<h3> Automate${zone_control.textContent}</h3>`;
         
         tooltip += "Toggle between automating tasks in the current zone, and not automating";
+        tooltip += "<br>Right-click tasks to designate them as automated";
+        tooltip += "<br>They'll be executed in the order you right-clicked them, as indicated by the number in their corner";
         
         return tooltip;
     });
     
-    RENDERING.controls_list_element.appendChild(all_control);
-    RENDERING.controls_list_element.appendChild(zone_control);
+    automation.appendChild(automation_text);
+    automation.appendChild(all_control);
+    automation.appendChild(zone_control);
+    RENDERING.controls_list_element.appendChild(automation);
 }
 
 // MARK: Extra stats

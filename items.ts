@@ -75,7 +75,7 @@ export var ITEMS: ItemDefinition[] = [
     },
     {
         enum: ItemType.Book, name: "Books", tooltip: "Improves Study speed by 10%", icon: "📚",
-        get_effect_text: (amount) => { return `Study speed increased ${amount * 10}`; },
+        get_effect_text: (amount) => { return `Study speed increased ${amount * 10}%`; },
         on_consume: (amount) => {
             getSkill(SkillType.Study).speed_modifier += 0.1 * amount;
         },

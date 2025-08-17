@@ -237,6 +237,19 @@ button:hover:enabled {
     height: 60px;
 }
 
+.automation {
+    text-align: center;
+}
+
+#controls .automation button {
+    width: 60px;
+    height: 42px;
+}
+
+.automation .on {
+    background-color: rgb(49, 221, 72);
+}
+
 /* MARK: Perks
 */
 
