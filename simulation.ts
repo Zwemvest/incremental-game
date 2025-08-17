@@ -119,6 +119,19 @@ function calcSkillTaskProgressWithoutLevel(skill_type: SkillType): number {
             break;
     }
 
+    switch (skill_type) {
+        case SkillType.Combat:
+        case SkillType.Fortitude:
+            mult *= 1 + GAMESTATE.power / 100;
+            break;
+
+        case SkillType.Study:
+        case SkillType.Magic:
+        case SkillType.Druid:
+            mult *= 1 + GAMESTATE.attunement / 1000;
+            break;
+    }
+
     return mult;
 }
 
@@ -250,12 +263,8 @@ function finishTask(task: Task) {
         unlockTask(task.task_definition.unlocks_task);
     }
 
-    if (task.task_definition.type == TaskType.Boss)
-    {
-        const mult = task.task_definition.zone_id - 1; // First boss is zone 3, which is internally 2
-        const powerAmount = 5 * mult;
-        addPower(powerAmount);
-    }
+    addPower(calcPowerGain(task));
+    addAttunement(calcAttunementGain(task));
 
     if (!GAMESTATE.repeat_tasks)
     {
@@ -437,6 +446,11 @@ export function hasPerk(perk: PerkType): boolean {
 // MARK: Extra stats
 
 function addPower(amount: number) {
+    if (amount <= 0)
+    {
+        return;
+    }
+
     if (!GAMESTATE.has_unlocked_power)
     {
         const event = new RenderEvent(EventType.UnlockedPower, new EventContext());
@@ -444,6 +458,37 @@ function addPower(amount: number) {
         GAMESTATE.has_unlocked_power = true;
     }
     GAMESTATE.power += amount;
+}
+
+export function calcPowerGain(task: Task) {
+    if (task.task_definition.type != TaskType.Boss)
+    {
+        return 0;
+    }
+
+    const mult = task.task_definition.zone_id - 1; // First boss is zone 3, which is internally 2
+    const powerAmount = 5 * mult;
+    return powerAmount;
+}
+
+function addAttunement(amount: number) {
+    GAMESTATE.attunement += amount;
+}
+
+export function calcAttunementGain(task: Task): number {
+    if (!hasPerk(PerkType.Attunement))
+    {
+        return 0;
+    }
+
+    const attunement_skills = [SkillType.Druid, SkillType.Magic, SkillType.Study];
+    if (!attunement_skills.some(skill => task.task_definition.skills.includes(skill)))
+    {
+        return 0;
+    }
+
+    const zone_mult = task.task_definition.zone_id + 1;
+    return zone_mult;
 }
 
 // MARK: Persistence

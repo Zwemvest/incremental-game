@@ -1,5 +1,5 @@
 import { Task, TaskDefinition, SkillType, ZONES, TaskType, SKILL_DEFINITIONS, SkillDefinition } from "./zones.js";
-import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel, saveGame, SAVE_LOCATION, toggleRepeatTasks } from "./simulation.js";
+import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel, saveGame, SAVE_LOCATION, toggleRepeatTasks, calcAttunementGain, calcPowerGain } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS, HASTE_MULT } from "./items.js";
 import { PerkDefinition, PerkType, PERKS } from "./perks.js";
@@ -200,6 +200,18 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
 
         if (task.task_definition.xp_mult != 1) {
             tooltip += `<br><br>XP multiplier: ${task.task_definition.xp_mult}`;
+        }
+
+        const attunement_gain = calcAttunementGain(task);
+        if (attunement_gain > 0)
+        {
+            tooltip += `<br><br>Gives ${attunement_gain} Attunement`;
+        }
+
+        const power_gain = calcPowerGain(task);
+        if (power_gain > 0 && GAMESTATE.has_unlocked_power)
+        {
+            tooltip += `<br><br>Gives ${power_gain} Power`;
         }
 
         if (task_button.disabled) {
@@ -767,7 +779,7 @@ function updateExtraStats() {
     if (GAMESTATE.has_unlocked_power && RENDERING.power_element.style.display == "none") {
         RENDERING.power_element.style.display = "block";
         setupTooltip(RENDERING.power_element, function () {
-            var tooltip = `<h3>Power: ${GAMESTATE.power.toFixed(0)}</h3>`;
+            var tooltip = `<h3>💪Power: ${GAMESTATE.power.toFixed(0)}</h3>`;
 
             tooltip += `Increases Combat and Fortitude speed by ${GAMESTATE.power}%`;
 
@@ -775,10 +787,27 @@ function updateExtraStats() {
         });
     }
 
-    const power_text = `Power: ${GAMESTATE.power.toFixed(0)}`;
+    const power_text = `💪Power: ${GAMESTATE.power.toFixed(0)}`;
     if (RENDERING.power_element.textContent != power_text)
     {
         RENDERING.power_element.textContent = power_text;
+    }
+
+    if (hasPerk(PerkType.Attunement) && RENDERING.attunement_element.style.display == "none") {
+        RENDERING.attunement_element.style.display = "block";
+        setupTooltip(RENDERING.attunement_element, function () {
+            var tooltip = `<h3>🌀Attunement: ${GAMESTATE.attunement.toFixed(0)}</h3>`;
+
+            tooltip += `Increases Study, Magic, and Druid speed by ${GAMESTATE.attunement / 10}%`;
+
+            return tooltip;
+        });
+    }
+
+    const attunement_text = `🌀Attunement: ${GAMESTATE.attunement.toFixed(0)}`;
+    if (RENDERING.attunement_element.textContent != attunement_text)
+    {
+        RENDERING.attunement_element.textContent = attunement_text;
     }
 }
 
@@ -792,6 +821,7 @@ export class Rendering {
     energy_element: HTMLElement;
     messages_element: HTMLElement;
     power_element: HTMLElement;
+    attunement_element: HTMLElement;
     task_elements: Map<TaskDefinition, ElementWithTooltip> = new Map();
     skill_elements: Map<SkillType, HTMLElement> = new Map();
     item_elements: Map<ItemType, HTMLElement> = new Map();
@@ -846,6 +876,7 @@ export class Rendering {
         this.messages_element = getElement("messages");
         this.controls_list_element = getElement("controls-list");
         this.power_element = getElement("power");
+        this.attunement_element = getElement("attunement");
     }
 
     public initialize() {
