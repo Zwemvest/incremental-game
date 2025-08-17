@@ -1,4 +1,4 @@
-import { Task, TaskDefinition, SkillType, ZONES, TaskType } from "./zones.js";
+import { Task, TaskDefinition, SkillType, ZONES, TaskType, SKILL_DEFINITIONS, SkillDefinition } from "./zones.js";
 import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel, saveGame, SAVE_LOCATION, toggleRepeatTasks } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS, HASTE_MULT } from "./items.js";
@@ -7,15 +7,14 @@ import { EventType, GainedPerkContext, SkillUpContext, UnlockedSkillContext, Unl
 
 // MARK: Skills
 
-let SKILL_NAMES = ["Charisma", "Study", "Combat", "Search", "Subterfuge", "Crafting", "Survival", "Travel", "Magic", "Fortitude", "Druid", "Ascension"];
-
 function createSkillDiv(skill: Skill, skills_div: HTMLElement) {
     const skill_div = document.createElement("div");
     skill_div.className = "skill";
 
+    const skill_definition = SKILL_DEFINITIONS[skill.type] as SkillDefinition;
     const name = document.createElement("div");
     name.className = "skill-name";
-    name.textContent = `${SKILL_NAMES[skill.type]}`;
+    name.textContent = `${skill_definition.name}`;
 
     const progressFill = document.createElement("div");
     progressFill.className = "progress-fill";
@@ -28,7 +27,7 @@ function createSkillDiv(skill: Skill, skills_div: HTMLElement) {
     skill_div.appendChild(progressBar);
 
     setupTooltip(skill_div, function () {
-        var tooltip = `<h3>${SKILL_NAMES[skill.type]}</h3>`;
+        var tooltip = `<h3>${skill_definition.name}</h3>`;
         tooltip += `Speed multiplier: x${calcSkillTaskProgressMultiplier(skill.type).toFixed(2)}`;
         tooltip += `<br>XP: ${skill.progress.toFixed(2)}/${calcSkillXpNeeded(skill).toFixed(2)}`;
         return tooltip;
@@ -55,8 +54,7 @@ function recreateSkills() {
 
 function updateSkillRendering() {
     for (const skill of GAMESTATE.skills) {
-        if (!GAMESTATE.unlocked_skills.includes(skill.type))
-        {
+        if (!GAMESTATE.unlocked_skills.includes(skill.type)) {
             continue;
         }
 
@@ -68,7 +66,8 @@ function updateSkillRendering() {
 
         var name = element.querySelector<HTMLDivElement>(".skill-name");
         if (name) {
-            const new_html = `${SKILL_NAMES[skill.type]}<br>(${skill.level})`;
+            const skill_definition = SKILL_DEFINITIONS[skill.type] as SkillDefinition;
+            const new_html = `${skill_definition.name}<br>(${skill.level})`;
             // Avoid flickering in the debugger
             if (new_html != name.innerHTML) {
                 name.innerHTML = new_html;
@@ -106,7 +105,8 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     var skillText = "Skills used: ";
     var skillStrings: string[] = [];
     for (const skill of task.task_definition.skills) {
-        const name = SKILL_NAMES[skill];
+        const skill_definition = SKILL_DEFINITIONS[skill] as SkillDefinition;
+        const name = skill_definition.name;
         if (name) {
             skillStrings.push(name);
         }
@@ -173,7 +173,8 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
 
         for (const skill of task.task_definition.skills) {
             const skill_progress = getSkill(skill);
-            const name = SKILL_NAMES[skill];
+            const skill_definition = SKILL_DEFINITIONS[skill] as SkillDefinition;
+            const name = skill_definition.name;
             if (!name) {
                 continue;
             }
@@ -185,7 +186,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
             while (xp_gained > xp_needed) {
                 xp_gained -= xp_needed;
                 resulting_level += 1;
-                xp_needed = calcSkillXpNeededAtLevel(resulting_level);
+                xp_needed = calcSkillXpNeededAtLevel(resulting_level, skill);
             }
 
             const levels_diff = resulting_level - skill_progress.level;
@@ -473,7 +474,8 @@ function populateGameOver(game_over_div: HTMLElement) {
         if (skill_diff > 0) {
             has_gained_some_skill = true;
             var skill_gain_text = document.createElement("p");
-            skill_gain_text.textContent = `${SKILL_NAMES[i]}: +${skill_diff} (x${calcSkillTaskProgressMultiplierFromLevel(skill_diff).toFixed(2)} speed)`;
+            const skill_definition = SKILL_DEFINITIONS[i] as SkillDefinition;
+            skill_gain_text.textContent = `${skill_definition.name}: +${skill_diff} (x${calcSkillTaskProgressMultiplierFromLevel(skill_diff).toFixed(2)} speed)`;
 
             skill_gain.appendChild(skill_gain_text);
         }
@@ -667,31 +669,43 @@ function handleEvents() {
 
         switch (event.type) {
             case EventType.SkillUp:
-                var skill_context = event.context as SkillUpContext;
-                message_div.textContent = `${SKILL_NAMES[skill_context.skill]} is now ${skill_context.new_level}`;
-                break;
+                {
+                    var skill_context = event.context as SkillUpContext;
+                    const skill_definition = SKILL_DEFINITIONS[skill_context.skill] as SkillDefinition;
+                    message_div.textContent = `${skill_definition.name} is now ${skill_context.new_level}`;
+                    break;
+                }
             case EventType.GainedPerk:
-                var perk_context = event.context as GainedPerkContext;
-                const perk = PERKS[perk_context.perk] as PerkDefinition;
-                message_div.innerHTML = `Unlocked ${perk.icon}${perk.name}`;
-                message_div.innerHTML += `<br>${perk.tooltip}`;
-                break;
+                {
+                    var perk_context = event.context as GainedPerkContext;
+                    const perk = PERKS[perk_context.perk] as PerkDefinition;
+                    message_div.innerHTML = `Unlocked ${perk.icon}${perk.name}`;
+                    message_div.innerHTML += `<br>${perk.tooltip}`;
+                    break;
+                }
             case EventType.UsedItem:
-                var item_context = event.context as UsedItemContext;
-                const item = ITEMS[item_context.item] as ItemDefinition;
-                message_div.innerHTML = `Used ${item_context.count} ${item.icon}${item.name}`;
-                message_div.innerHTML += `<br>${item.get_effect_text(item_context.count)}`;
-                break;
+                {
+                    var item_context = event.context as UsedItemContext;
+                    const item = ITEMS[item_context.item] as ItemDefinition;
+                    message_div.innerHTML = `Used ${item_context.count} ${item.icon}${item.name}`;
+                    message_div.innerHTML += `<br>${item.get_effect_text(item_context.count)}`;
+                    break;
+                }
             case EventType.UnlockedTask:
-                var unlock_context = event.context as UnlockedTaskContext;
-                message_div.innerHTML = `Unlocked task ${unlock_context.task_definition.name}`;
-                recreateTasks();
-                break;
+                {
+                    var unlock_context = event.context as UnlockedTaskContext;
+                    message_div.innerHTML = `Unlocked task ${unlock_context.task_definition.name}`;
+                    recreateTasks();
+                    break;
+                }
             case EventType.UnlockedSkill:
-                var unlock_skill_context = event.context as UnlockedSkillContext;
-                message_div.innerHTML = `Unlocked skill ${SKILL_NAMES[unlock_skill_context.skill]}`;
-                recreateSkills();
-                break;
+                {
+                    var unlock_skill_context = event.context as UnlockedSkillContext;
+                    const skill_definition = SKILL_DEFINITIONS[unlock_skill_context.skill] as SkillDefinition;
+                    message_div.innerHTML = `Unlocked skill ${skill_definition.name}`;
+                    recreateSkills();
+                    break;
+                }
             default:
                 break;
         }

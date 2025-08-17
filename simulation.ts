@@ -1,4 +1,4 @@
-import { Task, ZONES, SkillType, TaskType, TASK_LOOKUP, TaskDefinition } from "./zones.js";
+import { Task, ZONES, SkillType, TaskType, TASK_LOOKUP, TaskDefinition, SKILL_DEFINITIONS, SkillDefinition } from "./zones.js";
 import { GAMESTATE } from "./game.js";
 import { HASTE_MULT, ItemDefinition, ITEMS, ItemType } from "./items.js";
 import { PerkType } from "./perks.js";
@@ -33,14 +33,15 @@ export function calcSkillXp(task: Task, task_progress: number): number {
 }
 
 export function calcSkillXpNeeded(skill: Skill): number {
-    return calcSkillXpNeededAtLevel(skill.level);
+    return calcSkillXpNeededAtLevel(skill.level, skill.type);
 }
 
-export function calcSkillXpNeededAtLevel(level: number): number {
+export function calcSkillXpNeededAtLevel(level: number, skill_type: SkillType): number {
     const exponent_base = 1.02;
     const base_amount = 10;
+    const skill_modifier = (SKILL_DEFINITIONS[skill_type] as SkillDefinition).xp_needed_mult;
 
-    return Math.pow(exponent_base, level) * base_amount;
+    return Math.pow(exponent_base, level) * base_amount * skill_modifier;
 }
 
 function addSkillXp(skill: SkillType, xp: number) {
@@ -448,7 +449,6 @@ export function saveGame() {
     // Save to localStorage
     const json = JSON.stringify(saveData, (key, value) => {
         if (typeof value === 'object' && value !== null && 'id' in value) {
-            console.log(value);
             return value.id; // Replace object with its ID
         }
         return value;

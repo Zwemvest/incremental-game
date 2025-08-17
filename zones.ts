@@ -18,6 +18,31 @@ export enum SkillType {
     Count
 }
 
+export class SkillDefinition {
+    type: SkillType = SkillType.Count;
+    name = "";
+    xp_needed_mult = 1.0;
+
+    constructor(overrides: Partial<SkillDefinition> = {}) {
+        Object.assign(this, overrides);
+    }
+}
+
+export const SKILL_DEFINITIONS: SkillDefinition[] = [
+    new SkillDefinition({type: SkillType.Charisma, name: "Charisma"}),
+    new SkillDefinition({type: SkillType.Study, name: "Study"}),
+    new SkillDefinition({type: SkillType.Combat, name: "Combat"}),
+    new SkillDefinition({type: SkillType.Search, name: "Search"}),
+    new SkillDefinition({type: SkillType.Subterfuge, name: "Subterfuge"}),
+    new SkillDefinition({type: SkillType.Crafting, name: "Crafting"}),
+    new SkillDefinition({type: SkillType.Survival, name: "Survival"}),
+    new SkillDefinition({type: SkillType.Travel, name: "Travel"}),
+    new SkillDefinition({type: SkillType.Magic, name: "Magic", xp_needed_mult: 3}),
+    new SkillDefinition({type: SkillType.Fortitude, name: "Fortitude", xp_needed_mult: 10}),
+    new SkillDefinition({type: SkillType.Druid, name: "Druid", xp_needed_mult: 20}),
+    new SkillDefinition({type: SkillType.Ascension, name: "Ascension"}),
+]
+
 export enum TaskType {
     Normal,
     Travel,
@@ -111,7 +136,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 45, name: "Forage for Mushrooms", max_reps: 5, xp_mult: 2, cost_multiplier: 0.6, skills: [SkillType.Search], item: ItemType.Mushroom }),
             new TaskDefinition({ id: 46, name: "Befried a Deer", cost_multiplier: 4, xp_mult: 3, skills: [SkillType.Charisma] }),
             new TaskDefinition({ id: 47, name: "Angry Ent", type: TaskType.Boss, cost_multiplier: 8000, skills: [SkillType.Combat], xp_mult: 0.3, unlocks_task: 48, item: ItemType.MagicalRoots }),
-            new TaskDefinition({ id: 48, name: "Gather Magical Roots", cost_multiplier: 40, max_reps: 3, skills: [SkillType.Search], item: ItemType.MagicalRoots }),
+            new TaskDefinition({ id: 48, name: "Gather Magical Roots", cost_multiplier: 40, max_reps: 3, skills: [SkillType.Search], item: ItemType.MagicalRoots, hidden_by_default: true }),
         ],
     },
     {
@@ -133,7 +158,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 60, name: "Get to the City", type: TaskType.Travel, cost_multiplier: 6, skills: [SkillType.Travel] }),
             new TaskDefinition({ id: 61, name: "Join a Caravan", type: TaskType.Mandatory, cost_multiplier: 12, xp_mult: 0.5, skills: [SkillType.Charisma] }),
             new TaskDefinition({ id: 62, name: "Scout the Road Ahead", type: TaskType.Mandatory, cost_multiplier: 4, max_reps: 3, skills: [SkillType.Study, SkillType.Search, SkillType.Survival] }),
-            new TaskDefinition({ id: 63, name: "Make Travel Equipment", max_reps: 4, cost_multiplier: 2, skills: [SkillType.Crafting], item: ItemType.TravelEquipment }),
+            new TaskDefinition({ id: 63, name: "Make Travel Equipment", max_reps: 4, cost_multiplier: 1.5, skills: [SkillType.Crafting], item: ItemType.TravelEquipment }),
             new TaskDefinition({ id: 64, name: "Get Used to Traveling", cost_multiplier: 3, max_reps: 3, xp_mult: 3, skills: [SkillType.Travel, SkillType.Fortitude], perk: PerkType.ExperiencedTraveler }),
             new TaskDefinition({ id: 65, name: "Chat with Travelers", cost_multiplier: 3, max_reps: 4, xp_mult: 3, skills: [SkillType.Charisma] }),
             new TaskDefinition({ id: 66, name: "Practice Traveling Unnoticed", cost_multiplier: 6, max_reps: 1, xp_mult: 4, skills: [SkillType.Subterfuge, SkillType.Survival] }),
@@ -145,11 +170,11 @@ export const ZONES: Zone[] = [
         tasks: [
             new TaskDefinition({ id: 70, name: "Enter the City", type: TaskType.Travel, cost_multiplier: 4, skills: [SkillType.Travel] }),
             new TaskDefinition({ id: 71, name: "Bribe the City Guards", type: TaskType.Mandatory, cost_multiplier: 15, skills: [SkillType.Charisma] }),
-            new TaskDefinition({ id: 72, name: "Survive a Mugging", type: TaskType.Mandatory, cost_multiplier: 6, max_reps: 1, xp_mult: 0.5, skills: [SkillType.Combat, SkillType.Fortitude] }),
+            new TaskDefinition({ id: 72, name: "Survive a Mugging", type: TaskType.Mandatory, cost_multiplier: 5, max_reps: 1, xp_mult: 0.5, skills: [SkillType.Combat, SkillType.Fortitude] }),
             new TaskDefinition({ id: 73, name: "Buy a Book", max_reps: 5, cost_multiplier: 5, skills: [SkillType.Charisma], item: ItemType.Book }),
             new TaskDefinition({ id: 74, name: "Negotiate with a Rogue Guard Captain", cost_multiplier: 50, max_reps: 1, xp_mult: 0.3, skills: [SkillType.Charisma, SkillType.Subterfuge], perk: PerkType.UndergroundConnection }),
             new TaskDefinition({ id: 75, name: "Spar with the Guards", cost_multiplier: 3, max_reps: 3, xp_mult: 1.5, skills: [SkillType.Combat] }),
-            new TaskDefinition({ id: 76, name: "Fend for Yourself", cost_multiplier: 4, max_reps: 1, xp_mult: 3, skills: [SkillType.Survival, SkillType.Fortitude] }),
+            new TaskDefinition({ id: 76, name: "Fend for Yourself", cost_multiplier: 3, max_reps: 1, xp_mult: 4, skills: [SkillType.Survival, SkillType.Fortitude] }),
             new TaskDefinition({ id: 77, name: "Skulk About", cost_multiplier: 8, skills: [SkillType.Subterfuge], xp_mult: 5 }),
         ],
     },
