@@ -205,6 +205,10 @@ function calcTaskProgressPerTick(task: Task): number {
 function updateActiveTask() {
     var active_task = GAMESTATE.active_task;
     if (!active_task) {
+        active_task = pickNextTaskInAutomationQueue();
+    }
+    if (!active_task)
+    {
         return;
     }
 
@@ -383,6 +387,7 @@ export function doEnergyReset() {
     GAMESTATE.current_energy = GAMESTATE.max_energy;
     GAMESTATE.energy_reset_count += 1;
     GAMESTATE.is_in_game_over = false;
+    GAMESTATE.automation_mode = AutomationMode.Off;
 
     removeTemporarySkillBonuses();
     halveItemCounts();
@@ -491,6 +496,75 @@ export function calcAttunementGain(task: Task): number {
     return zone_mult;
 }
 
+// MARK: Automation
+
+export enum AutomationMode {
+    All,
+    Zone,
+    Off,
+}
+
+export function toggleAutomation(task: Task) {
+    if (!hasPerk(PerkType.DeepTrance))
+    {
+        return;
+    }
+
+    if (!GAMESTATE.automation_prios.has(task.task_definition.zone_id))
+    {
+        GAMESTATE.automation_prios.set(task.task_definition.zone_id, []);
+    }
+
+    var prios = GAMESTATE.automation_prios.get(task.task_definition.zone_id) as number[];
+    if (prios.includes(task.task_definition.id))
+    {
+        prios.splice(prios.indexOf(task.task_definition.id), 1);
+    }
+    else {
+        prios.push(task.task_definition.id);
+        // Ensure travel always happens last
+        prios.sort((a, b) => {
+            const task_a = TASK_LOOKUP.get(a) as TaskDefinition;
+            const task_b = TASK_LOOKUP.get(b) as TaskDefinition;
+            if (task_a.type == TaskType.Travel || task_b.type == TaskType.Travel) {
+                return task_a.type == TaskType.Travel ? 1 : -1;
+            }
+            return 0;
+        });
+    }
+}
+
+function pickNextTaskInAutomationQueue(): Task | null {
+    if (GAMESTATE.automation_mode == AutomationMode.Off)
+    {
+        return null;
+    }
+
+    var prios = GAMESTATE.automation_prios.get(GAMESTATE.current_zone);
+    if (!prios)
+    {
+        return null;
+    }
+
+    for (const task_id of prios) {
+        for (const task of GAMESTATE.tasks) {
+            if (task.task_definition.id != task_id)
+            {
+                continue;
+            }
+
+            if (!task.enabled)
+            {
+                break
+            }
+
+            return task;
+        }
+    }
+
+    return null;
+}
+
 // MARK: Persistence
 
 export const SAVE_LOCATION = "incrementalGameSave";
@@ -501,6 +575,9 @@ export function saveGame() {
     for (const key in GAMESTATE) {
         if (key == "active_task") {
             continue; // This would feel weird for the player if was persisted
+        }
+        if (key == "automation_mode") {
+            continue;
         }
 
         if (GAMESTATE.hasOwnProperty(key)) {
@@ -574,7 +651,10 @@ export class Gamestate {
     active_task: Task | null = null;
     unlocked_tasks: number[] = [];
     current_zone: number = 0;
+
     repeat_tasks = true;
+    automation_mode = AutomationMode.Off;
+    automation_prios: Map<number, number[]> = new Map();
 
     skills_at_start_of_reset: number[] = [];
     skills: Skill[] = [];
@@ -626,6 +706,11 @@ function advanceZone() {
     }
 
     GAMESTATE.current_zone += 1;
+    if (GAMESTATE.automation_mode == AutomationMode.Zone)
+    {
+        GAMESTATE.automation_mode = AutomationMode.Off;
+    }
+
     resetTasks();
 }
 

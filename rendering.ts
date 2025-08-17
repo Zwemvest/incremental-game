@@ -1,5 +1,5 @@
 import { Task, TaskDefinition, SkillType, ZONES, TaskType, SKILL_DEFINITIONS, SkillDefinition } from "./zones.js";
-import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel, saveGame, SAVE_LOCATION, toggleRepeatTasks, calcAttunementGain, calcPowerGain } from "./simulation.js";
+import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel, saveGame, SAVE_LOCATION, toggleRepeatTasks, calcAttunementGain, calcPowerGain, toggleAutomation, AutomationMode } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS, HASTE_MULT } from "./items.js";
 import { PerkDefinition, PerkType, PERKS } from "./perks.js";
@@ -92,6 +92,11 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     task_button.className = "task-button";
     task_button.textContent = `${task.task_definition.name}`;
     task_button.addEventListener("click", () => { clickTask(task); });
+    task_button.addEventListener("contextmenu", (e) => { e.preventDefault(); toggleAutomation(task); });
+
+    const task_automation = document.createElement("div");
+    task_automation.className = "task-automation";
+    task_button.appendChild(task_automation);
 
     const progressFill = document.createElement("div");
     progressFill.className = "progress-fill";
@@ -259,6 +264,21 @@ function updateTaskRendering() {
         }
         else {
             console.error("No task-button");
+        }
+
+        var automation = task_element.querySelector<HTMLDivElement>(".task-automation");
+        if (automation) {
+            var prios = GAMESTATE.automation_prios.get(GAMESTATE.current_zone);
+            if (prios) {
+                const index = prios.indexOf(task.task_definition.id);
+                const index_str = index >= 0 ? `${index + 1}` : "";
+                if (automation.textContent != index_str) {
+                    automation.textContent = index_str;
+                }
+            }
+        }
+        else {
+            console.error("No task-automation");
         }
 
         if (task.task_definition.type != TaskType.Travel) {
@@ -748,6 +768,11 @@ function handleEvents() {
 function setupControls() {
     RENDERING.controls_list_element.innerHTML = "";
 
+    setupRepeatTasksControl();
+    setupAutomationControls();
+}
+
+function setupRepeatTasksControl() {
     var rep_control = document.createElement("button");
     rep_control.className = "element";
 
@@ -770,7 +795,56 @@ function setupControls() {
     });
 
     RENDERING.controls_list_element.appendChild(rep_control);
-    RENDERING.control_elements.set("rep_control", rep_control);
+}
+
+// MARK: Controls - Automation
+
+function setupAutomationControls() {
+    if (!hasPerk(PerkType.DeepTrance))
+    {
+        return;
+    }
+
+    var all_control = document.createElement("button");
+    var zone_control = document.createElement("button");
+    
+    all_control.className = "element";
+    zone_control.className = "element";
+
+    function setAutomationControlNames() {
+        all_control.textContent = GAMESTATE.automation_mode == AutomationMode.All ? "Stop Auto" : "Auto (All)";
+        zone_control.textContent = GAMESTATE.automation_mode == AutomationMode.Zone ? "Stop Auto" : "Auto (Zone)";
+    }
+
+    setAutomationControlNames();
+
+    all_control.addEventListener("click", () => {
+        GAMESTATE.automation_mode = GAMESTATE.automation_mode == AutomationMode.All ? AutomationMode.Off : AutomationMode.All;
+        setAutomationControlNames();
+    });
+    zone_control.addEventListener("click", () => {
+        GAMESTATE.automation_mode = GAMESTATE.automation_mode == AutomationMode.Zone ? AutomationMode.Off : AutomationMode.Zone;
+        setAutomationControlNames();
+    });
+
+    setupTooltip(all_control, function () {
+        var tooltip = `<h3>${all_control.textContent}</h3>`;
+
+        tooltip += "Toggle between automating tasks in all zones, and not automating";
+
+        return tooltip;
+    });
+    
+    setupTooltip(zone_control, function () {
+        var tooltip = `<h3>${zone_control.textContent}</h3>`;
+        
+        tooltip += "Toggle between automating tasks in the current zone, and not automating";
+        
+        return tooltip;
+    });
+    
+    RENDERING.controls_list_element.appendChild(all_control);
+    RENDERING.controls_list_element.appendChild(zone_control);
 }
 
 // MARK: Extra stats
@@ -826,7 +900,6 @@ export class Rendering {
     skill_elements: Map<SkillType, HTMLElement> = new Map();
     item_elements: Map<ItemType, HTMLElement> = new Map();
     perk_elements: Map<PerkType, HTMLElement> = new Map();
-    control_elements: Map<string, HTMLElement> = new Map();
     controls_list_element: HTMLElement;
 
     energy_reset_count: number = 0;
@@ -907,6 +980,7 @@ function checkZone() {
 
     RENDERING.current_zone = GAMESTATE.current_zone;
     recreateTasks();
+    setupControls();
     setupZone();
 }
 

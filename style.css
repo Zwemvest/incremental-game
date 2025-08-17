@@ -90,6 +90,7 @@ button:hover:enabled {
 }
 
 .task button {
+    position: relative;
     width: 50%;
     height: 30px;
     display: flex;
@@ -147,6 +148,13 @@ button:hover:enabled {
 
 .task-rep.finished {
     background: #00BB00;
+}
+
+.task-automation {
+    position: absolute;
+    top: 2px;
+    right: 2px;
+    font-size: smaller;
 }
 
 /* MARK: Skills

@@ -215,8 +215,8 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 103, name: "Steal Some Reagents", max_reps: 4, cost_multiplier: 1, skills: [SkillType.Subterfuge], item: ItemType.Reagents }),
             new TaskDefinition({ id: 104, name: "Learn Magical Trance", cost_multiplier: 20, max_reps: 6, xp_mult: 0.2, skills: [SkillType.Magic, SkillType.Study], perk: PerkType.DeepTrance }),
             new TaskDefinition({ id: 105, name: "Give Yourself a Pep Talk", cost_multiplier: 10, xp_mult: 4, skills: [SkillType.Charisma] }),
-            new TaskDefinition({ id: 106, name: "Try to Transform Into an Eagle", cost_multiplier: 10, xp_mult: 4, skills: [SkillType.Druid] }),
-            new TaskDefinition({ id: 107, name: "PLACEHOLDER", cost_multiplier: 1, max_reps: 3, xp_mult: 3, skills: [SkillType.Search] }),
+            new TaskDefinition({ id: 106, name: "Try to Transform Into an Eagle", cost_multiplier: 10, xp_mult: 4, skills: [SkillType.Druid, SkillType.Magic] }),
+            new TaskDefinition({ id: 107, name: "Low-oxygen Exercise", cost_multiplier: 3, max_reps: 5, xp_mult: 4, skills: [SkillType.Fortitude, SkillType.Survival] }),
         ],
     },
 ]
