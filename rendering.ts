@@ -27,9 +27,10 @@ function createSkillDiv(skill: Skill, skills_div: HTMLElement) {
     skill_div.appendChild(progressBar);
 
     setupTooltip(skill_div, function () {
-        var tooltip = `<h3>${skill_definition.name}</h3>`;
+        var tooltip = `<h3>${skill_definition.name} - ${skill.level}</h3>`;
         tooltip += `Speed multiplier: x${formatNumber(calcSkillTaskProgressMultiplier(skill.type))}`;
         tooltip += `<br>XP: ${formatNumber(skill.progress)}/${formatNumber(calcSkillXpNeeded(skill))}`;
+        tooltip += `<br><br>Skill speed increases 1% per level, while XP needed to level up increases 2%`;
         return tooltip;
     });
 
