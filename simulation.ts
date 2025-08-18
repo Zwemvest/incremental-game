@@ -265,7 +265,7 @@ function finishTask(task: Task) {
     addPower(calcPowerGain(task));
     addAttunement(calcAttunementGain(task));
 
-    if (!GAMESTATE.repeat_tasks) {
+    if (!GAMESTATE.repeat_tasks || fully_finished) {
         GAMESTATE.active_task = null;
     }
 

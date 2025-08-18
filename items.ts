@@ -15,6 +15,7 @@ export enum ItemType {
     FiremakingKit,
     Reagents,
     MagicalRoots,
+    GoblinTreasure,
 
     Count
 }
@@ -113,6 +114,14 @@ export var ITEMS: ItemDefinition[] = [
         on_consume: (amount) => {
             getSkill(SkillType.Survival).speed_modifier += 0.1 * amount;
             getSkill(SkillType.Magic).speed_modifier += 0.1 * amount;
+        },
+    },
+    {
+        enum: ItemType.GoblinTreasure, name: "Goblin Treasure", tooltip: "Improves Subterfuge speed by 50% and Survival speed by 50%", icon: "💎",
+        get_effect_text: (amount) => { return `Subterfuge speed increased ${amount * 50}%; Survival speed increased ${amount * 50}%`; },
+        on_consume: (amount) => {
+            getSkill(SkillType.Subterfuge).speed_modifier += 0.5 * amount;
+            getSkill(SkillType.Survival).speed_modifier += 0.5 * amount;
         },
     },
 ]

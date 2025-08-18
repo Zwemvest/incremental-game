@@ -11,6 +11,7 @@ export enum PerkType {
     DeepTrance,
     VillageHero,
     Attunement,
+    GoblinScourge,
 
     Count
 }
@@ -58,5 +59,8 @@ export var PERKS: PerkDefinition[] = [
     },
     {
         enum: PerkType.Attunement, name: "Attunement", tooltip: "Unlocks the Attunement mechanic", icon: "🌀",
+    },
+    {
+        enum: PerkType.GoblinScourge, name: "Goblin Scourge", tooltip: "Improves Combat speed by 30% and Fortitude speed by 30%", icon: "💀",
     },
 ]
