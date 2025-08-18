@@ -117,7 +117,7 @@ export const ZONES: Zone[] = [
         tasks: [
             new TaskDefinition({ id: 30, name: "Enter the Wilderness", type: TaskType.Travel, cost_multiplier: 3, xp_mult: 0.5, skills: [SkillType.Travel] }),
             new TaskDefinition({ id: 31, name: "Fight a Goblin", type: TaskType.Mandatory, cost_multiplier: 5, skills: [SkillType.Combat] }),
-            new TaskDefinition({ id: 32, name: "Warn Villagers", type: TaskType.Mandatory, cost_multiplier: 2.5, max_reps: 3, skills: [SkillType.Charisma] }),
+            new TaskDefinition({ id: 32, name: "Warn Villagers", type: TaskType.Mandatory, cost_multiplier: 4, max_reps: 3, skills: [SkillType.Charisma] }),
             new TaskDefinition({ id: 33, name: "Loot the Fallen", max_reps: 4, cost_multiplier: 0.8, skills: [SkillType.Search], item: ItemType.Coin }),
             new TaskDefinition({ id: 34, name: "Rescue Villager", cost_multiplier: 1.5, max_reps: 3, xp_mult: 1.5, skills: [SkillType.Subterfuge, SkillType.Search], perk: PerkType.VillagerGratitude }),
             new TaskDefinition({ id: 35, name: "Treat Villager Wounds", cost_multiplier: 2, max_reps: 3, xp_mult: 3, skills: [SkillType.Survival, SkillType.Crafting] }),
