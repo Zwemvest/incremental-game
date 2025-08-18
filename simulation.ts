@@ -112,6 +112,22 @@ function calcSkillTaskProgressWithoutLevel(skill_type: SkillType): number {
             if (hasPerk(PerkType.VillageHero)) {
                 mult *= 1.2;
             }
+            if (hasPerk(PerkType.GoblinScourge)) {
+                mult *= 1.3;
+            }
+            break;
+        case SkillType.Survival:
+            if (hasPerk(PerkType.SunkenTreasure)) {
+                mult *= 1.3;
+            }
+            break;
+        case SkillType.Fortitude:
+            if (hasPerk(PerkType.GoblinScourge)) {
+                mult *= 1.3;
+            }
+            if (hasPerk(PerkType.SunkenTreasure)) {
+                mult *= 1.3;
+            }
             break;
     }
 

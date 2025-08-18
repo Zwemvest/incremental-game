@@ -12,6 +12,7 @@ export enum PerkType {
     VillageHero,
     Attunement,
     GoblinScourge,
+    SunkenTreasure,
 
     Count
 }
@@ -62,5 +63,8 @@ export var PERKS: PerkDefinition[] = [
     },
     {
         enum: PerkType.GoblinScourge, name: "Goblin Scourge", tooltip: "Improves Combat speed by 30% and Fortitude speed by 30%", icon: "💀",
+    },
+    {
+        enum: PerkType.SunkenTreasure, name: "Sunken Treasure", tooltip: "Improves Survival speed by 30% and Fortitude speed by 30%", icon: "⚓",
     },
 ]

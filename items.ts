@@ -16,6 +16,7 @@ export enum ItemType {
     Reagents,
     MagicalRoots,
     GoblinTreasure,
+    Fish,
 
     Count
 }
@@ -101,19 +102,21 @@ export var ITEMS: ItemDefinition[] = [
         },
     },
     {
-        enum: ItemType.Reagents, name: "Reagents", tooltip: "Improves Magic speed by 20% and Crafting speed by 10%", icon: "🌿",
-        get_effect_text: (amount) => { return `Magic speed increased ${amount * 20}%; Crafting speed increased ${amount * 10}%`; },
+        enum: ItemType.Reagents, name: "Reagents", tooltip: "Improves Magic speed by 20%, and Crafting and Druid speed by 10%", icon: "🌿",
+        get_effect_text: (amount) => { return `Magic speed increased ${amount * 20}%; Crafting and Druid speed increased ${amount * 10}%`; },
         on_consume: (amount) => {
             getSkill(SkillType.Magic).speed_modifier += 0.2 * amount;
             getSkill(SkillType.Crafting).speed_modifier += 0.1 * amount;
+            getSkill(SkillType.Druid).speed_modifier += 0.1 * amount;
         },
     },
     {
-        enum: ItemType.Reagents, name: "Magical Roots", tooltip: "Improves Survival speed by 10% and Magic speed by 10%", icon: "🌲",
-        get_effect_text: (amount) => { return `Survival speed increased ${amount * 10}%; Magic speed increased ${amount * 10}%`; },
+        enum: ItemType.MagicalRoots, name: "Magical Roots", tooltip: "Improves Survival, Magic, and Druid speed by 10%", icon: "🌲",
+        get_effect_text: (amount) => { return `Survival, Magic, and Druid speed increased ${amount * 10}%`; },
         on_consume: (amount) => {
             getSkill(SkillType.Survival).speed_modifier += 0.1 * amount;
             getSkill(SkillType.Magic).speed_modifier += 0.1 * amount;
+            getSkill(SkillType.Druid).speed_modifier += 0.1 * amount;
         },
     },
     {
@@ -123,6 +126,11 @@ export var ITEMS: ItemDefinition[] = [
             getSkill(SkillType.Subterfuge).speed_modifier += 0.5 * amount;
             getSkill(SkillType.Survival).speed_modifier += 0.5 * amount;
         },
+    },
+    {
+        enum: ItemType.Fish, name: "Fish", tooltip: "Gives 10 Energy", icon: "🐟",
+        get_effect_text: (amount) => { return `Gained ${amount * 10} Energy`; },
+        on_consume: (amount) => { GAMESTATE.current_energy += 10 * amount; },
     },
 ]
 

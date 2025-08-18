@@ -210,7 +210,7 @@ export const ZONES: Zone[] = [
     {
         name: "The Magician's Mountain",
         tasks: [
-            new TaskDefinition({ id: 100, name: "PLACEHOLDER", type: TaskType.Travel, cost_multiplier: 25, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 100, name: "Hunt for the First Reagent", type: TaskType.Travel, cost_multiplier: 25, skills: [SkillType.Travel] }),
             new TaskDefinition({ id: 101, name: "Convince the Magician", type: TaskType.Mandatory, cost_multiplier: 50, skills: [SkillType.Charisma] }),
             new TaskDefinition({ id: 102, name: "Do a Favor", type: TaskType.Mandatory, cost_multiplier: 8, max_reps: 1, skills: [SkillType.Crafting, SkillType.Subterfuge] }),
             new TaskDefinition({ id: 103, name: "Steal Some Reagents", max_reps: 4, cost_multiplier: 1, skills: [SkillType.Subterfuge], item: ItemType.Reagents }),
@@ -218,6 +218,19 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 105, name: "Give Yourself a Pep Talk", cost_multiplier: 10, xp_mult: 4, skills: [SkillType.Charisma] }),
             new TaskDefinition({ id: 106, name: "Try to Transform Into an Eagle", cost_multiplier: 10, xp_mult: 4, skills: [SkillType.Druid, SkillType.Magic] }),
             new TaskDefinition({ id: 107, name: "Low-oxygen Exercise", cost_multiplier: 3, max_reps: 5, xp_mult: 4, skills: [SkillType.Fortitude, SkillType.Survival] }),
+        ],
+    },
+    {
+        name: "The Ocean",
+        tasks: [
+            new TaskDefinition({ id: 110, name: "Land on Island", type: TaskType.Travel, cost_multiplier: 20, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 111, name: "Weather a Storm", type: TaskType.Mandatory, cost_multiplier: 20, skills: [SkillType.Survival, SkillType.Fortitude] }),
+            new TaskDefinition({ id: 112, name: "Find the Island", type: TaskType.Mandatory, cost_multiplier: 8, max_reps: 1, skills: [SkillType.Search] }),
+            new TaskDefinition({ id: 113, name: "Catch Fish", max_reps: 5, cost_multiplier: 4, xp_mult: 4, skills: [SkillType.Survival], item: ItemType.Fish }),
+            new TaskDefinition({ id: 114, name: "Dive as a Squid", cost_multiplier: 15, max_reps: 3, xp_mult: 0.5, skills: [SkillType.Druid, SkillType.Search], perk: PerkType.SunkenTreasure }),
+            new TaskDefinition({ id: 115, name: "Look for Land", cost_multiplier: 5, max_reps: 3, xp_mult: 8, skills: [SkillType.Search] }),
+            new TaskDefinition({ id: 116, name: "Practice Transforming", cost_multiplier: 10, xp_mult: 4, skills: [SkillType.Druid] }),
+            new TaskDefinition({ id: 117, name: "Kraken", type:TaskType.Boss, cost_multiplier: 25000, xp_mult: 0.3, skills: [SkillType.Combat] }),
         ],
     },
 ]
