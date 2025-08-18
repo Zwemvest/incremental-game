@@ -196,10 +196,10 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
 
             const levels_diff = resulting_level - skill_progress.level;
             if (levels_diff > 0) {
-                tooltip += `<br>${name}: ${resulting_level - skill_progress.level}`;
+                tooltip += `<br>* ${name} - ${resulting_level - skill_progress.level}`;
             } else {
                 const level_percentage = xp_gained / calcSkillXpNeeded(skill_progress) * 100;
-                tooltip += `<br>${name}: ${level_percentage.toFixed(1)}% of a level`;
+                tooltip += `<br>* ${name} - ${level_percentage.toFixed(1)}% of a level`;
             }
         }
 
@@ -1068,16 +1068,34 @@ function showTooltip(element: ElementWithTooltip) {
         console.error("No generateTooltip callback");
         return;
     }
-
-    const elementRect = element.getBoundingClientRect();
-    const x = elementRect.right + window.scrollX;
-    const y = elementRect.top + window.scrollY;
-
+    
     var tooltip_element = RENDERING.tooltip_element;
     tooltip_element.innerHTML = element.generateTooltip();
 
-    tooltip_element.style.left = x + "px";
-    tooltip_element.style.top = y + "px";
+    tooltip_element.style.top = "";
+    tooltip_element.style.bottom = "";
+    tooltip_element.style.left = "";
+    tooltip_element.style.right = "";
+
+    const elementRect = element.getBoundingClientRect();
+    const beyondVerticalCenter = elementRect.top > (window.innerHeight / 2);
+    const beyondHorizontalCenter = elementRect.left > (window.innerWidth / 2);
+    var x = (beyondHorizontalCenter ? elementRect.left : elementRect.right ) + window.scrollX;
+    var y = (beyondVerticalCenter ? elementRect.bottom : elementRect.top ) + window.scrollY;
+
+    if (beyondHorizontalCenter) {
+        x = document.documentElement.clientWidth - x;
+        tooltip_element.style.right = x + "px";
+    } else {
+        tooltip_element.style.left = x + "px";
+    }
+    if (beyondVerticalCenter) {
+        y = document.documentElement.clientHeight - y;
+        tooltip_element.style.bottom = y + "px";
+    } else {
+        tooltip_element.style.top = y + "px";
+    }
+
     tooltip_element.style.display = "block";
 }
 
