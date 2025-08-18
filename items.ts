@@ -44,7 +44,7 @@ export var ITEMS: ItemDefinition[] = [
     },
     {
         enum: ItemType.Arrow, name: "Arrow", tooltip: "Improves Combat speed by 15%", icon: "🏹",
-        get_effect_text: (amount) => { return `Charisma speed increased ${amount * 15}%`; },
+        get_effect_text: (amount) => { return `Combat speed increased ${amount * 15}%`; },
         on_consume: (amount) => { getSkill(SkillType.Combat).speed_modifier += 0.15 * amount; },
     },
     {
