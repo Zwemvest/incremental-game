@@ -28,8 +28,8 @@ function createSkillDiv(skill: Skill, skills_div: HTMLElement) {
 
     setupTooltip(skill_div, function () {
         var tooltip = `<h3>${skill_definition.name}</h3>`;
-        tooltip += `Speed multiplier: x${calcSkillTaskProgressMultiplier(skill.type).toFixed(2)}`;
-        tooltip += `<br>XP: ${skill.progress.toFixed(1)}/${calcSkillXpNeeded(skill).toFixed(1)}`;
+        tooltip += `Speed multiplier: x${formatNumber(calcSkillTaskProgressMultiplier(skill.type))}`;
+        tooltip += `<br>XP: ${formatNumber(skill.progress)}/${formatNumber(calcSkillXpNeeded(skill))}`;
         return tooltip;
     });
 
@@ -166,7 +166,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
             tooltip += `<p>Gives a permanent Perk</p>`;
         }
 
-        tooltip += `Estimated energy used: ${maxDecimals(estimateTotalTaskEnergyConsumption(task), 2)}`;
+        tooltip += `Estimated energy used: ${formatNumber(estimateTotalTaskEnergyConsumption(task))}`;
         const task_ticks = estimateTotalTaskTicks(task);
         if (task_ticks == 1) {
             tooltip += `<br>Estimated time: one tick`;
@@ -199,7 +199,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
                 tooltip += `<br>* ${name} - ${resulting_level - skill_progress.level}`;
             } else {
                 const level_percentage = xp_gained / calcSkillXpNeeded(skill_progress) * 100;
-                tooltip += `<br>* ${name} - ${level_percentage.toFixed(1)}% of a level`;
+                tooltip += `<br>* ${name} - ${formatNumber(level_percentage)}% of a level`;
             }
         }
 
@@ -573,7 +573,7 @@ function populateGameOver(game_over_div: HTMLElement) {
 
         skill_gain.appendChild(skill_gain_text);
     }
-    
+
     var reset_count = game_over_div.querySelector("#game-over-reset-count");
     if (!reset_count) {
         console.error("No reset count text");
@@ -629,9 +629,31 @@ function formatOrdinal(n: number): string {
     return n + ((suffix[(remainder - 20) % 10] || suffix[remainder] || suffix[0]) as string);
 }
 
-function maxDecimals(n: Number, maxDecimals: number): string {
-    const exactDecimals = n.toFixed(maxDecimals);
-    return Number(exactDecimals).toString(); // Trim trailing zeroes
+function formatNumber(n: number, allow_decimals: boolean = true): string {
+    if (n < 0) {
+        console.log("Tried to format negative number");
+        return n + "";
+    }
+
+    if (allow_decimals) {
+        if (n < 1) {
+            return n.toFixed(2);
+        } else if (n < 10) {
+            return n.toFixed(1);
+        }
+    }
+
+    if (n < 10000) {
+        return n.toFixed(0);
+    }
+
+    n = n / 1000;
+
+    if (n < 100) {
+        return n.toFixed(1) + "k";
+    } else {
+        return n.toFixed(0) + "k";
+    }
 }
 
 // MARK: Settings
@@ -921,15 +943,15 @@ function updateExtraStats() {
     if (GAMESTATE.has_unlocked_power && RENDERING.power_element.style.display == "none") {
         RENDERING.power_element.style.display = "block";
         setupTooltip(RENDERING.power_element, function () {
-            var tooltip = `<h3>💪Power: ${GAMESTATE.power.toFixed(0)}</h3>`;
+            var tooltip = `<h3>💪Power: ${formatNumber(GAMESTATE.power, false)}</h3>`;
 
-            tooltip += `Increases Combat and Fortitude speed by ${GAMESTATE.power}%`;
+            tooltip += `Increases Combat and Fortitude speed by ${formatNumber(GAMESTATE.power, false)}%`;
 
             return tooltip;
         });
     }
 
-    const power_text = `💪Power: ${GAMESTATE.power.toFixed(0)}`;
+    const power_text = `💪Power: ${formatNumber(GAMESTATE.power, false)}`;
     if (RENDERING.power_element.textContent != power_text) {
         RENDERING.power_element.textContent = power_text;
     }
@@ -937,15 +959,15 @@ function updateExtraStats() {
     if (hasPerk(PerkType.Attunement) && RENDERING.attunement_element.style.display == "none") {
         RENDERING.attunement_element.style.display = "block";
         setupTooltip(RENDERING.attunement_element, function () {
-            var tooltip = `<h3>🌀Attunement: ${GAMESTATE.attunement.toFixed(0)}</h3>`;
+            var tooltip = `<h3>🌀Attunement: ${formatNumber(GAMESTATE.attunement, false)}</h3>`;
 
-            tooltip += `Increases Study, Magic, and Druid speed by ${GAMESTATE.attunement / 10}%`;
+            tooltip += `Increases Study, Magic, and Druid speed by ${formatNumber(GAMESTATE.attunement / 10)}%`;
 
             return tooltip;
         });
     }
 
-    const attunement_text = `🌀Attunement: ${GAMESTATE.attunement.toFixed(0)}`;
+    const attunement_text = `🌀Attunement: ${formatNumber(GAMESTATE.attunement, false)}`;
     if (RENDERING.attunement_element.textContent != attunement_text) {
         RENDERING.attunement_element.textContent = attunement_text;
     }
@@ -1068,7 +1090,7 @@ function showTooltip(element: ElementWithTooltip) {
         console.error("No generateTooltip callback");
         return;
     }
-    
+
     var tooltip_element = RENDERING.tooltip_element;
     tooltip_element.innerHTML = element.generateTooltip();
 
@@ -1080,8 +1102,8 @@ function showTooltip(element: ElementWithTooltip) {
     const elementRect = element.getBoundingClientRect();
     const beyondVerticalCenter = elementRect.top > (window.innerHeight / 2);
     const beyondHorizontalCenter = elementRect.left > (window.innerWidth / 2);
-    var x = (beyondHorizontalCenter ? elementRect.left : elementRect.right ) + window.scrollX;
-    var y = (beyondVerticalCenter ? elementRect.bottom : elementRect.top ) + window.scrollY;
+    var x = (beyondHorizontalCenter ? elementRect.left : elementRect.right) + window.scrollX;
+    var y = (beyondVerticalCenter ? elementRect.bottom : elementRect.top) + window.scrollY;
 
     if (beyondHorizontalCenter) {
         x = document.documentElement.clientWidth - x;
