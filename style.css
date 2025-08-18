@@ -157,6 +157,10 @@ button:hover:enabled {
     font-size: smaller;
 }
 
+.disable-reason {
+    color: red;
+}
+
 /* MARK: Skills
 */
 

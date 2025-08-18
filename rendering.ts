@@ -220,10 +220,10 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
 
         if (task_button.disabled) {
             if (task.task_definition.type == TaskType.Travel) {
-                tooltip += `<br><br>Disabled until you complete the Mandatory tasks`;
+                tooltip += `<br><br><span class="disable-reason">Disabled until you complete the Mandatory tasks</span>`;
             }
             else if (task.reps >= task.task_definition.max_reps) {
-                tooltip += `<br><br>Disabled due to being fully completed`;
+                tooltip += `<br><br><span class="disable-reason">Disabled due to being fully completed</span>`;
             }
             else {
                 console.error("Task disabled for unknown reason");
