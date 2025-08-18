@@ -149,7 +149,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 54, name: "Try Casting a Spell", cost_multiplier: 7, max_reps: 6, skills: [SkillType.Magic, SkillType.Study], perk: PerkType.EnergySpell }),
             new TaskDefinition({ id: 55, name: "Inspect Wall Paitings", cost_multiplier: 4, xp_mult: 4, skills: [SkillType.Study] }),
             new TaskDefinition({ id: 56, name: "Scout the Cave", cost_multiplier: 1, max_reps: 3, xp_mult: 3, skills: [SkillType.Search] }),
-            new TaskDefinition({ id: 57, name: "Goblin Chieftain", type: TaskType.Boss, cost_multiplier: 15000, skills: [SkillType.Combat], xp_mult: 0.3, unlocks_task: 58, item:ItemType.GoblinTreasure }),
+            new TaskDefinition({ id: 57, name: "Goblin Chieftain", type: TaskType.Boss, cost_multiplier: 20000, skills: [SkillType.Combat], xp_mult: 0.3, unlocks_task: 58, item:ItemType.GoblinTreasure }),
             new TaskDefinition({ id: 58, name: "Wipe Out Goblins", cost_multiplier: 20000, skills: [SkillType.Combat], xp_mult: 0.3, hidden_by_default: true, perk:PerkType.GoblinScourge }),
         ],
     },
@@ -163,7 +163,8 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 64, name: "Get Used to Traveling", cost_multiplier: 3, max_reps: 3, xp_mult: 3, skills: [SkillType.Travel, SkillType.Fortitude], perk: PerkType.ExperiencedTraveler }),
             new TaskDefinition({ id: 65, name: "Chat with Travelers", cost_multiplier: 3, max_reps: 4, xp_mult: 3, skills: [SkillType.Charisma] }),
             new TaskDefinition({ id: 66, name: "Practice Traveling Unnoticed", cost_multiplier: 6, max_reps: 1, xp_mult: 4, skills: [SkillType.Subterfuge, SkillType.Survival] }),
-            new TaskDefinition({ id: 67, name: "Bandits", type: TaskType.Boss, cost_multiplier: 25000, skills: [SkillType.Combat], xp_mult: 0.3 }),
+            new TaskDefinition({ id: 67, name: "Bandits", type: TaskType.Boss, cost_multiplier: 25000, skills: [SkillType.Combat], xp_mult: 0.3, item:ItemType.BanditWeapons, unlocks_task: 68 }),
+            new TaskDefinition({ id: 68, name: "Loot Bandit Camp", cost_multiplier: 100, skills: [SkillType.Subterfuge, SkillType.Search], xp_mult: 3, max_reps: 4, item:ItemType.BanditWeapons, hidden_by_default: true }),
         ],
     },
     {
@@ -231,6 +232,19 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 115, name: "Look for Land", cost_multiplier: 5, max_reps: 3, xp_mult: 8, skills: [SkillType.Search] }),
             new TaskDefinition({ id: 116, name: "Practice Transforming", cost_multiplier: 10, xp_mult: 4, skills: [SkillType.Druid] }),
             new TaskDefinition({ id: 117, name: "Kraken", type:TaskType.Boss, cost_multiplier: 25000, xp_mult: 0.3, skills: [SkillType.Combat] }),
+        ],
+    },
+    {
+        name: "The Island",
+        tasks: [
+            new TaskDefinition({ id: 120, name: "Hunt for the Second Reagent", type: TaskType.Travel, cost_multiplier: 60, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 121, name: "Gather Reagent", type: TaskType.Mandatory, cost_multiplier: 10, max_reps: 3, skills: [SkillType.Search] }),
+            new TaskDefinition({ id: 122, name: "Repair Ship", type: TaskType.Mandatory, cost_multiplier: 15, max_reps: 1, skills: [SkillType.Crafting] }),
+            new TaskDefinition({ id: 123, name: "Catch More Fish", max_reps: 4, cost_multiplier: 10, skills: [SkillType.Survival], item: ItemType.Fish }),
+            new TaskDefinition({ id: 124, name: "Explore the Jungle", cost_multiplier: 70, max_reps: 6, skills: [SkillType.Survival, SkillType.Search, SkillType.Travel], perk: PerkType.LostTemple }),
+            new TaskDefinition({ id: 125, name: "Build Another Hut", cost_multiplier: 25, max_reps: 1, xp_mult: 4, skills: [SkillType.Crafting, SkillType.Survival] }),
+            new TaskDefinition({ id: 126, name: "Talk to the Local Wildlife", cost_multiplier: 25, max_reps: 3, xp_mult: 2, skills: [SkillType.Druid, SkillType.Charisma] }),
+            new TaskDefinition({ id: 127, name: "PLACEHOLDER", type:TaskType.Boss, cost_multiplier: 25000, xp_mult: 0.3, skills: [SkillType.Combat] }),
         ],
     },
 ]

@@ -17,6 +17,7 @@ export enum ItemType {
     MagicalRoots,
     GoblinTreasure,
     Fish,
+    BanditWeapons,
 
     Count
 }
@@ -132,6 +133,14 @@ export var ITEMS: ItemDefinition[] = [
         get_effect_text: (amount) => { return `Gained ${amount * 10} Energy`; },
         on_consume: (amount) => { GAMESTATE.current_energy += 10 * amount; },
     },
+    {
+        enum: ItemType.BanditWeapons, name: "Bandit Weapons", tooltip: "Improves Subterfuge speed by 10% and Combat speed by 20%", icon: "🔪",
+        get_effect_text: (amount) => { return `Subterfuge speed increased ${amount * 10}%; Combat speed increased ${amount * 20}%`; },
+        on_consume: (amount) => {
+            getSkill(SkillType.Subterfuge).speed_modifier += 0.1 * amount;
+            getSkill(SkillType.Combat).speed_modifier += 0.2 * amount;
+        },
+    }
 ]
 
 export var ITEMS_TO_NOT_AUTO_USE = [ItemType.ScrollOfHaste];

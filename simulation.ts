@@ -129,6 +129,11 @@ function calcSkillTaskProgressWithoutLevel(skill_type: SkillType): number {
                 mult *= 1.3;
             }
             break;
+        case SkillType.Druid:
+            if (hasPerk(PerkType.LostTemple)) {
+                mult *= 1.5;
+            }
+            break;
     }
 
     switch (skill_type) {
@@ -394,6 +399,7 @@ export function doEnergyReset() {
     GAMESTATE.energy_reset_count += 1;
     GAMESTATE.is_in_game_over = false;
     GAMESTATE.automation_mode = AutomationMode.Off;
+    GAMESTATE.queued_scrolls_of_haste = 0;
 
     removeTemporarySkillBonuses();
     halveItemCounts();

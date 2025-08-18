@@ -13,6 +13,7 @@ export enum PerkType {
     Attunement,
     GoblinScourge,
     SunkenTreasure,
+    LostTemple,
 
     Count
 }
@@ -66,5 +67,8 @@ export var PERKS: PerkDefinition[] = [
     },
     {
         enum: PerkType.SunkenTreasure, name: "Sunken Treasure", tooltip: "Improves Survival speed by 30% and Fortitude speed by 30%", icon: "⚓",
+    },
+    {
+        enum: PerkType.LostTemple, name: "Found Lost Temple", tooltip: "Improves Druid speed by 50%", icon: "🏯",
     },
 ]
