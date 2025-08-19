@@ -260,6 +260,19 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 137, name: "Giant Sandworm", type:TaskType.Boss, cost_multiplier: 25000, xp_mult: 0.3, skills: [SkillType.Combat] }),
         ],
     },
+    {
+        name: "The Oasis",
+        tasks: [
+            new TaskDefinition({ id: 140, name: "PLACEHOLDER", type: TaskType.Travel, cost_multiplier: 100, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 141, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 100, max_reps: 1, skills: [SkillType.Fortitude] }),
+            new TaskDefinition({ id: 142, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 15, max_reps: 1, skills: [SkillType.Search] }),
+            new TaskDefinition({ id: 143, name: "PLACEHOLDER", max_reps: 3, cost_multiplier: 12, skills: [SkillType.Survival, SkillType.Crafting], item: ItemType.Cactus }),
+            new TaskDefinition({ id: 144, name: "PLACEHOLDER", cost_multiplier: 15, max_reps: 5, skills: [SkillType.Subterfuge], perk: PerkType.WalkWithoutRhythm }),
+            new TaskDefinition({ id: 145, name: "PLACEHOLDER", cost_multiplier: 15, max_reps: 3, xp_mult: 15, skills: [SkillType.Fortitude] }),
+            new TaskDefinition({ id: 146, name: "PLACEHOLDER", cost_multiplier: 25, max_reps: 1, xp_mult: 2, skills: [SkillType.Druid, SkillType.Charisma] }),
+            new TaskDefinition({ id: 147, name: "PLACEHOLDER", type:TaskType.Boss, cost_multiplier: 25000, xp_mult: 0.3, skills: [SkillType.Combat] }),
+        ],
+    },
 ]
 
 ZONES.forEach((zone, index) => {
