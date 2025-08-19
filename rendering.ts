@@ -1,5 +1,5 @@
 import { Task, TaskDefinition, SkillType, ZONES, TaskType, SKILL_DEFINITIONS, SkillDefinition } from "./zones.js";
-import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel, saveGame, SAVE_LOCATION, toggleRepeatTasks, calcAttunementGain, calcPowerGain, toggleAutomation, AutomationMode, calcPowerSpeedBonusAtLevel, calcAttunementSpeedBonusAtLevel } from "./simulation.js";
+import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel, saveGame, SAVE_LOCATION, toggleRepeatTasks, calcAttunementGain, calcPowerGain, toggleAutomation, AutomationMode, calcPowerSpeedBonusAtLevel, calcAttunementSpeedBonusAtLevel, calcSkillTaskProgressWithoutLevel } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS, HASTE_MULT } from "./items.js";
 import { PerkDefinition, PerkType, PERKS, ENERGETIC_MEMORY_MULT } from "./perks.js";
@@ -29,8 +29,16 @@ function createSkillDiv(skill: Skill, skills_div: HTMLElement) {
     setupTooltip(skill_div, function () {
         var tooltip = `<h3>${skill_definition.name} - ${skill.level}</h3>`;
         tooltip += `Speed multiplier: x${formatNumber(calcSkillTaskProgressMultiplier(skill.type))}`;
-        tooltip += `<br>XP: ${formatNumber(skill.progress)}/${formatNumber(calcSkillXpNeeded(skill))}`;
+        const other_sources_mult = calcSkillTaskProgressWithoutLevel(skill.type);
+        if (other_sources_mult != 1) {
+            tooltip += `<br>From level: x${formatNumber(calcSkillTaskProgressMultiplierFromLevel(skill.level))}`;
+            tooltip += `<br>From other sources: x${formatNumber(other_sources_mult)}`;
+        }
+
+        tooltip += `<br><br>XP: ${formatNumber(skill.progress)}/${formatNumber(calcSkillXpNeeded(skill))}`;
         tooltip += `<br><br>Skill speed increases 1% per level, while XP needed to level up increases 2%`;
+        tooltip += `<br>The speed of Tasks with multiple skills scale by the square or cube root of the skill level bonuses`;
+        tooltip += `<br>Bonuses not from levels (E.G., from Items and Perks) are not scaled down this way`;
         return tooltip;
     });
 
@@ -1032,8 +1040,6 @@ export class Rendering {
         setupTooltip(this.energy_element, function () {
             var tooltip = `<h3>Energy - ${GAMESTATE.current_energy.toFixed(0)}/${GAMESTATE.max_energy.toFixed(0)}</h3>`;
             tooltip += `Energy goes down over time while you have a Task active`;
-            tooltip += `<br>Tasks with multiple skills scale by the square or cube root of the skill level bonuses`;
-            tooltip += `<br>Bonuses not from levels (E.G., from Items and Perks) are not scaled down this way`;
             return tooltip;
         });
 

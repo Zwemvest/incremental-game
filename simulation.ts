@@ -75,7 +75,7 @@ export function calcSkillTaskProgressMultiplierFromLevel(level: number): number 
     return Math.pow(exponent, level);
 }
 
-function calcSkillTaskProgressWithoutLevel(skill_type: SkillType): number {
+export function calcSkillTaskProgressWithoutLevel(skill_type: SkillType): number {
     var mult = 1;
 
     var skill = getSkill(skill_type);
