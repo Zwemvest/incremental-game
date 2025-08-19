@@ -19,6 +19,7 @@ export enum ItemType {
     Fish,
     BanditWeapons,
     Cactus,
+    CityChain,
 
     Count
 }
@@ -148,6 +149,14 @@ export var ITEMS: ItemDefinition[] = [
         on_consume: (amount) => {
             getSkill(SkillType.Survival).speed_modifier += 0.1 * amount;
             getSkill(SkillType.Fortitude).speed_modifier += 0.1 * amount;
+        },
+    },
+    {
+        enum: ItemType.CityChain, name: "City Chain", tooltip: "Improves Charisma and Subterfuge speed by 50%", icon: "🔗",
+        get_effect_text: (amount) => { return `Charisma and Subterfuge speed increased ${amount * 50}%`; },
+        on_consume: (amount) => {
+            getSkill(SkillType.Charisma).speed_modifier += 0.5 * amount;
+            getSkill(SkillType.Subterfuge).speed_modifier += 0.5 * amount;
         },
     },
 ]

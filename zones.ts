@@ -191,7 +191,8 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 85, name: "Study at the Mage's Guild", cost_multiplier: 10, xp_mult: 2, skills: [SkillType.Study, SkillType.Magic] }),
             new TaskDefinition({ id: 88, name: "Figure Out How to Attune", cost_multiplier: 1500, xp_mult: 0.1, skills: [SkillType.Study, SkillType.Magic], perk: PerkType.Attunement }),
             new TaskDefinition({ id: 86, name: "Train for Your Quest", cost_multiplier: 6, max_reps: 3, xp_mult: 3, skills: [SkillType.Search, SkillType.Survival, SkillType.Fortitude] }),
-            new TaskDefinition({ id: 87, name: "Corrupt Mayor", type: TaskType.Boss, cost_multiplier: 25000, skills: [SkillType.Combat], xp_mult: 0.3 }),
+            new TaskDefinition({ id: 87, name: "Corrupt Mayor", type: TaskType.Boss, cost_multiplier: 50000, skills: [SkillType.Combat], xp_mult: 0.3, item:ItemType.CityChain, unlocks_task: 89 }),
+            new TaskDefinition({ id: 89, name: "Purge Corrupt Bureacracy", cost_multiplier: 500000, skills: [SkillType.Study, SkillType.Subterfuge], xp_mult: 0.02, perk:PerkType.PurgedBureaucracy, hidden_by_default: true }),
         ],
     },
     {
@@ -205,7 +206,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 95, name: "Build a Hut", cost_multiplier: 10, xp_mult: 3, skills: [SkillType.Crafting, SkillType.Survival] }),
             new TaskDefinition({ id: 96, name: "Go Sightseeing", cost_multiplier: 2, max_reps: 3, xp_mult: 3, skills: [SkillType.Search, SkillType.Travel] }),
             new TaskDefinition({ id: 97, name: "Meet a Magical Creature", cost_multiplier: 2, max_reps: 1, xp_mult: 3, skills: [SkillType.Druid, SkillType.Charisma] }),
-            new TaskDefinition({ id: 98, name: "???", type: TaskType.Boss, cost_multiplier: 25000, skills: [SkillType.Combat], xp_mult: 0.3 }),
+            new TaskDefinition({ id: 98, name: "???", type: TaskType.Boss, cost_multiplier: 100000, skills: [SkillType.Combat], xp_mult: 0.3 }),
         ],
     },
     {
@@ -231,7 +232,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 114, name: "Dive as a Squid", cost_multiplier: 15, max_reps: 3, xp_mult: 0.5, skills: [SkillType.Druid, SkillType.Search], perk: PerkType.SunkenTreasure }),
             new TaskDefinition({ id: 115, name: "Look for Land", cost_multiplier: 5, max_reps: 3, xp_mult: 8, skills: [SkillType.Search] }),
             new TaskDefinition({ id: 116, name: "Practice Transforming", cost_multiplier: 10, xp_mult: 4, skills: [SkillType.Druid] }),
-            new TaskDefinition({ id: 117, name: "Kraken", type:TaskType.Boss, cost_multiplier: 25000, xp_mult: 0.3, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 117, name: "Kraken", type:TaskType.Boss, cost_multiplier: 100000, xp_mult: 0.3, skills: [SkillType.Combat] }),
         ],
     },
     {
@@ -244,7 +245,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 124, name: "Explore the Jungle", cost_multiplier: 70, max_reps: 6, skills: [SkillType.Survival, SkillType.Search, SkillType.Travel], perk: PerkType.LostTemple }),
             new TaskDefinition({ id: 125, name: "Build Another Hut", cost_multiplier: 25, max_reps: 1, xp_mult: 4, skills: [SkillType.Crafting, SkillType.Survival] }),
             new TaskDefinition({ id: 126, name: "Talk to the Local Wildlife", cost_multiplier: 25, max_reps: 3, xp_mult: 2, skills: [SkillType.Druid, SkillType.Charisma] }),
-            new TaskDefinition({ id: 127, name: "PLACEHOLDER", type:TaskType.Boss, cost_multiplier: 25000, xp_mult: 0.3, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 127, name: "PLACEHOLDER", type:TaskType.Boss, cost_multiplier: 100000, xp_mult: 0.3, skills: [SkillType.Combat] }),
         ],
     },
     {
@@ -257,7 +258,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 134, name: "Avoid Notice by the Sandworm", cost_multiplier: 15, max_reps: 5, skills: [SkillType.Subterfuge], perk: PerkType.WalkWithoutRhythm }),
             new TaskDefinition({ id: 135, name: "Work on Your Tan", cost_multiplier: 15, max_reps: 3, xp_mult: 15, skills: [SkillType.Fortitude] }),
             new TaskDefinition({ id: 136, name: "PLACEHOLDER", cost_multiplier: 25, max_reps: 1, xp_mult: 2, skills: [SkillType.Druid, SkillType.Charisma] }),
-            new TaskDefinition({ id: 137, name: "Giant Sandworm", type:TaskType.Boss, cost_multiplier: 25000, xp_mult: 0.3, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 137, name: "Giant Sandworm", type:TaskType.Boss, cost_multiplier: 100000, xp_mult: 0.3, skills: [SkillType.Combat] }),
         ],
     },
     {
@@ -267,10 +268,10 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 141, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 100, max_reps: 1, skills: [SkillType.Fortitude] }),
             new TaskDefinition({ id: 142, name: "PLACEHOLDER", type: TaskType.Mandatory, cost_multiplier: 15, max_reps: 1, skills: [SkillType.Search] }),
             new TaskDefinition({ id: 143, name: "PLACEHOLDER", max_reps: 3, cost_multiplier: 12, skills: [SkillType.Survival, SkillType.Crafting], item: ItemType.Cactus }),
-            new TaskDefinition({ id: 144, name: "PLACEHOLDER", cost_multiplier: 15, max_reps: 5, skills: [SkillType.Subterfuge], perk: PerkType.WalkWithoutRhythm }),
+            new TaskDefinition({ id: 144, name: "Reflect on the Journey", cost_multiplier: 600, max_reps: 5, skills: [SkillType.Study], perk: PerkType.ReflectionsOnTheJourney }),
             new TaskDefinition({ id: 145, name: "PLACEHOLDER", cost_multiplier: 15, max_reps: 3, xp_mult: 15, skills: [SkillType.Fortitude] }),
             new TaskDefinition({ id: 146, name: "PLACEHOLDER", cost_multiplier: 25, max_reps: 1, xp_mult: 2, skills: [SkillType.Druid, SkillType.Charisma] }),
-            new TaskDefinition({ id: 147, name: "PLACEHOLDER", type:TaskType.Boss, cost_multiplier: 25000, xp_mult: 0.3, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 147, name: "PLACEHOLDER", type:TaskType.Boss, cost_multiplier: 100000, xp_mult: 0.3, skills: [SkillType.Combat] }),
         ],
     },
 ]

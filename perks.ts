@@ -15,6 +15,8 @@ export enum PerkType {
     SunkenTreasure,
     LostTemple,
     WalkWithoutRhythm,
+    ReflectionsOnTheJourney,
+    PurgedBureaucracy,
 
     Count
 }
@@ -74,5 +76,11 @@ export var PERKS: PerkDefinition[] = [
     },
     {
         enum: PerkType.WalkWithoutRhythm, name: "Walk Without Rhythm", tooltip: "Improves Subterfuge speed by 40% and Travel speed by 20%", icon: "👣",
+    },
+    {
+        enum: PerkType.ReflectionsOnTheJourney, name: "Reflections on the Journey", tooltip: "Reduce Energy drain based on the highest zone reached<br>In each zone energy consumption is reduced 5% compounding for each zone you've reached past it<br>So zone 12 has energy cost multiplied by 0.95^2 if the highest zone reached is 14", icon: "🕰️",
+    },
+    {
+        enum: PerkType.PurgedBureaucracy, name: "Purged Bureaucracy", tooltip: "Improves Charisma and Crafting speed by 30%", icon: "⚖️",
     },
 ]
