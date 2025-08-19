@@ -309,6 +309,10 @@ function finishTask(task: Task) {
         GAMESTATE.active_task = null;
     }
 
+    if (task.task_definition.type == TaskType.Prestige) {
+        GAMESTATE.is_at_end_of_content = true;
+    }
+
     updateEnabledTasks();
     saveGame();
 }

@@ -1031,10 +1031,8 @@ export class Rendering {
 
         this.tooltip_element = getElement("tooltip");
         this.game_over_element = getElement("game-over-overlay");
-        this.end_of_content_element = getElement("game-over-overlay");
-        this.game_over_element = getElement("end-of-content-overlay");
+        this.end_of_content_element = getElement("end-of-content-overlay");
         this.settings_element = getElement("settings-overlay");
-        this.game_over_element = getElement("game-over-overlay");
         this.messages_element = getElement("messages");
         this.controls_list_element = getElement("controls-list");
         this.power_element = getElement("power");
