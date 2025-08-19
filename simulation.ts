@@ -315,6 +315,9 @@ function finishTask(task: Task) {
 
     updateEnabledTasks();
     saveGame();
+
+    const event = new RenderEvent(EventType.TaskCompleted, {});
+    GAMESTATE.queueRenderEvent(event);
 }
 
 function updateEnabledTasks() {

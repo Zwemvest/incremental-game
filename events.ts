@@ -9,6 +9,7 @@ export enum EventType {
     UnlockedTask,
     UnlockedSkill,
     UnlockedPower,
+    TaskCompleted,
 
     Count
 }

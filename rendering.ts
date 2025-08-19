@@ -226,7 +226,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
             tooltip += `<br><br>Gives ${power_gain} Power`;
         }
 
-        if (task_button.disabled) {
+        if (!task.enabled) {
             if (task.task_definition.type == TaskType.Travel) {
                 tooltip += `<br><br><span class="disable-reason">Disabled until you complete the Mandatory tasks</span>`;
             }
@@ -335,7 +335,7 @@ function estimateTotalTaskEnergyConsumption(task: Task): number {
 
 // MARK: Tooltips
 type tooltipLambda = () => string;
-interface ElementWithTooltip extends Element {
+interface ElementWithTooltip extends HTMLElement {
     generateTooltip?: tooltipLambda;
 }
 
@@ -345,7 +345,7 @@ function setupTooltip(element: ElementWithTooltip, callback: tooltipLambda) {
         showTooltip(element);
     });
     element.addEventListener("pointerleave", (e) => {
-        RENDERING.tooltip_element.style.display = "none";
+        hideTooltip();
     });
 }
 
@@ -378,6 +378,12 @@ function setupInfoTooltips() {
         tooltip += `<br>The bonuses stack multiplicatively; 2 +100% results in 4x speed, not 3x`;
         return tooltip;
     });
+}
+
+function updateTooltip() {
+    if (RENDERING.tooltipped_element) {
+        showTooltip(RENDERING.tooltipped_element);
+    }
 }
 
 // MARK: Items
@@ -648,7 +654,7 @@ function formatOrdinal(n: number): string {
 
 function formatNumber(n: number, allow_decimals: boolean = true): string {
     if (n < 0) {
-        console.log("Tried to format negative number");
+        console.error("Tried to format negative number");
         return n + "";
     }
 
@@ -676,7 +682,7 @@ function formatNumber(n: number, allow_decimals: boolean = true): string {
 // MARK: Settings
 
 function setupSettings(settings_div: HTMLElement) {
-    var open_button = document.querySelector("#open-settings");
+    var open_button = document.querySelector<HTMLElement>("#open-settings");
 
     if (!open_button) {
         console.error("No open settings button");
@@ -692,7 +698,7 @@ function setupSettings(settings_div: HTMLElement) {
         return tooltip;
     });
 
-    var close_button = settings_div.querySelector("#close-settings");
+    var close_button = settings_div.querySelector<HTMLElement>("#close-settings");
 
     if (!close_button) {
         console.error("No close settings button");
@@ -715,7 +721,7 @@ function setupSettings(settings_div: HTMLElement) {
 // MARK: Settings: Saves
 
 function setupPersistence(settings_div: HTMLElement) {
-    var save_button = settings_div.querySelector("#save");
+    var save_button = settings_div.querySelector<HTMLElement>("#save");
 
     if (!save_button) {
         console.error("No save button");
@@ -749,7 +755,7 @@ function setupPersistence(settings_div: HTMLElement) {
         return tooltip;
     });
 
-    var load_button = settings_div.querySelector("#load");
+    var load_button = settings_div.querySelector<HTMLElement>("#load");
 
     if (!load_button) {
         console.error("No load button");
@@ -789,6 +795,11 @@ function handleEvents() {
     var events = GAMESTATE.popRenderEvents();
     var messages = RENDERING.messages_element;
     for (var event of events) {
+        if (event.type == EventType.TaskCompleted) {
+            updateTooltip();
+            continue; // No message, just forces tooltips to update
+        }
+
         const message_div = document.createElement("div");
         message_div.className = "message";
 
@@ -993,6 +1004,7 @@ function updateExtraStats() {
 // MARK: Rendering
 
 export class Rendering {
+    tooltipped_element: ElementWithTooltip | null = null;
     tooltip_element: HTMLElement;
     game_over_element: HTMLElement;
     end_of_content_element: HTMLElement;
@@ -1098,11 +1110,23 @@ function setupZone() {
     }
 }
 
+function hideTooltip() {
+    RENDERING.tooltip_element.style.display = "none";
+    RENDERING.tooltipped_element = null;
+}
+
 function showTooltip(element: ElementWithTooltip) {
     if (!element.generateTooltip) {
         console.error("No generateTooltip callback");
         return;
     }
+
+    if (!element.parentNode) {
+        hideTooltip();
+        return;
+    }
+
+    RENDERING.tooltipped_element = element;
 
     var tooltip_element = RENDERING.tooltip_element;
     tooltip_element.innerHTML = element.generateTooltip();
