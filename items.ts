@@ -18,6 +18,7 @@ export enum ItemType {
     GoblinTreasure,
     Fish,
     BanditWeapons,
+    Cactus,
 
     Count
 }
@@ -140,7 +141,15 @@ export var ITEMS: ItemDefinition[] = [
             getSkill(SkillType.Subterfuge).speed_modifier += 0.1 * amount;
             getSkill(SkillType.Combat).speed_modifier += 0.2 * amount;
         },
-    }
+    },
+    {
+        enum: ItemType.BanditWeapons, name: "Cactus", tooltip: "Improves Survival and Fortitude speed by 10%", icon: "🌵",
+        get_effect_text: (amount) => { return `Survival and Fortitude speed increased ${amount * 10}%`; },
+        on_consume: (amount) => {
+            getSkill(SkillType.Survival).speed_modifier += 0.1 * amount;
+            getSkill(SkillType.Fortitude).speed_modifier += 0.1 * amount;
+        },
+    },
 ]
 
 export var ITEMS_TO_NOT_AUTO_USE = [ItemType.ScrollOfHaste];

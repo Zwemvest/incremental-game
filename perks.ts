@@ -14,6 +14,7 @@ export enum PerkType {
     GoblinScourge,
     SunkenTreasure,
     LostTemple,
+    WalkWithoutRhythm,
 
     Count
 }
@@ -70,5 +71,8 @@ export var PERKS: PerkDefinition[] = [
     },
     {
         enum: PerkType.LostTemple, name: "Found Lost Temple", tooltip: "Improves Druid speed by 50%", icon: "🏯",
+    },
+    {
+        enum: PerkType.WalkWithoutRhythm, name: "Walk Without Rhythm", tooltip: "Improves Subterfuge speed by 40% and Travel speed by 20%", icon: "👣",
     },
 ]

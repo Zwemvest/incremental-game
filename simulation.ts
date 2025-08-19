@@ -134,6 +134,11 @@ function calcSkillTaskProgressWithoutLevel(skill_type: SkillType): number {
                 mult *= 1.5;
             }
             break;
+        case SkillType.Travel:
+            if (hasPerk(PerkType.ExperiencedTraveler)) {
+                mult *= 1.5;
+            }
+            break;
     }
 
     switch (skill_type) {

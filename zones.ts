@@ -156,7 +156,7 @@ export const ZONES: Zone[] = [
     {
         name: "The Road to the City",
         tasks: [
-            new TaskDefinition({ id: 60, name: "Get to the City", type: TaskType.Travel, cost_multiplier: 6, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 60, name: "Get to the City", type: TaskType.Travel, cost_multiplier: 9, skills: [SkillType.Travel] }),
             new TaskDefinition({ id: 61, name: "Join a Caravan", type: TaskType.Mandatory, cost_multiplier: 12, xp_mult: 0.5, skills: [SkillType.Charisma] }),
             new TaskDefinition({ id: 62, name: "Scout the Road Ahead", type: TaskType.Mandatory, cost_multiplier: 4, max_reps: 3, skills: [SkillType.Study, SkillType.Search, SkillType.Survival] }),
             new TaskDefinition({ id: 63, name: "Make Travel Equipment", max_reps: 4, cost_multiplier: 1.5, skills: [SkillType.Crafting], item: ItemType.TravelEquipment }),
@@ -170,7 +170,7 @@ export const ZONES: Zone[] = [
     {
         name: "The City Outskirts",
         tasks: [
-            new TaskDefinition({ id: 70, name: "Enter the City", type: TaskType.Travel, cost_multiplier: 4, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 70, name: "Enter the City", type: TaskType.Travel, cost_multiplier: 6, skills: [SkillType.Travel] }),
             new TaskDefinition({ id: 71, name: "Bribe the City Guards", type: TaskType.Mandatory, cost_multiplier: 15, skills: [SkillType.Charisma] }),
             new TaskDefinition({ id: 72, name: "Survive a Mugging", type: TaskType.Mandatory, cost_multiplier: 5, max_reps: 1, xp_mult: 0.5, skills: [SkillType.Combat, SkillType.Fortitude] }),
             new TaskDefinition({ id: 73, name: "Buy a Book", max_reps: 5, cost_multiplier: 5, skills: [SkillType.Charisma], item: ItemType.Book }),
@@ -183,7 +183,7 @@ export const ZONES: Zone[] = [
     {
         name: "The City",
         tasks: [
-            new TaskDefinition({ id: 80, name: "Embark on a Quest", type: TaskType.Travel, cost_multiplier: 15, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 80, name: "Embark on a Quest", type: TaskType.Travel, cost_multiplier: 22, skills: [SkillType.Travel] }),
             new TaskDefinition({ id: 81, name: "Investigate Rumors of a Great Magician", type: TaskType.Mandatory, cost_multiplier: 8, max_reps: 4, skills: [SkillType.Charisma, SkillType.Search] }),
             new TaskDefinition({ id: 82, name: "Search the Archives for Magic Spells", type: TaskType.Mandatory, cost_multiplier: 6, max_reps: 5, skills: [SkillType.Study, SkillType.Search] }),
             new TaskDefinition({ id: 83, name: "Scribe Scroll of Haste", max_reps: 1, cost_multiplier: 10, skills: [SkillType.Crafting, SkillType.Magic], item: ItemType.ScrollOfHaste }),
@@ -197,7 +197,7 @@ export const ZONES: Zone[] = [
     {
         name: "The Forest",
         tasks: [
-            new TaskDefinition({ id: 90, name: "Scale the Mountain", type: TaskType.Travel, cost_multiplier: 8, skills: [SkillType.Travel, SkillType.Fortitude], perk: PerkType.HighAltitudeClimbing }),
+            new TaskDefinition({ id: 90, name: "Scale the Mountain", type: TaskType.Travel, cost_multiplier: 12, skills: [SkillType.Travel, SkillType.Fortitude], perk: PerkType.HighAltitudeClimbing }),
             new TaskDefinition({ id: 91, name: "Locate the Mountain", type: TaskType.Mandatory, cost_multiplier: 10, skills: [SkillType.Survival, SkillType.Search] }),
             new TaskDefinition({ id: 92, name: "Make Climbing Gear", type: TaskType.Mandatory, cost_multiplier: 2, max_reps: 3, skills: [SkillType.Crafting] }),
             new TaskDefinition({ id: 93, name: "Create Firemaking Kit", max_reps: 3, cost_multiplier: 0.75, skills: [SkillType.Crafting, SkillType.Survival], item: ItemType.FiremakingKit }),
@@ -211,7 +211,7 @@ export const ZONES: Zone[] = [
     {
         name: "The Magician's Mountain",
         tasks: [
-            new TaskDefinition({ id: 100, name: "Hunt for the First Reagent", type: TaskType.Travel, cost_multiplier: 25, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 100, name: "Hunt for the First Reagent", type: TaskType.Travel, cost_multiplier: 37, skills: [SkillType.Travel] }),
             new TaskDefinition({ id: 101, name: "Convince the Magician", type: TaskType.Mandatory, cost_multiplier: 50, skills: [SkillType.Charisma] }),
             new TaskDefinition({ id: 102, name: "Do a Favor", type: TaskType.Mandatory, cost_multiplier: 8, max_reps: 1, skills: [SkillType.Crafting, SkillType.Subterfuge] }),
             new TaskDefinition({ id: 103, name: "Steal Some Reagents", max_reps: 4, cost_multiplier: 1, skills: [SkillType.Subterfuge], item: ItemType.Reagents }),
@@ -224,7 +224,7 @@ export const ZONES: Zone[] = [
     {
         name: "The Ocean",
         tasks: [
-            new TaskDefinition({ id: 110, name: "Land on Island", type: TaskType.Travel, cost_multiplier: 20, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 110, name: "Land on Island", type: TaskType.Travel, cost_multiplier: 30, skills: [SkillType.Travel] }),
             new TaskDefinition({ id: 111, name: "Weather a Storm", type: TaskType.Mandatory, cost_multiplier: 20, skills: [SkillType.Survival, SkillType.Fortitude] }),
             new TaskDefinition({ id: 112, name: "Find the Island", type: TaskType.Mandatory, cost_multiplier: 8, max_reps: 1, skills: [SkillType.Search] }),
             new TaskDefinition({ id: 113, name: "Catch Fish", max_reps: 5, cost_multiplier: 4, xp_mult: 4, skills: [SkillType.Survival], item: ItemType.Fish }),
@@ -237,7 +237,7 @@ export const ZONES: Zone[] = [
     {
         name: "The Island",
         tasks: [
-            new TaskDefinition({ id: 120, name: "Hunt for the Second Reagent", type: TaskType.Travel, cost_multiplier: 60, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 120, name: "Hunt for the Second Reagent", type: TaskType.Travel, cost_multiplier: 90, skills: [SkillType.Travel] }),
             new TaskDefinition({ id: 121, name: "Gather Reagent", type: TaskType.Mandatory, cost_multiplier: 10, max_reps: 3, skills: [SkillType.Search] }),
             new TaskDefinition({ id: 122, name: "Repair Ship", type: TaskType.Mandatory, cost_multiplier: 15, max_reps: 1, skills: [SkillType.Crafting] }),
             new TaskDefinition({ id: 123, name: "Catch More Fish", max_reps: 4, cost_multiplier: 10, skills: [SkillType.Survival], item: ItemType.Fish }),
@@ -245,6 +245,19 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 125, name: "Build Another Hut", cost_multiplier: 25, max_reps: 1, xp_mult: 4, skills: [SkillType.Crafting, SkillType.Survival] }),
             new TaskDefinition({ id: 126, name: "Talk to the Local Wildlife", cost_multiplier: 25, max_reps: 3, xp_mult: 2, skills: [SkillType.Druid, SkillType.Charisma] }),
             new TaskDefinition({ id: 127, name: "PLACEHOLDER", type:TaskType.Boss, cost_multiplier: 25000, xp_mult: 0.3, skills: [SkillType.Combat] }),
+        ],
+    },
+    {
+        name: "The Desert",
+        tasks: [
+            new TaskDefinition({ id: 130, name: "Enter the Oasis", type: TaskType.Travel, cost_multiplier: 100, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 131, name: "Overcome Mirage", type: TaskType.Mandatory, cost_multiplier: 100, max_reps: 1, skills: [SkillType.Fortitude] }),
+            new TaskDefinition({ id: 132, name: "Find the Oasis", type: TaskType.Mandatory, cost_multiplier: 15, max_reps: 1, skills: [SkillType.Search] }),
+            new TaskDefinition({ id: 133, name: "Harvest Cactus", max_reps: 3, cost_multiplier: 12, skills: [SkillType.Survival, SkillType.Crafting], item: ItemType.Cactus }),
+            new TaskDefinition({ id: 134, name: "Avoid Notice by the Sandworm", cost_multiplier: 15, max_reps: 5, skills: [SkillType.Subterfuge], perk: PerkType.WalkWithoutRhythm }),
+            new TaskDefinition({ id: 135, name: "Work on Your Tan", cost_multiplier: 15, max_reps: 3, xp_mult: 15, skills: [SkillType.Fortitude] }),
+            new TaskDefinition({ id: 136, name: "PLACEHOLDER", cost_multiplier: 25, max_reps: 1, xp_mult: 2, skills: [SkillType.Druid, SkillType.Charisma] }),
+            new TaskDefinition({ id: 137, name: "Giant Sandworm", type:TaskType.Boss, cost_multiplier: 25000, xp_mult: 0.3, skills: [SkillType.Combat] }),
         ],
     },
 ]
