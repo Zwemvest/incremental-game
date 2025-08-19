@@ -923,7 +923,7 @@ function setupAutomationControls() {
     });
 
     setupTooltip(zone_control, function () {
-        var tooltip = `<h3> Automate${zone_control.textContent}</h3>`;
+        var tooltip = `<h3> Automate ${zone_control.textContent}</h3>`;
 
         tooltip += "Toggle between automating tasks in the current zone, and not automating";
         tooltip += "<br>Right-click tasks to designate them as automated";
