@@ -79,7 +79,7 @@ function updateSkillRendering() {
 
 // MARK: Tasks
 
-let TASK_TYPE_NAMES = ["Normal", "Travel", "Mandatory", "Boss"];
+let TASK_TYPE_NAMES = ["Normal", "Travel", "Mandatory", "Prestige", "Boss"];
 
 function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering) {
     const task_div = document.createElement("div");
@@ -150,9 +150,9 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     task_upper_div.appendChild(task_button);
     task_upper_div.appendChild(task_reps_div);
 
-    task_div.appendChild(task_upper_div);
-    task_div.appendChild(progressBar);
     task_div.appendChild(skillsUsed);
+    task_div.appendChild(progressBar);
+    task_div.appendChild(task_upper_div);
 
     setupTooltip(task_div, function () {
         var tooltip = `<h3>${task.task_definition.name}</h3>`;

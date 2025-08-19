@@ -87,6 +87,8 @@ button:hover:enabled {
     background: var(--element-background-color);
     border-radius: 8px;
     padding: 5px;
+    display: flex;
+    flex-direction: column-reverse;
 }
 
 .task button {
@@ -120,6 +122,12 @@ button:hover:enabled {
     background: linear-gradient(5deg, rgb(214, 60, 60), rgb(236, 107, 107));
 }
 
+.task.Prestige button:enabled {
+    background: linear-gradient(5deg, rgb(141, 23, 196), rgb(162, 54, 204));
+    transition: background-color 0.2s, filter 0.2s;
+    animation: prestige-glow 2s infinite;
+}
+
 .task .indicator {
     width: 16px;
     height: 16px;
@@ -130,6 +138,7 @@ button:hover:enabled {
 .task-upper {
     width: 100%;
     display: flex;
+    position: relative;
 }
 
 .task-reps {
@@ -159,6 +168,18 @@ button:hover:enabled {
 
 .disable-reason {
     color: red;
+}
+
+@keyframes prestige-glow {
+  0% {
+    box-shadow: 0 0 5px 5px rgba(166, 52, 219, 0.6);
+  }
+  50% {
+    box-shadow: 0 0 15px 8px rgba(166, 52, 219, 0.9);
+  }
+  100% {
+    box-shadow: 0 0 5px 5px rgba(166, 52, 219, 0.6);
+  }
 }
 
 /* MARK: Skills
@@ -300,6 +321,7 @@ button:hover:enabled {
     margin-right: 5px;
     padding: 5px;
     border-radius: 5px;
+    z-index: 1000;
 }
 
 #tooltip h3 {
@@ -378,6 +400,7 @@ footer {
     padding: 10px 0;
     background-color: transparent;
     pointer-events: none;
+    z-index: 999;
 }
 .message {
     background: rgba(0, 0, 0, 0.25);

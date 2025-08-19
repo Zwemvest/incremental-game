@@ -18,6 +18,7 @@ export enum PerkType {
     ReflectionsOnTheJourney,
     PurgedBureaucracy,
     DeepSeaDiving,
+    EnergeticMemory,
 
     Count
 }
@@ -86,5 +87,8 @@ export var PERKS: PerkDefinition[] = [
     },
     {
         enum: PerkType.DeepSeaDiving, name: "Deep Sea Diving", tooltip: "Improves Search and Druid speed by 30%", icon: "🤿",
+    },
+    {
+        enum: PerkType.EnergeticMemory, name: "Energetic Memory", tooltip: "On each Energy Reset, increase max Energy by the current zone / 10<br>So zone 11 gives 1.1 max Energy", icon: "💭",
     },
 ]

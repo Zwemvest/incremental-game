@@ -40,13 +40,14 @@ export const SKILL_DEFINITIONS: SkillDefinition[] = [
     new SkillDefinition({ type: SkillType.Magic, name: "Magic", xp_needed_mult: 3 }),
     new SkillDefinition({ type: SkillType.Fortitude, name: "Fortitude", xp_needed_mult: 10 }),
     new SkillDefinition({ type: SkillType.Druid, name: "Druid", xp_needed_mult: 20 }),
-    new SkillDefinition({ type: SkillType.Ascension, name: "Ascension" }),
+    new SkillDefinition({ type: SkillType.Ascension, name: "Ascension", xp_needed_mult: 1000 }),
 ]
 
 export enum TaskType {
     Normal,
     Travel,
     Mandatory,
+    Prestige,
     Boss,
 }
 
@@ -247,7 +248,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 124, name: "Explore the Jungle", cost_multiplier: 70, max_reps: 6, skills: [SkillType.Survival, SkillType.Search, SkillType.Travel], perk: PerkType.LostTemple }),
             new TaskDefinition({ id: 125, name: "Build Another Hut", cost_multiplier: 25, max_reps: 1, xp_mult: 4, skills: [SkillType.Crafting, SkillType.Survival] }),
             new TaskDefinition({ id: 126, name: "Talk to the Local Wildlife", cost_multiplier: 25, max_reps: 3, xp_mult: 2, skills: [SkillType.Druid, SkillType.Charisma] }),
-            new TaskDefinition({ id: 127, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 150000, xp_mult: 0.2, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 127, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 1000000, xp_mult: 0.2, skills: [SkillType.Combat] }),
         ],
     },
     {
@@ -260,20 +261,33 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 134, name: "Avoid Notice by the Sandworm", cost_multiplier: 15, max_reps: 5, skills: [SkillType.Subterfuge], perk: PerkType.WalkWithoutRhythm }),
             new TaskDefinition({ id: 135, name: "Work on Your Tan", cost_multiplier: 15, max_reps: 3, xp_mult: 15, skills: [SkillType.Fortitude] }),
             new TaskDefinition({ id: 136, name: "Comb the Desert", cost_multiplier: 25, max_reps: 6, xp_mult: 10, skills: [SkillType.Search] }),
-            new TaskDefinition({ id: 137, name: "Giant Sandworm", type: TaskType.Boss, cost_multiplier: 150000, xp_mult: 0.2, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 137, name: "Giant Sandworm", type: TaskType.Boss, cost_multiplier: 1000000, xp_mult: 0.2, skills: [SkillType.Combat] }),
         ],
     },
     {
         name: "The Oasis",
         tasks: [
             new TaskDefinition({ id: 140, name: "Return to the Magician", type: TaskType.Travel, cost_multiplier: 150, skills: [SkillType.Travel] }),
-            new TaskDefinition({ id: 141, name: "Banish Evil Spirit", type: TaskType.Mandatory, cost_multiplier: 3000, max_reps: 3, skills: [SkillType.Magic] }),
-            new TaskDefinition({ id: 142, name: "Gather Second Reagent", type: TaskType.Mandatory, cost_multiplier: 15, max_reps: 5, skills: [SkillType.Search] }),
+            new TaskDefinition({ id: 141, name: "Banish Evil Spirit", type: TaskType.Mandatory, cost_multiplier: 5000, max_reps: 3, skills: [SkillType.Magic] }),
+            new TaskDefinition({ id: 142, name: "Gather Second Reagent", type: TaskType.Mandatory, cost_multiplier: 25, max_reps: 5, skills: [SkillType.Search] }),
             new TaskDefinition({ id: 143, name: "Bottle Oasis Water", max_reps: 4, cost_multiplier: 20, skills: [SkillType.Survival], item: ItemType.OasisWater }),
             new TaskDefinition({ id: 144, name: "Reflect on the Journey", cost_multiplier: 600, max_reps: 5, skills: [SkillType.Study], perk: PerkType.ReflectionsOnTheJourney }),
             new TaskDefinition({ id: 145, name: "Prepare for the Journey Ahead", cost_multiplier: 50, max_reps: 3, xp_mult: 5, skills: [SkillType.Travel] }),
             new TaskDefinition({ id: 146, name: "Frolic in the Water", cost_multiplier: 600, max_reps: 1, xp_mult: 10, skills: [SkillType.Druid] }),
-            new TaskDefinition({ id: 147, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 150000, xp_mult: 0.2, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 147, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 1000000, xp_mult: 0.2, skills: [SkillType.Combat] }),
+        ],
+    },
+    {
+        name: "The Ritual",
+        tasks: [
+            new TaskDefinition({ id: 150, name: "Begin Search for the Next Ritual", type: TaskType.Travel, cost_multiplier: 1500, skills: [SkillType.Travel] }),
+            new TaskDefinition({ id: 151, name: "Apologize for Stealing Reagents", type: TaskType.Mandatory, cost_multiplier: 500, max_reps: 1, skills: [SkillType.Charisma] }),
+            new TaskDefinition({ id: 152, name: "Rest for a While", type: TaskType.Mandatory, cost_multiplier: 250, max_reps: 5, skills: [SkillType.Fortitude] }),
+            new TaskDefinition({ id: 153, name: "Touch the Divine", type: TaskType.Prestige, max_reps: 1, cost_multiplier: 1, skills: [SkillType.Ascension] }),
+            new TaskDefinition({ id: 154, name: "Infuse Magical Incense", max_reps: 9, cost_multiplier: 2000, skills: [SkillType.Magic], item: ItemType.MagicalIncense }),
+            new TaskDefinition({ id: 155, name: "Practice Memorization", cost_multiplier: 1000000, max_reps: 5, skills: [SkillType.Study, SkillType.Magic], perk: PerkType.EnergeticMemory, xp_mult: 0.05 }),
+            new TaskDefinition({ id: 156, name: "Guided Spellcasting", cost_multiplier: 2500, max_reps: 3, xp_mult: 10, skills: [SkillType.Magic] }),
+            new TaskDefinition({ id: 157, name: "Go for a Walk", cost_multiplier: 100, max_reps: 1, xp_mult: 5, skills: [SkillType.Search, SkillType.Travel] }),
         ],
     },
 ]

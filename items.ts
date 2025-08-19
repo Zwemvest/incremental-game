@@ -23,6 +23,7 @@ export enum ItemType {
     WerewolfFur,
     OasisWater,
     Calamari,
+    MagicalIncense,
 
     Count
 }
@@ -182,6 +183,13 @@ export var ITEMS: ItemDefinition[] = [
         enum: ItemType.Calamari, name: "Calamari", tooltip: "Gives 50 Energy", icon: "🦑",
         get_effect_text: (amount) => { return `Gained ${amount * 50} Energy`; },
         on_consume: (amount) => { GAMESTATE.current_energy += 50 * amount; },
+    },
+    {
+        enum: ItemType.MagicalIncense, name: "Magical Incense", tooltip: "Improves Ascension speed by 10%", icon: "🕯️",
+        get_effect_text: (amount) => { return `Ascension speed increased ${amount * 10}%`; },
+        on_consume: (amount) => {
+            getSkill(SkillType.Ascension).speed_modifier += 0.1 * amount;
+        },
     },
 ]
 
