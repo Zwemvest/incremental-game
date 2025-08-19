@@ -281,8 +281,8 @@ export const ZONES: Zone[] = [
         name: "The Ritual",
         tasks: [
             new TaskDefinition({ id: 150, name: "Begin Search for the Next Ritual", type: TaskType.Travel, cost_multiplier: 1500, skills: [SkillType.Travel] }),
-            new TaskDefinition({ id: 151, name: "Apologize for Stealing Reagents", type: TaskType.Mandatory, cost_multiplier: 500, max_reps: 1, skills: [SkillType.Charisma] }),
-            new TaskDefinition({ id: 152, name: "Rest for a While", type: TaskType.Mandatory, cost_multiplier: 250, max_reps: 5, skills: [SkillType.Fortitude] }),
+            new TaskDefinition({ id: 151, name: "Apologize for Stealing Reagents", type: TaskType.Mandatory, cost_multiplier: 300, max_reps: 3, skills: [SkillType.Charisma], xp_mult: 0.2 }),
+            new TaskDefinition({ id: 152, name: "Rest for a While", type: TaskType.Mandatory, cost_multiplier: 25000, max_reps: 5, skills: [SkillType.Fortitude] }),
             new TaskDefinition({ id: 153, name: "Touch the Divine", type: TaskType.Prestige, max_reps: 1, cost_multiplier: 0.75, skills: [SkillType.Ascension] }),
             new TaskDefinition({ id: 154, name: "Infuse Magical Incense", max_reps: 9, cost_multiplier: 2000, skills: [SkillType.Magic], item: ItemType.MagicalIncense }),
             new TaskDefinition({ id: 155, name: "Practice Memorization", cost_multiplier: 1000000, max_reps: 5, skills: [SkillType.Study, SkillType.Magic], perk: PerkType.EnergeticMemory, xp_mult: 0.05 }),
