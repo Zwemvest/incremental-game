@@ -30,6 +30,8 @@ export class PerkDefinition {
     icon = "";
 }
 
+export const ENERGETIC_MEMORY_MULT = 0.1;
+
 export var PERKS: PerkDefinition[] = [
     {
         enum: PerkType.Reading, name: "How to Read", tooltip: "Improves Study speed by 50%", icon: "📖",

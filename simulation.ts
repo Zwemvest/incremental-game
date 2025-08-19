@@ -1,7 +1,7 @@
 import { Task, ZONES, SkillType, TaskType, TASK_LOOKUP, TaskDefinition, SKILL_DEFINITIONS, SkillDefinition } from "./zones.js";
 import { GAMESTATE } from "./game.js";
 import { HASTE_MULT, ItemDefinition, ITEMS, ITEMS_TO_NOT_AUTO_USE, ItemType } from "./items.js";
-import { PerkType } from "./perks.js";
+import { ENERGETIC_MEMORY_MULT, PerkType } from "./perks.js";
 import { SkillUpContext, EventType, RenderEvent, GainedPerkContext, UsedItemContext, UnlockedTaskContext, UnlockedSkillContext, EventContext } from "./events.js";
 
 // MARK: Skills
@@ -421,7 +421,7 @@ function checkEnergyReset() {
 
 export function doEnergyReset() {
     if (hasPerk(PerkType.EnergeticMemory)) {
-        GAMESTATE.max_energy += (GAMESTATE.current_zone + 1) / 10;
+        GAMESTATE.max_energy += (GAMESTATE.current_zone + 1) * ENERGETIC_MEMORY_MULT;
     }
 
     GAMESTATE.current_zone = 0;

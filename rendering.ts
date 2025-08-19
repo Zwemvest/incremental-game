@@ -2,7 +2,7 @@ import { Task, TaskDefinition, SkillType, ZONES, TaskType, SKILL_DEFINITIONS, Sk
 import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel, saveGame, SAVE_LOCATION, toggleRepeatTasks, calcAttunementGain, calcPowerGain, toggleAutomation, AutomationMode, calcPowerSpeedBonusAtLevel, calcAttunementSpeedBonusAtLevel } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS, HASTE_MULT } from "./items.js";
-import { PerkDefinition, PerkType, PERKS } from "./perks.js";
+import { PerkDefinition, PerkType, PERKS, ENERGETIC_MEMORY_MULT } from "./perks.js";
 import { EventType, GainedPerkContext, SkillUpContext, UnlockedSkillContext, UnlockedTaskContext, UsedItemContext } from "./events.js";
 
 // MARK: Skills
@@ -566,6 +566,14 @@ function populateGameOver(game_over_div: HTMLElement) {
         attunement_gain_text.textContent = `Attunement: +${attunement_gain} (x${speed_bonus.toFixed(2)} speed)`;
 
         skill_gain.appendChild(attunement_gain_text);
+    }
+
+    if (hasPerk(PerkType.EnergeticMemory)) {
+        var energetic_memory_gain_text = document.createElement("p");
+        const energy_gain = (GAMESTATE.current_zone + 1) * ENERGETIC_MEMORY_MULT;
+        energetic_memory_gain_text.textContent = `Max Energy: +${energy_gain} (Energetic Memory Perk)`;
+
+        skill_gain.appendChild(energetic_memory_gain_text);
     }
 
     if (skill_gain.childNodes.length == 0) {
