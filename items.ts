@@ -20,6 +20,7 @@ export enum ItemType {
     BanditWeapons,
     Cactus,
     CityChain,
+    WerewolfFur,
 
     Count
 }
@@ -157,6 +158,14 @@ export var ITEMS: ItemDefinition[] = [
         on_consume: (amount) => {
             getSkill(SkillType.Charisma).speed_modifier += 0.5 * amount;
             getSkill(SkillType.Subterfuge).speed_modifier += 0.5 * amount;
+        },
+    },
+    {
+        enum: ItemType.WerewolfFur, name: "Werewolf Fur", tooltip: "Improves Charisma and Survival speed by 20%", icon: "🐺",
+        get_effect_text: (amount) => { return `Charisma and Survival speed increased ${amount * 20}%`; },
+        on_consume: (amount) => {
+            getSkill(SkillType.Charisma).speed_modifier += 0.2 * amount;
+            getSkill(SkillType.Survival).speed_modifier += 0.2 * amount;
         },
     },
 ]
