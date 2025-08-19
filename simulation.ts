@@ -384,6 +384,11 @@ export function calcEnergyDrainPerTick(task: Task, is_single_tick: boolean): num
         drain *= 0.8;
     }
 
+    if (hasPerk(PerkType.ReflectionsOnTheJourney)) {
+        const zone_diff = GAMESTATE.highest_zone - task.task_definition.zone_id;
+        drain *= Math.pow(0.95, zone_diff);
+    }
+
     return drain;
 }
 
@@ -679,6 +684,7 @@ export class Gamestate {
     active_task: Task | null = null;
     unlocked_tasks: number[] = [];
     current_zone: number = 0;
+    highest_zone: number = 0;
 
     repeat_tasks = true;
     automation_mode = AutomationMode.Off;
@@ -738,6 +744,7 @@ function advanceZone() {
     }
 
     GAMESTATE.current_zone += 1;
+    GAMESTATE.highest_zone = Math.max(GAMESTATE.highest_zone, GAMESTATE.current_zone);
     if (GAMESTATE.automation_mode == AutomationMode.Zone) {
         GAMESTATE.automation_mode = AutomationMode.Off;
     }
