@@ -416,6 +416,10 @@ function checkEnergyReset() {
 }
 
 export function doEnergyReset() {
+    if (hasPerk(PerkType.EnergeticMemory)) {
+        GAMESTATE.max_energy += (GAMESTATE.current_zone + 1) / 10;
+    }
+
     GAMESTATE.current_zone = 0;
     resetTasks();
 
