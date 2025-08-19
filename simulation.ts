@@ -97,6 +97,9 @@ function calcSkillTaskProgressWithoutLevel(skill_type: SkillType): number {
             if (hasPerk(PerkType.UndergroundConnection)) {
                 mult *= 1.2;
             }
+            if (hasPerk(PerkType.PurgedBureaucracy)) {
+                mult *= 1.3;
+            }
             break;
         case SkillType.Magic:
             if (hasPerk(PerkType.Amulet)) {
@@ -105,6 +108,9 @@ function calcSkillTaskProgressWithoutLevel(skill_type: SkillType): number {
             break;
         case SkillType.Subterfuge:
             if (hasPerk(PerkType.UndergroundConnection)) {
+                mult *= 1.4;
+            }
+            if (hasPerk(PerkType.WalkWithoutRhythm)) {
                 mult *= 1.4;
             }
             break;
@@ -137,6 +143,14 @@ function calcSkillTaskProgressWithoutLevel(skill_type: SkillType): number {
         case SkillType.Travel:
             if (hasPerk(PerkType.ExperiencedTraveler)) {
                 mult *= 1.5;
+            }
+            if (hasPerk(PerkType.WalkWithoutRhythm)) {
+                mult *= 1.2;
+            }
+            break;
+        case SkillType.Crafting:
+            if (hasPerk(PerkType.PurgedBureaucracy)) {
+                mult *= 1.3;
             }
             break;
     }

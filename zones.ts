@@ -233,7 +233,8 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 114, name: "Dive as a Squid", cost_multiplier: 15, max_reps: 3, xp_mult: 0.5, skills: [SkillType.Druid, SkillType.Search], perk: PerkType.SunkenTreasure }),
             new TaskDefinition({ id: 115, name: "Look for Land", cost_multiplier: 5, max_reps: 3, xp_mult: 8, skills: [SkillType.Search] }),
             new TaskDefinition({ id: 116, name: "Practice Transforming", cost_multiplier: 10, xp_mult: 4, skills: [SkillType.Druid] }),
-            new TaskDefinition({ id: 117, name: "Kraken", type: TaskType.Boss, cost_multiplier: 100000, xp_mult: 0.3, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 117, name: "Kraken", type: TaskType.Boss, cost_multiplier: 150000, xp_mult: 0.2, skills: [SkillType.Combat], item:ItemType.Calamari, unlocks_task: 118 }),
+            new TaskDefinition({ id: 118, name: "Explore Kraken's Lair", cost_multiplier: 250000, skills: [SkillType.Search, SkillType.Druid], xp_mult: 0.1, perk:PerkType.DeepSeaDiving, hidden_by_default: true }),
         ],
     },
     {
@@ -246,7 +247,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 124, name: "Explore the Jungle", cost_multiplier: 70, max_reps: 6, skills: [SkillType.Survival, SkillType.Search, SkillType.Travel], perk: PerkType.LostTemple }),
             new TaskDefinition({ id: 125, name: "Build Another Hut", cost_multiplier: 25, max_reps: 1, xp_mult: 4, skills: [SkillType.Crafting, SkillType.Survival] }),
             new TaskDefinition({ id: 126, name: "Talk to the Local Wildlife", cost_multiplier: 25, max_reps: 3, xp_mult: 2, skills: [SkillType.Druid, SkillType.Charisma] }),
-            new TaskDefinition({ id: 127, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 100000, xp_mult: 0.3, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 127, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 150000, xp_mult: 0.2, skills: [SkillType.Combat] }),
         ],
     },
     {
@@ -259,7 +260,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 134, name: "Avoid Notice by the Sandworm", cost_multiplier: 15, max_reps: 5, skills: [SkillType.Subterfuge], perk: PerkType.WalkWithoutRhythm }),
             new TaskDefinition({ id: 135, name: "Work on Your Tan", cost_multiplier: 15, max_reps: 3, xp_mult: 15, skills: [SkillType.Fortitude] }),
             new TaskDefinition({ id: 136, name: "Comb the Desert", cost_multiplier: 25, max_reps: 6, xp_mult: 10, skills: [SkillType.Search] }),
-            new TaskDefinition({ id: 137, name: "Giant Sandworm", type: TaskType.Boss, cost_multiplier: 100000, xp_mult: 0.3, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 137, name: "Giant Sandworm", type: TaskType.Boss, cost_multiplier: 150000, xp_mult: 0.2, skills: [SkillType.Combat] }),
         ],
     },
     {
@@ -272,7 +273,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 144, name: "Reflect on the Journey", cost_multiplier: 600, max_reps: 5, skills: [SkillType.Study], perk: PerkType.ReflectionsOnTheJourney }),
             new TaskDefinition({ id: 145, name: "Prepare for the Journey Ahead", cost_multiplier: 50, max_reps: 3, xp_mult: 5, skills: [SkillType.Travel] }),
             new TaskDefinition({ id: 146, name: "Frolic in the Water", cost_multiplier: 600, max_reps: 1, xp_mult: 10, skills: [SkillType.Druid] }),
-            new TaskDefinition({ id: 147, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 100000, xp_mult: 0.3, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 147, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 150000, xp_mult: 0.2, skills: [SkillType.Combat] }),
         ],
     },
 ]

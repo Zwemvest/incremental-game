@@ -17,6 +17,7 @@ export enum PerkType {
     WalkWithoutRhythm,
     ReflectionsOnTheJourney,
     PurgedBureaucracy,
+    DeepSeaDiving,
 
     Count
 }
@@ -82,5 +83,8 @@ export var PERKS: PerkDefinition[] = [
     },
     {
         enum: PerkType.PurgedBureaucracy, name: "Purged Bureaucracy", tooltip: "Improves Charisma and Crafting speed by 30%", icon: "⚖️",
+    },
+    {
+        enum: PerkType.DeepSeaDiving, name: "Deep Sea Diving", tooltip: "Improves Search and Druid speed by 30%", icon: "🤿",
     },
 ]

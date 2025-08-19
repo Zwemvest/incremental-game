@@ -22,6 +22,7 @@ export enum ItemType {
     CityChain,
     WerewolfFur,
     OasisWater,
+    Calamari,
 
     Count
 }
@@ -176,6 +177,11 @@ export var ITEMS: ItemDefinition[] = [
             getSkill(SkillType.Magic).speed_modifier += 0.2 * amount;
             getSkill(SkillType.Survival).speed_modifier += 0.1 * amount;
         },
+    },
+    {
+        enum: ItemType.Calamari, name: "Calamari", tooltip: "Gives 50 Energy", icon: "🦑",
+        get_effect_text: (amount) => { return `Gained ${amount * 50} Energy`; },
+        on_consume: (amount) => { GAMESTATE.current_energy += 50 * amount; },
     },
 ]
 
