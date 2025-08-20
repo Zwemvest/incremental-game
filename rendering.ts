@@ -3,7 +3,7 @@ import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTask
 import { GAMESTATE, RENDERING } from "./game.js";
 import { ItemType, ItemDefinition, ITEMS, HASTE_MULT, ITEMS_TO_NOT_AUTO_USE } from "./items.js";
 import { PerkDefinition, PerkType, PERKS, ENERGETIC_MEMORY_MULT } from "./perks.js";
-import { EventType, GainedPerkContext, SkillUpContext, UnlockedSkillContext, UnlockedTaskContext, UsedItemContext } from "./events.js";
+import { EventContext, EventType, GainedPerkContext, RenderEvent, SkillUpContext, UnlockedSkillContext, UnlockedTaskContext, UsedItemContext } from "./events.js";
 
 // MARK: Skills
 
@@ -815,17 +815,44 @@ function handleEvents() {
         const message_div = document.createElement("div");
         message_div.className = "message";
 
+        var context = event.context;
+        if (event.type == EventType.UsedItem) {
+            var new_item_context = context as UsedItemContext;
+            for (const [message, old_event] of RENDERING.message_contexts) {
+                if (old_event.type == event.type) {
+                    var old_item_context = old_event.context as UsedItemContext;
+                    if (old_item_context.item == new_item_context.item) {
+                        new_item_context.count += old_item_context.count;
+                        messages.removeChild(message);
+                        RENDERING.message_contexts.delete(message);
+                    }
+                }
+            }
+        } else if (event.type == EventType.SkillUp) {
+            var new_skill_context = context as SkillUpContext;
+            for (const [message, old_event] of RENDERING.message_contexts) {
+                if (old_event.type == event.type) {
+                    var old_skill_context = old_event.context as SkillUpContext;
+                    if (old_skill_context.skill == new_skill_context.skill) {
+                        new_skill_context.levels_gained += old_skill_context.levels_gained;
+                        messages.removeChild(message);
+                        RENDERING.message_contexts.delete(message);
+                    }
+                }
+            }
+        }
+
         switch (event.type) {
             case EventType.SkillUp:
                 {
-                    var skill_context = event.context as SkillUpContext;
+                    var skill_context = context as SkillUpContext;
                     const skill_definition = SKILL_DEFINITIONS[skill_context.skill] as SkillDefinition;
-                    message_div.textContent = `${skill_definition.name} is now ${skill_context.new_level}`;
+                    message_div.textContent = `${skill_definition.name} is now ${skill_context.new_level} (+${skill_context.levels_gained})`;
                     break;
                 }
             case EventType.GainedPerk:
                 {
-                    var perk_context = event.context as GainedPerkContext;
+                    var perk_context = context as GainedPerkContext;
                     const perk = PERKS[perk_context.perk] as PerkDefinition;
                     message_div.innerHTML = `Unlocked ${perk.icon}${perk.name}`;
                     message_div.innerHTML += `<br>${perk.tooltip}`;
@@ -834,7 +861,7 @@ function handleEvents() {
                 }
             case EventType.UsedItem:
                 {
-                    var item_context = event.context as UsedItemContext;
+                    var item_context = context as UsedItemContext;
                     const item = ITEMS[item_context.item] as ItemDefinition;
                     message_div.innerHTML = `Used ${item_context.count} ${item.icon}${item.name}`;
                     message_div.innerHTML += `<br>${item.get_effect_text(item_context.count)}`;
@@ -843,14 +870,14 @@ function handleEvents() {
                 }
             case EventType.UnlockedTask:
                 {
-                    var unlock_context = event.context as UnlockedTaskContext;
+                    var unlock_context = context as UnlockedTaskContext;
                     message_div.innerHTML = `Unlocked task ${unlock_context.task_definition.name}`;
                     recreateTasks();
                     break;
                 }
             case EventType.UnlockedSkill:
                 {
-                    var unlock_skill_context = event.context as UnlockedSkillContext;
+                    var unlock_skill_context = context as UnlockedSkillContext;
                     const skill_definition = SKILL_DEFINITIONS[unlock_skill_context.skill] as SkillDefinition;
                     message_div.innerHTML = `Unlocked skill ${skill_definition.name}`;
                     recreateSkills();
@@ -868,13 +895,18 @@ function handleEvents() {
         }
 
         messages.insertBefore(message_div, messages.firstChild);
+        RENDERING.message_contexts.set(message_div, event);
 
         while (messages.children.length > 5) {
-            messages.removeChild(messages.lastElementChild as Element);
+            var last_message = messages.lastElementChild as Element;
+            RENDERING.message_contexts.delete(last_message);
+            messages.removeChild(last_message);
         }
 
         setTimeout(() => {
             if (message_div.parentNode) {
+                var last_message = messages.lastElementChild as Element;
+                RENDERING.message_contexts.delete(last_message);
                 messages.removeChild(message_div);
             }
         }, 5000);
@@ -1024,6 +1056,7 @@ export class Rendering {
     settings_element: HTMLElement;
     energy_element: HTMLElement;
     messages_element: HTMLElement;
+    message_contexts: Map<Element, RenderEvent> = new Map();
     power_element: HTMLElement;
     attunement_element: HTMLElement;
     task_elements: Map<TaskDefinition, ElementWithTooltip> = new Map();

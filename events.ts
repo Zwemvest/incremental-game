@@ -30,6 +30,7 @@ export class RenderEvent {
 export class SkillUpContext extends EventContext {
     skill: SkillType = SkillType.Count;
     new_level: number = 0;
+    levels_gained: number = 0;
 }
 
 export class GainedPerkContext extends EventContext {

@@ -58,7 +58,7 @@ function addSkillXp(skill: SkillType, xp: number) {
     }
 
     if (skill_entry.level > old_level) {
-        const context: SkillUpContext = { skill: skill_entry.type, new_level: skill_entry.level };
+        const context: SkillUpContext = { skill: skill_entry.type, new_level: skill_entry.level, levels_gained: skill_entry.level - old_level };
         const event = new RenderEvent(EventType.SkillUp, context);
         GAMESTATE.queueRenderEvent(event);
     }
@@ -469,6 +469,7 @@ export function clickItem(item: ItemType, use_all: boolean) {
     GAMESTATE.items.set(item, old_value - num_used);
 
     const context: UsedItemContext = { item: item, count: num_used };
+    console.log(context instanceof UsedItemContext);
     const event = new RenderEvent(EventType.UsedItem, context);
     GAMESTATE.queueRenderEvent(event);
 }
