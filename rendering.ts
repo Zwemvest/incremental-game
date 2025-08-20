@@ -1020,6 +1020,7 @@ function updateExtraStats() {
             var tooltip = `<h3>💪Power - ${formatNumber(GAMESTATE.power, false)}</h3>`;
 
             tooltip += `Increases Combat and Fortitude speed by ${formatNumber(GAMESTATE.power, false)}%`;
+            tooltip += `<br><br>Increased by fighting Bosses`;
 
             return tooltip;
         });
@@ -1036,6 +1037,7 @@ function updateExtraStats() {
             var tooltip = `<h3>🌀Attunement - ${formatNumber(GAMESTATE.attunement, false)}</h3>`;
 
             tooltip += `Increases Study, Magic, and Druid speed by ${formatNumber(GAMESTATE.attunement / 10)}%`;
+            tooltip += `<br><br>Increased by all tasks it boosts`;
 
             return tooltip;
         });
