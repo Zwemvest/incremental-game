@@ -1,7 +1,7 @@
 import { Task, TaskDefinition, SkillType, ZONES, TaskType, SKILL_DEFINITIONS, SkillDefinition } from "./zones.js";
 import { clickTask, Skill, calcSkillXpNeeded, calcSkillXpNeededAtLevel, calcTaskProgressMultiplier, calcSkillXp, calcEnergyDrainPerTick, clickItem, calcTaskCost, calcSkillTaskProgressMultiplier, getSkill, hasPerk, doEnergyReset, calcSkillTaskProgressMultiplierFromLevel, saveGame, SAVE_LOCATION, toggleRepeatTasks, calcAttunementGain, calcPowerGain, toggleAutomation, AutomationMode, calcPowerSpeedBonusAtLevel, calcAttunementSpeedBonusAtLevel, calcSkillTaskProgressWithoutLevel } from "./simulation.js";
 import { GAMESTATE, RENDERING } from "./game.js";
-import { ItemType, ItemDefinition, ITEMS, HASTE_MULT } from "./items.js";
+import { ItemType, ItemDefinition, ITEMS, HASTE_MULT, ITEMS_TO_NOT_AUTO_USE } from "./items.js";
 import { PerkDefinition, PerkType, PERKS, ENERGETIC_MEMORY_MULT } from "./perks.js";
 import { EventType, GainedPerkContext, SkillUpContext, UnlockedSkillContext, UnlockedTaskContext, UsedItemContext } from "./events.js";
 
@@ -394,6 +394,9 @@ function createItemDiv(item: ItemType, items_div: HTMLElement) {
     button.classList.add("element");
 
     var item_definition = ITEMS[item] as ItemDefinition;
+    var item_count = GAMESTATE.items.get(item);
+    button.textContent = `${item_definition.icon} (${item_count})`;
+    button.disabled = item_count == 0;
 
     button.addEventListener("click", () => { clickItem(item, false); });
     button.addEventListener("contextmenu", (e) => { e.preventDefault(); clickItem(item, true); });
@@ -417,39 +420,36 @@ function createItems() {
 
     items_div.innerHTML = "";
 
-    for (const item of GAMESTATE.items.keys()) {
+    var items: [type: ItemType, amount: number][] = [];
+
+    for (const [item, amount] of GAMESTATE.items) {
+        items.push([item, amount]);
+    }
+
+    sortItems(items);
+    console.log(items);
+
+    for (const [item, amount] of items) {
         createItemDiv(item, items_div);
     }
 }
 
-function updateItems() {
-    var needs_recreation = false;
-    for (const item of GAMESTATE.items.keys()) {
-        if (!RENDERING.item_elements.has(item)) {
-            needs_recreation = true;
+function sortItems(items: [type: ItemType, amount: number][]) {
+    items.sort((a, b) => {
+        // Items we actually have first
+        if ((a[1] == 0) != (b[1] == 0))
+        {
+            return (a[1] == 0) ? 1 : -1;
         }
-    }
-
-    if (needs_recreation) {
-        createItems();
-    }
-
-    for (const item of GAMESTATE.items.keys()) {
-        var button = RENDERING.item_elements.get(item) as HTMLInputElement;
-        if (button) {
-            var item_definition = ITEMS[item] as ItemDefinition;
-            var item_count = GAMESTATE.items.get(item);
-            const text = `${item_definition.icon} (${item_count})`;
-            if (text != button.textContent) {
-                button.textContent = text;
-            }
-
-            button.disabled = item_count == 0;
+            
+        // Then special items
+        if (ITEMS_TO_NOT_AUTO_USE.includes(a[0]) != ITEMS_TO_NOT_AUTO_USE.includes(b[0])) {
+            return ITEMS_TO_NOT_AUTO_USE.includes(a[0]) ? -1 : 1;
         }
-        else {
-            console.error("Couldn't find item-button");
-        }
-    }
+
+        // Then just definition order
+        return a[0] < b[0] ? -1 : 0;
+    });
 }
 
 function setupAutoUseItemsControl() {
@@ -808,6 +808,11 @@ function handleEvents() {
             continue; // No message, just forces tooltips to update
         }
 
+        if (event.type == EventType.GainedItem) {
+            createItems();
+            continue; // No message, just forces item list to update
+        }
+
         const message_div = document.createElement("div");
         message_div.className = "message";
 
@@ -834,6 +839,7 @@ function handleEvents() {
                     const item = ITEMS[item_context.item] as ItemDefinition;
                     message_div.innerHTML = `Used ${item_context.count} ${item.icon}${item.name}`;
                     message_div.innerHTML += `<br>${item.get_effect_text(item_context.count)}`;
+                    createItems();
                     break;
                 }
             case EventType.UnlockedTask:
@@ -1086,6 +1092,7 @@ export class Rendering {
 
         setupZone();
         createPerks();
+        createItems();
 
         updateRendering();
 
@@ -1172,7 +1179,6 @@ export function updateRendering() {
     updateTaskRendering();
     updateSkillRendering();
     updateEnergyRendering();
-    updateItems();
     updatePerks();
     updateExtraStats();
     updateGameOver();

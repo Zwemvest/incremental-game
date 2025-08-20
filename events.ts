@@ -5,6 +5,7 @@ import { SkillType, TaskDefinition } from "./zones.js";
 export enum EventType {
     SkillUp,
     GainedPerk,
+    GainedItem,
     UsedItem,
     UnlockedTask,
     UnlockedSkill,

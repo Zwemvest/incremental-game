@@ -3,9 +3,9 @@ import { SkillType } from "./zones.js";
 import { getSkill } from "./simulation.js"
 
 export enum ItemType {
-    Coin,
-    Arrow,
     Food,
+    Arrow,
+    Coin,
     Mushroom,
     GoblinSupplies,
     TravelEquipment,
@@ -44,9 +44,9 @@ export const HASTE_MULT = 5;
 
 export var ITEMS: ItemDefinition[] = [
     {
-        enum: ItemType.Coin, name: "Coin", tooltip: "Improves Charisma speed by 15%", icon: "💰",
-        get_effect_text: (amount) => { return `Charisma speed increased ${amount * 15}%`; },
-        on_consume: (amount) => { getSkill(SkillType.Charisma).speed_modifier += 0.15 * amount; },
+        enum: ItemType.Food, name: "Food", tooltip: "Gives 5 Energy", icon: "🍲",
+        get_effect_text: (amount) => { return `Gained ${amount * 5} Energy`; },
+        on_consume: (amount) => { GAMESTATE.current_energy += 5 * amount; },
     },
     {
         enum: ItemType.Arrow, name: "Arrow", tooltip: "Improves Combat speed by 15%", icon: "🏹",
@@ -54,9 +54,9 @@ export var ITEMS: ItemDefinition[] = [
         on_consume: (amount) => { getSkill(SkillType.Combat).speed_modifier += 0.15 * amount; },
     },
     {
-        enum: ItemType.Food, name: "Food", tooltip: "Gives 5 Energy", icon: "🍲",
-        get_effect_text: (amount) => { return `Gained ${amount * 5} Energy`; },
-        on_consume: (amount) => { GAMESTATE.current_energy += 5 * amount; },
+        enum: ItemType.Coin, name: "Coin", tooltip: "Improves Charisma speed by 15%", icon: "💰",
+        get_effect_text: (amount) => { return `Charisma speed increased ${amount * 15}%`; },
+        on_consume: (amount) => { getSkill(SkillType.Charisma).speed_modifier += 0.15 * amount; },
     },
     {
         enum: ItemType.Mushroom, name: "Mushroom", tooltip: "Improves Magic speed by 20% and Search speed by 10%", icon: "🍄",

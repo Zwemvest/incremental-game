@@ -447,6 +447,9 @@ export function doEnergyReset() {
 function addItem(item: ItemType, count: number) {
     var oldValue = GAMESTATE.items.get(item) ?? 0;
     GAMESTATE.items.set(item, oldValue + count);
+
+    const event = new RenderEvent(EventType.GainedItem, {});
+    GAMESTATE.queueRenderEvent(event);
 }
 
 export function clickItem(item: ItemType, use_all: boolean) {
