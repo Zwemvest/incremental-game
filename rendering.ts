@@ -815,6 +815,11 @@ function handleEvents() {
         const message_div = document.createElement("div");
         message_div.className = "message";
 
+        function removeMessage(message: Element) {
+            messages.removeChild(message);
+            RENDERING.message_contexts.delete(message);
+        }
+
         var context = event.context;
         if (event.type == EventType.UsedItem) {
             var new_item_context = context as UsedItemContext;
@@ -823,8 +828,7 @@ function handleEvents() {
                     var old_item_context = old_event.context as UsedItemContext;
                     if (old_item_context.item == new_item_context.item) {
                         new_item_context.count += old_item_context.count;
-                        messages.removeChild(message);
-                        RENDERING.message_contexts.delete(message);
+                        removeMessage(message);
                     }
                 }
             }
@@ -835,8 +839,7 @@ function handleEvents() {
                     var old_skill_context = old_event.context as SkillUpContext;
                     if (old_skill_context.skill == new_skill_context.skill) {
                         new_skill_context.levels_gained += old_skill_context.levels_gained;
-                        messages.removeChild(message);
-                        RENDERING.message_contexts.delete(message);
+                        removeMessage(message);
                     }
                 }
             }
@@ -898,16 +901,12 @@ function handleEvents() {
         RENDERING.message_contexts.set(message_div, event);
 
         while (messages.children.length > 5) {
-            var last_message = messages.lastElementChild as Element;
-            RENDERING.message_contexts.delete(last_message);
-            messages.removeChild(last_message);
+            removeMessage(messages.lastElementChild as Element);
         }
 
         setTimeout(() => {
             if (message_div.parentNode) {
-                var last_message = messages.lastElementChild as Element;
-                RENDERING.message_contexts.delete(last_message);
-                messages.removeChild(message_div);
+                removeMessage(message_div);
             }
         }, 5000);
     }
