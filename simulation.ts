@@ -785,8 +785,8 @@ export function updateGamestate() {
         return;
     }
 
-    autoUseItems();
     updateActiveTask();
+    autoUseItems();
     checkEnergyReset();
 }
 
