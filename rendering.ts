@@ -704,6 +704,7 @@ function setupSettings(settings_div: HTMLElement) {
 
     setupTooltip(open_button, function () {
         var tooltip = `<h3>Open Settings Menu</h3>`;
+        tooltip += `Lets you Save and Load from disk`;
         return tooltip;
     });
 
