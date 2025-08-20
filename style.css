@@ -43,7 +43,7 @@ body {
     padding: 5px;
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
-    -moz-box-sizing: border-box;  
+    -moz-box-sizing: border-box;
 }
 
 #sidebar .item-text {
@@ -58,6 +58,7 @@ body {
 
 #play-area {
     display: flex;
+    margin-top: 30px;
 }
 
 #left-column {
@@ -81,17 +82,23 @@ body {
 }
 
 #energy {
-    margin-bottom: 8px;
     width: 100%;
 }
 
 #top-area {
+    width: 900px;
     display: flex;
     gap: 10px;
-}
-
-#top-bar {
-    width: 900px;
+    background: var(--element-background-color);
+    border-radius: 8px;
+    position: fixed;
+    top: -8px;
+    padding: 5px;
+    padding-top: 13px;
+    
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
 }
 
 #right-top-area {
@@ -208,15 +215,17 @@ button:hover:enabled {
 }
 
 @keyframes prestige-glow {
-  0% {
-    box-shadow: 0 0 5px 5px rgba(166, 52, 219, 0.6);
-  }
-  50% {
-    box-shadow: 0 0 15px 8px rgba(166, 52, 219, 0.9);
-  }
-  100% {
-    box-shadow: 0 0 5px 5px rgba(166, 52, 219, 0.6);
-  }
+    0% {
+        box-shadow: 0 0 5px 5px rgba(166, 52, 219, 0.6);
+    }
+
+    50% {
+        box-shadow: 0 0 15px 8px rgba(166, 52, 219, 0.9);
+    }
+
+    100% {
+        box-shadow: 0 0 5px 5px rgba(166, 52, 219, 0.6);
+    }
 }
 
 /* MARK: Skills
@@ -434,6 +443,7 @@ footer {
     pointer-events: none;
     z-index: 999;
 }
+
 .message {
     background: rgba(0, 0, 0, 0.25);
     color: #fff;
