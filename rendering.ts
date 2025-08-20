@@ -427,7 +427,6 @@ function createItems() {
     }
 
     sortItems(items);
-    console.log(items);
 
     for (const [item, amount] of items) {
         createItemDiv(item, items_div);
