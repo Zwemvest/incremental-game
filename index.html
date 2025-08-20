@@ -1,44 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 
-<head></head>
-<link rel="stylesheet" href="style.css" />
-<title>Test Game</title>
-
+<head>  
+	<meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="description" content="Play the Test Game and increment! Keep counting!">
+	
+	<link rel="canonical" href="https://meneth.github.io/incremental-game/">
+	
+	<meta property="og:title" content="Test Game">
+	<meta property="og:description" content="Play the Test Game and increment! Keep counting!">
+	<meta property="og:type" content="website">
+	<meta property="og:url" content="https://meneth.github.io/incremental-game">
+	<meta property="og:image" content="https://www.example.com/images/preview.jpg">
+	
+	<link rel="stylesheet" href="style.css" />
+	<title>Test Game</title>
+	<link href="https://fonts.cdnfonts.com/css/roboto" rel="stylesheet">
+</head>
 <body>
-    <div id="background"></div>
     <!-- Hidden until game's ready to render -->
+	
+	<aside id="left-sidebar" class="sidebar">
+		<button id="open-settings">⚙ Settings</button>
+		<div id="attunement" class="sidebar-section sidebar-item-text" style="display:none">🌀Attunement: 1337</div>
+		<div id="power" class="sidebar-section sidebar-item-text" style="display:none">💪Power: 1337</div>
+		<div id="skills"></div>
+	</aside>
     <main>
-        <div id="game-area" style="display:none">
-            <div id="left-sidebar" class="sidebar">
-                <button id="open-settings">⚙ Settings</button>
-                <div id="attunement" class="sidebar-section sidebar-item-text" style="display:none">🌀Attunement: 1337</div>
-                <div id="power" class="sidebar-section sidebar-item-text" style="display:none">💪Power: 1337</div>
-                <div id="skills"></div>
-            </div>
+        <div id="game-area">
             <div id="main-area">
                 <div id="play-area">
                     <div id="left-column">
                         <div id="tasks"></div>
-                    </div>
-                    <div id="right-column" class="sidebar">
-                        <div id="zone" class="sidebar-section">
-                            <h2 id="zone-name">Lorem Ipsum</h2>
-                        </div>
-                        <div id="controls" class="sidebar-section">
-                            <h3 class="section-name">Controls</h3>
-                            <div id="controls-list" class="elements-list"></div>
-                        </div>
-                        <div id="items" class="sidebar-section">
-                            <h3 class="section-name">Items</h3>
-                            <h3 class="section-info">?</h3>
-                            <div id="items-list" class="elements-list"></div>
-                        </div>
-                        <div id="perks" class="sidebar-section">
-                            <h3 class="section-name">Perks</h3>
-                            <h3 class="section-info">?</h3>
-                            <div id="perks-list" class="elements-list"></div>
-                        </div>
                     </div>
                 </div>
 
@@ -55,7 +49,7 @@
             </div>
         </div>
 
-        <div id="game-over-overlay" style="display:none" class="full-screen-overlay">
+        <div id="game-over-overlay" class="full-screen-overlay hidden">
             <div id="game-over-box">
                 <h2 id=>Game Over</h2>
                 <p>You used up all your Energy.</p>
@@ -68,7 +62,7 @@
             </div>
         </div>
 
-        <div id="end-of-content-overlay" style="display:none" class="full-screen-overlay">
+        <div id="end-of-content-overlay" class="full-screen-overlay hidden">
             <div id="end-of-content-box">
                 <h2 id=>End of Content</h2>
                 <p>You've reached the end of all content that exists!</p>
@@ -77,7 +71,7 @@
             </div>
         </div>
 
-        <div id="settings-overlay" style="display:none" class="full-screen-overlay">
+        <div id="settings-overlay" class="full-screen-overlay hidden">
             <div id="settings">
                 <button id="close-settings">X</button>
                 <button id="save">Save</button>
@@ -86,11 +80,30 @@
         </div>
     </main>
 
+	<aside id="right-sidebar" class="sidebar">
+		<div id="zone" class="sidebar-section">
+			<h2 id="zone-name">Lorem Ipsum</h2>
+		</div>
+		<div id="controls" class="sidebar-section">
+			<h3 class="section-name">Controls</h3>
+			<div id="controls-list" class="elements-list"></div>
+		</div>
+		<div id="items" class="sidebar-section">
+			<h3 class="section-name">Items</h3>
+			<h3 class="section-info">?</h3>
+			<div id="items-list" class="elements-list"></div>
+		</div>
+		<div id="perks" class="sidebar-section">
+			<h3 class="section-name">Perks</h3>
+			<h3 class="section-info">?</h3>
+			<div id="perks-list" class="elements-list"></div>
+		</div>
+	</aside>
     <footer>
         <div id="messages"></div>
     </footer>
 
-    <div id="tooltip" style="display:none"></div>
+    <div id="tooltip" class="hidden"></div>
 
     <script type="module" src="./build/game.js"></script>
     <script type="module" src="./build/simulation.js"></script>

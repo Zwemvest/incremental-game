@@ -99,11 +99,16 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
     task_upper_div.className = "task-upper";
 
     const task_button = document.createElement("button");
-    task_button.className = "task-button";
-    task_button.textContent = `${task.task_definition.name}`;
+    task_button.className = "task-button button";
+	
     task_button.addEventListener("click", () => { clickTask(task); });
     task_button.addEventListener("contextmenu", (e) => { e.preventDefault(); toggleAutomation(task); });
 
+    const task_label = document.createElement("div");
+    task_label.className = "task-label";
+    task_label.textContent = `${task.task_definition.name}`;
+    task_button.appendChild(task_label);
+	
     const task_automation = document.createElement("div");
     task_automation.className = "task-automation";
     task_button.appendChild(task_automation);
@@ -117,7 +122,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
 
     const skillsUsed = document.createElement("p");
     skillsUsed.className = "skills-used-text";
-    var skillText = "Skills used: ";
+    var skillText = "Skills: ";
     var skillStrings: string[] = [];
     for (const skill of task.task_definition.skills) {
         const skill_definition = SKILL_DEFINITIONS[skill] as SkillDefinition;
@@ -392,7 +397,7 @@ function updateTooltip() {
 
 function createItemDiv(item: ItemType, items_div: HTMLElement) {
     const button = document.createElement("button");
-    button.className = "item-button";
+    button.className = "item-button button";
     button.classList.add("element");
 
     var item_definition = ITEMS[item] as ItemDefinition;
@@ -459,7 +464,7 @@ function setupAutoUseItemsControl() {
     }
 
     var item_control = document.createElement("button");
-    item_control.className = "element";
+    item_control.className = "element button";
 
     function setItemControlName() {
         item_control.textContent = GAMESTATE.auto_use_items ? "Auto Use Items" : "Manual Use Items";
@@ -531,7 +536,8 @@ function updatePerks() {
 // MARK: Game over
 
 function populateGameOver(game_over_div: HTMLElement) {
-    game_over_div.style.display = "flex";
+    game_over_div.classList.add("display-flex");
+    game_over_div.classList.remove("hidden");
 
     var skill_gain = game_over_div.querySelector("#game-over-skillgain");
     if (!skill_gain) {
@@ -616,13 +622,15 @@ function setupGameOverRestartListener(game_over_div: HTMLElement) {
     }
 
     button.addEventListener("click", () => {
-        game_over_div.style.display = "none";
+        game_over_div.classList.add("hidden");
+        game_over_div.classList.remove("display-flex");
         doEnergyReset();
     });
 }
 
 function populateEndOfContent(end_of_content_div: HTMLElement) {
-    end_of_content_div.style.display = "flex";
+    end_of_content_div.classList.add("display-flex");
+    end_of_content_div.classList.remove("hidden");
 
     var reset_count = end_of_content_div.querySelector("#end-of-content-reset-count");
     if (!reset_count) {
@@ -634,12 +642,12 @@ function populateEndOfContent(end_of_content_div: HTMLElement) {
 }
 
 function updateGameOver() {
-    const showing_game_over = RENDERING.game_over_element.style.display != "none";
+    const showing_game_over = RENDERING.game_over_element.classList.contains("hidden");
     if (!showing_game_over && GAMESTATE.is_in_game_over) {
         populateGameOver(RENDERING.game_over_element);
     }
 
-    const showing_end_of_content = RENDERING.end_of_content_element.style.display != "none";
+    const showing_end_of_content = RENDERING.end_of_content_element.classList.contains("hidden");
     if (!showing_end_of_content && GAMESTATE.is_at_end_of_content) {
         populateEndOfContent(RENDERING.end_of_content_element);
     }
@@ -699,7 +707,8 @@ function setupSettings(settings_div: HTMLElement) {
     }
 
     open_button.addEventListener("click", () => {
-        settings_div.style.display = "flex";
+        settings_div.classList.add("display-flex");
+        settings_div.classList.remove("hidden");
     });
 
     setupTooltip(open_button, function () {
@@ -717,7 +726,8 @@ function setupSettings(settings_div: HTMLElement) {
 
 
     close_button.addEventListener("click", () => {
-        settings_div.style.display = "none";
+        settings_div.classList.add("hidden");
+        settings_div.classList.remove("display-flex");
     });
 
     setupTooltip(close_button, function () {
@@ -1015,8 +1025,9 @@ function setupAutomationControls() {
 // MARK: Extra stats
 
 function updateExtraStats() {
-    if (GAMESTATE.has_unlocked_power && RENDERING.power_element.style.display == "none") {
-        RENDERING.power_element.style.display = "flex";
+    if (GAMESTATE.has_unlocked_power && RENDERING.power_element.classList.contains("hidden")) {
+        RENDERING.power_element.classList.add("display-flex");
+        RENDERING.power_element.classList.remove("hidden");
         setupTooltip(RENDERING.power_element, function () {
             var tooltip = `<h3>💪Power - ${formatNumber(GAMESTATE.power, false)}</h3>`;
 
@@ -1032,8 +1043,9 @@ function updateExtraStats() {
         RENDERING.power_element.innerHTML = power_text;
     }
 
-    if (hasPerk(PerkType.Attunement) && RENDERING.attunement_element.style.display == "none") {
-        RENDERING.attunement_element.style.display = "flex";
+    if (hasPerk(PerkType.Attunement) && RENDERING.attunement_element.classList.contains("hidden")) {
+        RENDERING.attunement_element.classList.add("display-flex");
+        RENDERING.attunement_element.classList.remove("hidden");
         setupTooltip(RENDERING.attunement_element, function () {
             var tooltip = `<h3>🌀Attunement - ${formatNumber(GAMESTATE.attunement, false)}</h3>`;
 
@@ -1133,7 +1145,9 @@ export class Rendering {
         updateRendering();
 
         // Unhide the game now that it's ready
-        (document.getElementById("game-area") as HTMLElement).style.display = "flex";
+		let x = (document.getElementById("game-area") as HTMLElement);
+		x.classList.add("display-flex");
+		x.classList.remove("hidden");
     }
 }
 
@@ -1162,7 +1176,8 @@ function setupZone() {
 }
 
 function hideTooltip() {
-    RENDERING.tooltip_element.style.display = "none";
+    RENDERING.tooltip_element.classList.add("hidden");
+    RENDERING.tooltip_element.classList.remove("display-block");
     RENDERING.tooltipped_element = null;
 }
 
@@ -1214,7 +1229,8 @@ function showTooltip(element: ElementWithTooltip) {
         }
     }
 
-    tooltip_element.style.display = "block";
+    tooltip_element.classList.add("display-block");
+    tooltip_element.classList.remove("hidden");
 }
 
 export function updateRendering() {

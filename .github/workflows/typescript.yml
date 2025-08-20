@@ -31,6 +31,14 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        
+      - name: auto minify the files
+        uses: nizarmah/auto-minify@v3
+      - name: auto commit the minified files
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "bot: Add auto minified files"
+          
       - name: Setup Pages
         uses: actions/configure-pages@v5
       - name: Build with Typescript
