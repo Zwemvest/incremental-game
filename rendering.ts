@@ -1017,7 +1017,7 @@ function updateExtraStats() {
     if (GAMESTATE.has_unlocked_power && RENDERING.power_element.style.display == "none") {
         RENDERING.power_element.style.display = "flex";
         setupTooltip(RENDERING.power_element, function () {
-            var tooltip = `<h3>💪Power: ${formatNumber(GAMESTATE.power, false)}</h3>`;
+            var tooltip = `<h3>💪Power - ${formatNumber(GAMESTATE.power, false)}</h3>`;
 
             tooltip += `Increases Combat and Fortitude speed by ${formatNumber(GAMESTATE.power, false)}%`;
 
@@ -1033,7 +1033,7 @@ function updateExtraStats() {
     if (hasPerk(PerkType.Attunement) && RENDERING.attunement_element.style.display == "none") {
         RENDERING.attunement_element.style.display = "flex";
         setupTooltip(RENDERING.attunement_element, function () {
-            var tooltip = `<h3>🌀Attunement: ${formatNumber(GAMESTATE.attunement, false)}</h3>`;
+            var tooltip = `<h3>🌀Attunement - ${formatNumber(GAMESTATE.attunement, false)}</h3>`;
 
             tooltip += `Increases Study, Magic, and Druid speed by ${formatNumber(GAMESTATE.attunement / 10)}%`;
 
