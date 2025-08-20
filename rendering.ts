@@ -1192,17 +1192,25 @@ function showTooltip(element: ElementWithTooltip) {
     var x = (beyondHorizontalCenter ? elementRect.left : elementRect.right) + window.scrollX;
     var y = (beyondVerticalCenter ? elementRect.bottom : elementRect.top) + window.scrollY;
 
-    if (beyondHorizontalCenter) {
-        x = document.documentElement.clientWidth - x;
-        tooltip_element.style.right = x + "px";
-    } else {
+    // Energy element covers basically full width so needs its own logic to look good
+    if (element.id == "energy") {
+        x = elementRect.left + window.scrollX;
         tooltip_element.style.left = x + "px";
-    }
-    if (beyondVerticalCenter) {
-        y = document.documentElement.clientHeight - y;
-        tooltip_element.style.bottom = y + "px";
-    } else {
+        y = elementRect.bottom + scrollY + 5;
         tooltip_element.style.top = y + "px";
+    } else {
+        if (beyondHorizontalCenter) {
+            x = document.documentElement.clientWidth - x;
+            tooltip_element.style.right = x + "px";
+        } else {
+            tooltip_element.style.left = x + "px";
+        }
+        if (beyondVerticalCenter) {
+            y = document.documentElement.clientHeight - y;
+            tooltip_element.style.bottom = y + "px";
+        } else {
+            tooltip_element.style.top = y + "px";
+        }
     }
 
     tooltip_element.style.display = "block";
