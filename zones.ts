@@ -274,7 +274,7 @@ export const ZONES: Zone[] = [
             new TaskDefinition({ id: 144, name: "Reflect on the Journey", cost_multiplier: 30, max_reps: 5, skills: [SkillType.Study], perk: PerkType.ReflectionsOnTheJourney }),
             new TaskDefinition({ id: 145, name: "Prepare for the Journey Ahead", cost_multiplier: 2.5, max_reps: 3, xp_mult: 5, skills: [SkillType.Travel] }),
             new TaskDefinition({ id: 146, name: "Frolic in the Water", cost_multiplier: 30, max_reps: 1, xp_mult: 10, skills: [SkillType.Druid] }),
-            new TaskDefinition({ id: 147, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 15000, xp_mult: 0.2, skills: [SkillType.Combat] }),
+            new TaskDefinition({ id: 147, name: "PLACEHOLDER", type: TaskType.Boss, cost_multiplier: 150000, xp_mult: 0.2, skills: [SkillType.Combat] }),
         ],
     },
     {
