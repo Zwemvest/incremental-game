@@ -359,9 +359,12 @@ function initializeTasks() {
             for (const skill of task.skills) {
                 if (!GAMESTATE.unlocked_skills.includes(skill)) {
                     GAMESTATE.unlocked_skills.push(skill);
-                    const context: UnlockedSkillContext = { skill: skill };
-                    const event = new RenderEvent(EventType.UnlockedSkill, context);
-                    GAMESTATE.queueRenderEvent(event);
+                    // Don't cause notifications when literally just starting the game
+                    if (GAMESTATE.current_zone != 0) {
+                        const context: UnlockedSkillContext = { skill: skill };
+                        const event = new RenderEvent(EventType.UnlockedSkill, context);
+                        GAMESTATE.queueRenderEvent(event);
+                    }
                 }
             }
         }
