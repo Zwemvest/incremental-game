@@ -10,19 +10,21 @@
     <!-- Hidden until game's ready to render -->
     <main>
         <div id="game-area" style="display:none">
-            <div id="sidebar">
+            <div id="left-sidebar" class="sidebar">
                 <button id="open-settings">⚙ Settings</button>
-                <div id="attunement" class="sidebar-item item-text" style="display:none">🌀Attunement: 1337</div>
-                <div id="power" class="sidebar-item item-text" style="display:none">💪Power: 1337</div>
+                <div id="attunement" class="sidebar-section sidebar-item-text" style="display:none">🌀Attunement: 1337</div>
+                <div id="power" class="sidebar-section sidebar-item-text" style="display:none">💪Power: 1337</div>
                 <div id="skills"></div>
             </div>
-            <div id="main-bar">
+            <div id="main-area">
                 <div id="play-area">
                     <div id="left-column">
                         <div id="tasks"></div>
                     </div>
-                    <div id="right-column">
-                        <h2 id="zone-name">Lorem Ipsum</h2>
+                    <div id="right-column" class="sidebar">
+                        <div id="zone" class="sidebar-section">
+                            <h2 id="zone-name">Lorem Ipsum</h2>
+                        </div>
                         <div id="controls" class="sidebar-section">
                             <h3 class="section-name">Controls</h3>
                             <div id="controls-list" class="elements-list"></div>

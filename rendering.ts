@@ -14,7 +14,7 @@ function createSkillDiv(skill: Skill, skills_div: HTMLElement) {
 
     const skill_definition = SKILL_DEFINITIONS[skill.type] as SkillDefinition;
     const name = document.createElement("div");
-    name.className = "item-text";
+    name.className = "sidebar-item-text";
     name.textContent = `${skill_definition.name}`;
 
     const progressFill = document.createElement("div");
@@ -74,7 +74,7 @@ function updateSkillRendering() {
             fill.style.width = `${skill.progress * 100 / calcSkillXpNeeded(skill)}%`;
         }
 
-        var name = element.querySelector<HTMLDivElement>(".item-text");
+        var name = element.querySelector<HTMLDivElement>(".sidebar-item-text");
         if (name) {
             const skill_definition = SKILL_DEFINITIONS[skill.type] as SkillDefinition;
             const new_html = `<span>${skill_definition.name}</span><span>${skill.level}</span>`;
@@ -1156,7 +1156,7 @@ function setupZone() {
 
     const zone = ZONES[GAMESTATE.current_zone];
     if (zone) {
-        zone_name.textContent = `Zone ${GAMESTATE.current_zone + 1} - ${zone.name}`;
+        zone_name.innerHTML = `Zone ${GAMESTATE.current_zone + 1}<br>${zone.name}`;
     }
 }
 
