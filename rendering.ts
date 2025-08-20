@@ -168,7 +168,7 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
         tooltip += `<p>Type: ${TASK_TYPE_NAMES[task.task_definition.type]}</p>`;
 
         if (task.task_definition.item != ItemType.Count) {
-            tooltip += `<p>Gives item ${ITEMS[task.task_definition.item]?.icon}${ITEMS[task.task_definition.item]?.name}</p>`;
+            tooltip += `<p>Gives Item ${ITEMS[task.task_definition.item]?.icon}${ITEMS[task.task_definition.item]?.name}</p>`;
         }
 
         if (task.task_definition.perk != PerkType.Count && !hasPerk(task.task_definition.perk)) {
