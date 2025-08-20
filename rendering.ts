@@ -172,7 +172,8 @@ function createTaskDiv(task: Task, tasks_div: HTMLElement, rendering: Rendering)
         }
 
         if (task.task_definition.perk != PerkType.Count && !hasPerk(task.task_definition.perk)) {
-            tooltip += `<p>Gives a permanent Perk</p>`;
+            const perk = PERKS[task.task_definition.perk];
+            tooltip += `<p>Gives a permanent ${perk?.icon}Perk</p>`;
         }
 
         tooltip += `Estimated energy used: ${formatNumber(estimateTotalTaskEnergyConsumption(task))}`;
