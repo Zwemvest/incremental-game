@@ -243,24 +243,26 @@ function calcTaskProgressPerTick(task: Task): number {
 function updateActiveTask() {
     var active_task = GAMESTATE.active_task;
     if (!active_task) {
-        active_task = pickNextTaskInAutomationQueue();
+        GAMESTATE.active_task = pickNextTaskInAutomationQueue();
+        active_task = GAMESTATE.active_task;
     }
     if (!active_task) {
         return;
     }
 
+    const progress = calcTaskProgressPerTick(active_task);
+    active_task.progress += progress;
+    
     const cost = calcTaskCost(active_task);
-    if (active_task.progress < cost) {
-        const progress = calcTaskProgressPerTick(active_task);
-        active_task.progress += progress;
-        modifyEnergy(-calcEnergyDrainPerTick(active_task, progress >= cost));
-        for (const skill of active_task.task_definition.skills) {
-            addSkillXp(skill, calcSkillXp(active_task, progress));
-        }
+    const is_single_tick = progress >= cost;
+    modifyEnergy(-calcEnergyDrainPerTick(active_task, is_single_tick));
 
-        if (active_task.progress >= cost) {
-            finishTask(active_task);
-        }
+    for (const skill of active_task.task_definition.skills) {
+        addSkillXp(skill, calcSkillXp(active_task, progress));
+    }
+
+    if (active_task.progress >= cost) {
+        finishTask(active_task);
     }
 }
 
@@ -628,6 +630,15 @@ function pickNextTaskInAutomationQueue(): Task | null {
     }
 
     return null;
+}
+
+export function setAutomationMode(mode: AutomationMode) {
+    // If the player turns off automation they probably want to stop the ongoing task
+    if (GAMESTATE.automation_mode != AutomationMode.Off && mode == AutomationMode.Off) {
+        GAMESTATE.active_task = null;
+    }
+
+    GAMESTATE.automation_mode = mode;
 }
 
 // MARK: Persistence
