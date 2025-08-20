@@ -18,8 +18,42 @@ body {
 }
 
 #game-area {
-    max-width: 900px;
+    max-width: 1150px;
     margin: 0 auto;
+    display: flex;
+    gap: 10px;
+}
+
+#main-bar {
+    max-width: 900px;
+}
+
+#sidebar {
+    width: 180px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+#sidebar .sidebar-item {
+    width: 100%;
+    text-align: center;
+    background: var(--element-background-color);
+    border-radius: 8px;
+    padding: 5px;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;  
+}
+
+#sidebar .item-text {
+    display: flex;
+    justify-content: space-between;
+}
+
+#sidebar .item-text span {
+    display: inline-flex;
+    align-items: flex-end;
 }
 
 #play-area {
@@ -57,11 +91,14 @@ body {
 }
 
 #top-bar {
-    width: 730px;
+    width: 900px;
 }
 
 #right-top-area {
-    width: 160px;
+    width: 100%;
+    margin-bottom: 10px;
+    display: flex;
+    flex-wrap: wrap;
 }
 
 button {
@@ -70,7 +107,6 @@ button {
 }
 
 #open-settings {
-    width: 48px;
     height: 48px;
     text-align: center;
     font-size: 2em;
@@ -187,19 +223,10 @@ button:hover:enabled {
 */
 
 #skills {
-    display: flex;
-    flex-wrap: wrap;
+    width: 100%;
     gap: 10px;
-    margin-bottom: 20px;
-    justify-content: center;
-}
-
-.skill {
-    width: 100px;
-    text-align: center;
-    background: var(--element-background-color);
-    border-radius: 8px;
-    padding: 5px;
+    display: flex;
+    flex-direction: column;
 }
 
 .skill .progress-bar {
@@ -213,7 +240,7 @@ button:hover:enabled {
     margin-bottom: 2px;
 }
 
-/* MARK: Sidebar
+/* MARK: Sidebar right
 */
 
 .sidebar-section {
@@ -413,16 +440,4 @@ footer {
     margin: 3px 0;
     padding: 5px 10px;
     border-radius: 8px;
-}
-
-/* MARK: Extra stats
-*/
-
-.extra-stat {
-    width: 100% - 10px;
-    text-align: center;
-    background: var(--element-background-color);
-    border-radius: 8px;
-    padding: 5px;
-    margin-top: 5px;
 }

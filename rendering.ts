@@ -10,10 +10,11 @@ import { EventContext, EventType, GainedPerkContext, RenderEvent, SkillUpContext
 function createSkillDiv(skill: Skill, skills_div: HTMLElement) {
     const skill_div = document.createElement("div");
     skill_div.className = "skill";
+    skill_div.classList.add("sidebar-item");
 
     const skill_definition = SKILL_DEFINITIONS[skill.type] as SkillDefinition;
     const name = document.createElement("div");
-    name.className = "skill-name";
+    name.className = "item-text";
     name.textContent = `${skill_definition.name}`;
 
     const progressFill = document.createElement("div");
@@ -73,10 +74,10 @@ function updateSkillRendering() {
             fill.style.width = `${skill.progress * 100 / calcSkillXpNeeded(skill)}%`;
         }
 
-        var name = element.querySelector<HTMLDivElement>(".skill-name");
+        var name = element.querySelector<HTMLDivElement>(".item-text");
         if (name) {
             const skill_definition = SKILL_DEFINITIONS[skill.type] as SkillDefinition;
-            const new_html = `${skill_definition.name}<br>(${skill.level})`;
+            const new_html = `<span>${skill_definition.name}</span><span>${skill.level}</span>`;
             // Avoid flickering in the debugger
             if (new_html != name.innerHTML) {
                 name.innerHTML = new_html;
@@ -1014,7 +1015,7 @@ function setupAutomationControls() {
 
 function updateExtraStats() {
     if (GAMESTATE.has_unlocked_power && RENDERING.power_element.style.display == "none") {
-        RENDERING.power_element.style.display = "block";
+        RENDERING.power_element.style.display = "flex";
         setupTooltip(RENDERING.power_element, function () {
             var tooltip = `<h3>💪Power: ${formatNumber(GAMESTATE.power, false)}</h3>`;
 
@@ -1024,13 +1025,13 @@ function updateExtraStats() {
         });
     }
 
-    const power_text = `💪Power: ${formatNumber(GAMESTATE.power, false)}`;
-    if (RENDERING.power_element.textContent != power_text) {
-        RENDERING.power_element.textContent = power_text;
+    const power_text = `<span>💪Power</span><span>${formatNumber(GAMESTATE.power, false)}</span>`;
+    if (RENDERING.power_element.innerHTML != power_text) {
+        RENDERING.power_element.innerHTML = power_text;
     }
 
     if (hasPerk(PerkType.Attunement) && RENDERING.attunement_element.style.display == "none") {
-        RENDERING.attunement_element.style.display = "block";
+        RENDERING.attunement_element.style.display = "flex";
         setupTooltip(RENDERING.attunement_element, function () {
             var tooltip = `<h3>🌀Attunement: ${formatNumber(GAMESTATE.attunement, false)}</h3>`;
 
@@ -1040,9 +1041,9 @@ function updateExtraStats() {
         });
     }
 
-    const attunement_text = `🌀Attunement: ${formatNumber(GAMESTATE.attunement, false)}`;
-    if (RENDERING.attunement_element.textContent != attunement_text) {
-        RENDERING.attunement_element.textContent = attunement_text;
+    const attunement_text = `<span>🌀Attunement</span><span>${formatNumber(GAMESTATE.attunement, false)}</span>`;
+    if (RENDERING.attunement_element.innerHTML != attunement_text) {
+        RENDERING.attunement_element.innerHTML = attunement_text;
     }
 }
 
@@ -1129,7 +1130,7 @@ export class Rendering {
         updateRendering();
 
         // Unhide the game now that it's ready
-        (document.getElementById("game-area") as HTMLElement).style.display = "block";
+        (document.getElementById("game-area") as HTMLElement).style.display = "flex";
     }
 }
 
