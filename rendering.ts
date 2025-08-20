@@ -670,12 +670,20 @@ function formatNumber(n: number, allow_decimals: boolean = true): string {
         return n.toFixed(0);
     }
 
-    n = n / 1000;
+    const postfixes = ["k", "M", "B", "T"];
+    var postfix_index = -1;
 
-    if (n < 100) {
-        return n.toFixed(1) + "k";
+    while (n > 1000 && (postfix_index + 1) < postfixes.length) {
+        n = n / 1000;
+        postfix_index++;
+    }
+
+    if (n < 10) {
+        return n.toFixed(2) + postfixes[postfix_index];
+    } else if (n < 100) {
+        return n.toFixed(1) + postfixes[postfix_index];
     } else {
-        return n.toFixed(0) + "k";
+        return n.toFixed(0) + postfixes[postfix_index];
     }
 }
 
