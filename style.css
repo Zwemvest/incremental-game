@@ -380,6 +380,7 @@ main {
 }
 #main-area{
     flex:1;
+    padding-top: 1rem;
 }
 
 /* MARK: Button */
@@ -431,28 +432,22 @@ main {
     font-size: calc(var(--typography-button-size)*0.9);
     padding:0 0;
 }
+.task button:disabled {
+    background: linear-gradient(5deg, var(--palette-task-disabled), var(--palette-task-disabled-lighten));
+}
 .task.Normal button:enabled {
     background: linear-gradient(5deg, var(--palette-task-normal), var(--palette-task-normal-lighten));
     color: var(--palette-task-normal-text);
-}
-.task.Normal button:disabled {
-    background: linear-gradient(5deg, var(--palette-task-disabled), var(--palette-task-disabled-lighten));
 }
 
 .task.Travel button:enabled {
     background: linear-gradient(5deg, var(--palette-task-travel), var(--palette-task-travel-lighten));
     color: var(--palette-task-travel-text);
 }
-.task.Travel button:disabled {
-    background: linear-gradient(5deg, var(--palette-task-travel-disabled), var(--palette-task-travel-disabled-lighten));
-}
 
 .task.Mandatory button:enabled {
     background: linear-gradient(5deg, var(--palette-task-mandatory), var(--palette-task-mandatory-lighten));
     color: var(--palette-task-mandatory-text);
-}
-.task.Mandatory button:disabled {
-    background: linear-gradient(5deg, var(--palette-task-mandatory-disabled), var(--palette-task-mandatory-disabled-lighten));
 }
 
 .task.Boss button:enabled {
@@ -460,18 +455,11 @@ main {
     color: var(--palette-task-boss-text);
 }
 
-.task.Boss button:disabled {
-    background: linear-gradient(5deg, var(--palette-task-boss-disabled), var(--palette-task-boss-disabled-lighten));
-}
-
 .task.Prestige button:enabled {
     background: linear-gradient(5deg, var(--palette-task-prestige), var(--palette-task-prestige-lighten));
     color: var(--palette-task-prestige-text);
     transition: background-color 0.2s, filter 0.2s;
     animation: prestige-glow 2s infinite;
-}
-.task.Prestige button:disabled {
-    background: linear-gradient(5deg, var(--palette-task-prestige-disabled), var(--palette-task-prestige-disabled-lighten));
 }
 
 @keyframes prestige-glow {
@@ -786,7 +774,7 @@ footer {
     width: 100%;
     text-align: center;
     background: var(--palette-primary-paper-color);
-    border-radius: 8px;
+    border-radius: var(--default-border-radius);
     padding: 5px;
     box-sizing: border-box;
     -webkit-box-sizing: border-box;
