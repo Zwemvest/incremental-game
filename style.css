@@ -674,7 +674,7 @@ main {
 .progress-bar {
     position: relative;
     width: 100%;
-    height: 10px;
+    height: 1rem;
     background: #555;
     overflow: hidden;
     border-radius: var(--default-border-radius);
@@ -741,7 +741,7 @@ footer {
     left: 50%;
     transform: translateX(-50%);
     width: 100vw;
-    padding: 10px 0;
+    padding: 1rem 0;
     background-color: transparent;
     pointer-events: none;
     z-index: 999;
