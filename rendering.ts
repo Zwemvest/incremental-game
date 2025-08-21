@@ -536,7 +536,6 @@ function updatePerks() {
 // MARK: Game over
 
 function populateGameOver(game_over_div: HTMLElement) {
-    game_over_div.classList.add("display-flex");
     game_over_div.classList.remove("hidden");
 
     var skill_gain = game_over_div.querySelector("#game-over-skillgain");
@@ -622,14 +621,12 @@ function setupGameOverRestartListener(game_over_div: HTMLElement) {
     }
 
     button.addEventListener("click", () => {
-        game_over_div.classList.add("hidden");
         game_over_div.classList.remove("display-flex");
         doEnergyReset();
     });
 }
 
 function populateEndOfContent(end_of_content_div: HTMLElement) {
-    end_of_content_div.classList.add("display-flex");
     end_of_content_div.classList.remove("hidden");
 
     var reset_count = end_of_content_div.querySelector("#end-of-content-reset-count");
@@ -707,7 +704,6 @@ function setupSettings(settings_div: HTMLElement) {
     }
 
     open_button.addEventListener("click", () => {
-        settings_div.classList.add("display-flex");
         settings_div.classList.remove("hidden");
     });
 
@@ -727,7 +723,6 @@ function setupSettings(settings_div: HTMLElement) {
 
     close_button.addEventListener("click", () => {
         settings_div.classList.add("hidden");
-        settings_div.classList.remove("display-flex");
     });
 
     setupTooltip(close_button, function () {
@@ -1026,7 +1021,6 @@ function setupAutomationControls() {
 
 function updateExtraStats() {
     if (GAMESTATE.has_unlocked_power && RENDERING.power_element.classList.contains("hidden")) {
-        RENDERING.power_element.classList.add("display-flex");
         RENDERING.power_element.classList.remove("hidden");
         setupTooltip(RENDERING.power_element, function () {
             var tooltip = `<h3>💪Power - ${formatNumber(GAMESTATE.power, false)}</h3>`;
@@ -1044,7 +1038,6 @@ function updateExtraStats() {
     }
 
     if (hasPerk(PerkType.Attunement) && RENDERING.attunement_element.classList.contains("hidden")) {
-        RENDERING.attunement_element.classList.add("display-flex");
         RENDERING.attunement_element.classList.remove("hidden");
         setupTooltip(RENDERING.attunement_element, function () {
             var tooltip = `<h3>🌀Attunement - ${formatNumber(GAMESTATE.attunement, false)}</h3>`;
@@ -1145,9 +1138,7 @@ export class Rendering {
         updateRendering();
 
         // Unhide the game now that it's ready
-		let x = (document.getElementById("game-area") as HTMLElement);
-		x.classList.add("display-flex");
-		x.classList.remove("hidden");
+		(document.getElementById("game-area") as HTMLElement).classList.remove("hidden");
     }
 }
 
@@ -1177,7 +1168,6 @@ function setupZone() {
 
 function hideTooltip() {
     RENDERING.tooltip_element.classList.add("hidden");
-    RENDERING.tooltip_element.classList.remove("display-block");
     RENDERING.tooltipped_element = null;
 }
 
@@ -1229,7 +1219,6 @@ function showTooltip(element: ElementWithTooltip) {
         }
     }
 
-    tooltip_element.classList.add("display-block");
     tooltip_element.classList.remove("hidden");
 }
 
